@@ -1,4 +1,4 @@
-package com.myapplication
+package com.fexed.nuzlockone
 
 import MainView
 import android.os.Bundle

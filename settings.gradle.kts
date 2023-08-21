@@ -1,4 +1,4 @@
-rootProject.name = "MyApplication"
+rootProject.name = "Nuzlockone"
 
 include(":androidApp")
 include(":shared")
