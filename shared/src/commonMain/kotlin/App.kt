@@ -47,13 +47,20 @@ fun NetworkTests() {
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         items(count = number) {
-            var creature by remember { mutableStateOf(Creature().apply { id = it + 1; name = "Loading..."; type1 = Type.NONE; type2 = Type.NONE }) }
+            var creature by remember { mutableStateOf(
+                Creature().apply {
+                    id = it + 1
+                    name = "Loading..."
+                    type1 = Type.NONE
+                    type2 = Type.NONE
+                }) }
             LaunchedEffect(true) {
                 scope.launch {
                     creature = try {
                         PokeApi().getCreatureData(it + 1)
                     } catch (e: Exception) {
                         Creature().apply {
+                            id = it + 1
                             name = e.message ?: "Error"
                             type1 = Type.NONE
                             type2 = Type.NONE
