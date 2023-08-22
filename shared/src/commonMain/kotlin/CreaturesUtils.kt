@@ -39,7 +39,7 @@ enum class Type {
     Rock,
     Steel,
     Fairy,
-    Electro,
+    Electric,
     Dark,
     Bug,
     Poison,
@@ -85,7 +85,7 @@ fun TypePill(type: Type) {
         Type.Rock -> Color(0.0f, 1.0f, 0.0f)
         Type.Steel -> Color(0.0f, 1.0f, 0.0f)
         Type.Fairy -> Color(0.0f, 1.0f, 0.0f)
-        Type.Electro -> Color(0.0f, 1.0f, 0.0f)
+        Type.Electric -> Color(0.0f, 1.0f, 0.0f)
         Type.Dark -> Color(0.0f, 1.0f, 0.0f)
         Type.Bug -> Color(0.0f, 1.0f, 0.0f)
         Type.Poison -> Color(0.0f, 1.0f, 0.0f)
