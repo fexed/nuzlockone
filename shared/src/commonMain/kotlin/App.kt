@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import data.Bulbasaur
 import data.Charizard
 import data.Jigglypuff
+import ui.CreatureCard
+import ui.CreatureRowElement
 
 expect fun getPlatformName(): String
 
