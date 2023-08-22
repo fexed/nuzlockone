@@ -15,10 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import data.Bulbasaur
-import data.Charizard
 import data.Creature
-import data.Jigglypuff
 import data.Type
 import kotlinx.coroutines.launch
 import network.PokeApi
@@ -30,12 +27,6 @@ expect fun getPlatformName(): String
 @Composable
 fun UITests() {
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        item { CreatureRowElement(Bulbasaur, "Saaaur", false) }
-        item { CreatureRowElement(Charizard, "", false) }
-        item { CreatureRowElement(Jigglypuff, "", true) }
-        item { CreatureCard(Bulbasaur, "", true) }
-        item { CreatureCard(Charizard, "", true) }
-        item { CreatureCard(Jigglypuff, "", false) }
     }
 }
 

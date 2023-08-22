@@ -67,7 +67,7 @@ class PokeApi {
         }
     }
 
-    private suspend fun creatureFromCreatureSpecie(data: PokemonSpecies): Creature {
+    private suspend fun creatureFromPokemonSpecies(data: PokemonSpecies): Creature {
         val creature = Creature()
         creature.id = data.id
         creature.isBaby = data.is_baby
@@ -95,12 +95,12 @@ class PokeApi {
 
     suspend fun getCreatureData(name: String = "bulbasaur"): Creature {
         val response = client.get("https://pokeapi.co/api/v2/pokemon-species/$name")
-        return creatureFromCreatureSpecie(response.body())
+        return creatureFromPokemonSpecies(response.body())
     }
 
     suspend fun getCreatureData(number: Int = 1): Creature {
         val response = client.get("https://pokeapi.co/api/v2/pokemon-species/$number")
-        return creatureFromCreatureSpecie(response.body())
+        return creatureFromPokemonSpecies(response.body())
     }
 
     suspend fun getNumberOfPokemons(): Int {

@@ -12,6 +12,7 @@ class Creature(
     var isLegendary: Boolean = false,
     var isMithycal: Boolean = false,
     var generation: Int = -1,
+    var description: String = "",
     var image: String = "compose-multiplatform.xml")
 
 enum class Type {
@@ -61,7 +62,3 @@ fun getTypeColor(type: Type): Color {
         Type.NONE -> Color.Transparent
     }
 }
-
-val Bulbasaur = Creature(id = 1, name = "Bulbasaur", type1 = Type.Grass, type2 = Type.Poison)
-val Charizard = Creature(id = 6, name = "Charizard", type1 = Type.Fire, type2 = Type.Flying)
-val Jigglypuff = Creature(id = 39, name = "Jigglypuff", type1 = Type.Normal, type2 = Type.Fairy)
