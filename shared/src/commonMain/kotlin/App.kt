@@ -14,9 +14,12 @@ expect fun getPlatformName(): String
 fun UITests() {
     MaterialTheme {
         LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            item { CreatureCard(Bulbasaur, "Saaaur", false) }
-            item { CreatureCard(Charizard, "", false) }
-            item { CreatureCard(Jigglypuff, "", true) }
+            item { CreatureRowElement(Bulbasaur, "Saaaur", false) }
+            item { CreatureRowElement(Charizard, "", false) }
+            item { CreatureRowElement(Jigglypuff, "", true) }
+            item { CreatureCard(Bulbasaur, "", true) }
+            item { CreatureCard(Charizard, "", true) }
+            item { CreatureCard(Jigglypuff, "", false) }
         }
     }
 }
