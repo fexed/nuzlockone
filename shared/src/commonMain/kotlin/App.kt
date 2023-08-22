@@ -28,12 +28,6 @@ expect val language: String?
 expect val country: String?
 
 @Composable
-fun UITests() {
-    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-    }
-}
-
-@Composable
 fun NetworkTests() {
     val scope = rememberCoroutineScope()
     var number by remember { mutableStateOf(0) }
