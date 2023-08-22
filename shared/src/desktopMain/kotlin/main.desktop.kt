@@ -3,10 +3,10 @@ import androidx.compose.runtime.Composable
 
 actual fun getPlatformName(): String = "Desktop"
 
-@Composable fun MainView() = UITests()
+@Composable fun MainView() = MainScaffold(content = { UITests() })
 
 @Preview
 @Composable
 fun AppPreview() {
-    UITests()
+    MainScaffold(content = { UITests() })
 }
