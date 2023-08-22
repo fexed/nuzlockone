@@ -20,7 +20,6 @@ import data.Type
 import data.creaturesList
 import kotlinx.coroutines.launch
 import network.PokeApi
-import ui.CreatureCard
 import ui.CreatureRowElement
 
 expect fun getPlatformName(): String
@@ -28,7 +27,7 @@ expect val language: String?
 expect val country: String?
 
 @Composable
-fun NetworkTests() {
+fun ListAllPokemons() {
     val scope = rememberCoroutineScope()
     var number by remember { mutableStateOf(0) }
 
@@ -91,7 +90,7 @@ fun NetworkTests() {
 @Composable
 fun Tests() {
     Column {
-        NetworkTests()
+        ListAllPokemons()
     }
 }
 
