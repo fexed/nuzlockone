@@ -1,9 +1,14 @@
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,6 +21,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -57,13 +65,22 @@ enum class Type {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun CreatureCard(creature: Creature) {
-    Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp)) {
+fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = false) {
+    var areDetailsVisible by mutableStateOf(false)
+    val borderColor = if (caught) Color.Green else Color.Transparent
+
+    Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
+        if (details.isNotEmpty()) areDetailsVisible = !areDetailsVisible
+    }) {
         Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
             Image(
                 painterResource(creature.image),
                 null,
-                modifier = Modifier.size(75.dp).clip(CircleShape).background(getTypeColor(creature.type1))
+                modifier = Modifier.size(75.dp)
+                    .border(2.dp, borderColor, CircleShape)
+                    .border(6.dp, getTypeColor(creature.type2), CircleShape)
+                    .clip(CircleShape)
+                    .background(getTypeColor(creature.type1))
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
@@ -73,6 +90,10 @@ fun CreatureCard(creature: Creature) {
                     TypePill(creature.type1)
                     Spacer(modifier = Modifier.width(4.dp))
                     TypePill(creature.type2)
+                }
+
+                AnimatedVisibility(areDetailsVisible) {
+                    Text(details)
                 }
             }
         }
