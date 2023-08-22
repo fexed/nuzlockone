@@ -1,6 +1,7 @@
 package network
 
 import data.Creature
+import data.Location
 import data.Type
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -12,6 +13,8 @@ import kotlinx.serialization.json.Json
 import language
 
 class PokeApi {
+    val baseURL: String = "https://pokeapi.co/api/v2"
+
     private val client = HttpClient {
         install(ContentNegotiation) {
             json(Json {
@@ -81,7 +84,6 @@ class PokeApi {
         for (name in data.names) {
             if (name.language.name == "en") {
                 defaultName = name.name
-
             }
 
             if (name.language.name == language) {
@@ -108,22 +110,64 @@ class PokeApi {
                 break
             }
         }
+
+        creature.isValid = true
+
         return creature
     }
 
-    suspend fun getCreatureData(name: String): Creature {
-        val response = client.get("https://pokeapi.co/api/v2/pokemon-species/$name")
-        return creatureFromPokemonSpecies(response.body())
-    }
-
     suspend fun getCreatureData(number: Int): Creature {
-        val response = client.get("https://pokeapi.co/api/v2/pokemon-species/$number")
+        val response = client.get("${baseURL}/pokemon-species/$number")
         return creatureFromPokemonSpecies(response.body())
     }
 
     suspend fun getNumberOfPokemons(): Int {
-        val response = client.get("https://pokeapi.co/api/v2/pokemon-species/")
+        val response = client.get("${baseURL}/pokemon-species/")
         return response.body<EndpointData>().count
+    }
+
+    suspend fun getNumberOfLocations(): Int {
+        val response = client.get("${baseURL}/location/")
+        return response.body<EndpointData>().count
+    }
+
+    suspend fun getLocationData(number: Int): Location {
+        val response = client.get("${baseURL}/location/$number")
+        val data = response.body<network.Location>()
+        return Location().apply {
+            id = data.id
+
+            name = ""
+            var defaultName = ""
+            for (currentName in data.names) {
+                if (currentName.language.name == "en") {
+                    defaultName = currentName.name
+                }
+
+                if (currentName.language.name == language) {
+                    name = currentName.name
+                    break
+                }
+            }
+            if (name.isEmpty()) name = defaultName
+
+            val region = client.get(data.region.url).body<Region>()
+            regionName = ""
+            defaultName = ""
+            for (currentName in region.names) {
+                if (currentName.language.name == "en") {
+                    defaultName = currentName.name
+                }
+
+                if (currentName.language.name == language) {
+                    regionName = currentName.name
+                    break
+                }
+            }
+            if (regionName.isEmpty()) regionName = defaultName
+
+            isValid = true
+        }
     }
 }
 
@@ -159,3 +203,9 @@ class Type(val id: Int, val name: String, val damage_relations: TypeRelations)
 
 @Serializable
 class TypeRelations(val no_damage_to: List<NamedAPIResource>, val half_damage_to: List<NamedAPIResource>, val double_damage_to: List<NamedAPIResource>, val no_damage_from: List<NamedAPIResource>, val half_damage_from: List<NamedAPIResource>, val double_damage_from: List<NamedAPIResource>)
+
+@Serializable
+class Location(val id: Int, val name: String, val region: NamedAPIResource, val names: List<Name>)
+
+@Serializable
+class Region(val id: Int, val name: String, val names: List<Name>, val main_generation: NamedAPIResource)

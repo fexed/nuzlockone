@@ -17,7 +17,9 @@ class Creature(
     var isMithycal: Boolean = false,
     var generation: Int = -1,
     var descriptions: MutableList<String> = listOf<String>().toMutableList(),
-    var image: String = "compose-multiplatform.xml")
+    var image: String = "compose-multiplatform.xml",
+    var isValid: Boolean = false
+)
 
 enum class Type {
     Grass,

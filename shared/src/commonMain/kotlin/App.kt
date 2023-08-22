@@ -16,11 +16,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import data.Creature
+import data.Location
 import data.Type
 import data.creaturesList
+import data.locationsList
 import kotlinx.coroutines.launch
 import network.PokeApi
 import ui.CreatureRowElement
+import ui.LocationRowElement
 
 expect fun getPlatformName(): String
 expect val language: String?
@@ -82,7 +85,59 @@ fun ListAllPokemons() {
                 }
             }
 
-            CreatureRowElement(creature)
+            if (creature.isValid) CreatureRowElement(creature)
+        }
+    }
+}
+
+@Composable
+fun ListAllLocations() {
+    val scope = rememberCoroutineScope()
+    var number by remember { mutableStateOf(0) }
+
+    LaunchedEffect(true) {
+        scope.launch {
+            val n = try {
+                PokeApi().getNumberOfLocations()
+            } catch (e: Exception) {
+                0
+            }
+            val location = Location()
+            locationsList = ArrayList(n)
+            for (ix in 0..n) {
+                location.apply { id = ix + 1 }
+                locationsList.add(location)
+            }
+            number = n
+        }
+    }
+
+    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        items(count = number) {
+            var location by remember { mutableStateOf(locationsList[it]) }
+
+            if (location.name == "Loading...") {
+                location.apply {
+                    id = it + 1
+                    name = "Loading..."
+                    regionName = "Loading..."
+                }
+
+                LaunchedEffect(true) {
+                    scope.launch {
+                        locationsList[it] = try {
+                            PokeApi().getLocationData(it + 1)
+                        } catch (e: Exception) {
+                            Location().apply {
+                                name = e.message ?: "Error"
+                            }
+                        }
+                        location = locationsList[it]
+                    }
+                }
+            }
+
+            if (location.isValid) LocationRowElement(location)
         }
     }
 }
@@ -90,7 +145,7 @@ fun ListAllPokemons() {
 @Composable
 fun Tests() {
     Column {
-        ListAllPokemons()
+        ListAllLocations()
     }
 }
 
