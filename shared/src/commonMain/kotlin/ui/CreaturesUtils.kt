@@ -60,7 +60,7 @@ fun CreatureRowElement(creature: Creature, details: String = "", caught: Boolean
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
-                Text("${creature.number}", fontSize = 10.sp)
+                Text("${creature.id}", fontSize = 10.sp)
                 Text(creature.name, fontSize = 16.sp)
                 Row {
                     TypePill(creature.type1)
@@ -86,7 +86,7 @@ fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = fal
     }) {
         Column(modifier = Modifier.wrapContentHeight().wrapContentWidth().padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("${creature.number}", fontSize = 10.sp)
+            Text("${creature.id}", fontSize = 10.sp)
             Text(creature.name, fontSize = 16.sp)
             Spacer(modifier = Modifier.width(8.dp))
             Image(

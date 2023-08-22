@@ -4,10 +4,14 @@ import androidx.compose.ui.graphics.Color
 
 
 class Creature(
-    var number: Int = -1,
+    var id: Int = -1,
     var name: String = "MissingNo",
     var type1: Type = Type.UNKNOWN,
     var type2: Type = Type.NONE,
+    var isBaby: Boolean = false,
+    var isLegendary: Boolean = false,
+    var isMithycal: Boolean = false,
+    var generation: Int = -1,
     var image: String = "compose-multiplatform.xml")
 
 enum class Type {
@@ -58,6 +62,6 @@ fun getTypeColor(type: Type): Color {
     }
 }
 
-val Bulbasaur = Creature(number = 1, name = "Bulbasaur", type1 = Type.Grass, type2 = Type.Poison)
-val Charizard = Creature(number = 6, name = "Charizard", type1 = Type.Fire, type2 = Type.Flying)
-val Jigglypuff = Creature(number = 39, name = "Jigglypuff", type1 = Type.Normal, type2 = Type.Fairy)
+val Bulbasaur = Creature(id = 1, name = "Bulbasaur", type1 = Type.Grass, type2 = Type.Poison)
+val Charizard = Creature(id = 6, name = "Charizard", type1 = Type.Fire, type2 = Type.Flying)
+val Jigglypuff = Creature(id = 39, name = "Jigglypuff", type1 = Type.Normal, type2 = Type.Fairy)
