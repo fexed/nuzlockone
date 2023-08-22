@@ -2,6 +2,10 @@ package data
 
 import androidx.compose.ui.graphics.Color
 
+var creaturesList: MutableList<Creature> = mutableListOf(Creature().apply {
+    name = "Loading..."
+    type1 = Type.NONE
+})
 
 class Creature(
     var id: Int = -1,
@@ -12,7 +16,7 @@ class Creature(
     var isLegendary: Boolean = false,
     var isMithycal: Boolean = false,
     var generation: Int = -1,
-    var description: String = "",
+    var descriptions: MutableList<String> = listOf<String>().toMutableList(),
     var image: String = "compose-multiplatform.xml")
 
 enum class Type {

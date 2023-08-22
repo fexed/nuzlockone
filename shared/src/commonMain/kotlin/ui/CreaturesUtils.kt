@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
@@ -41,35 +43,40 @@ import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun CreatureRowElement(creature: Creature, details: String = "", caught: Boolean = false) {
+fun CreatureRowElement(creature: Creature, caught: Boolean = false) {
     var areDetailsVisible by mutableStateOf(false)
     val borderColor = if (caught) Color.Green else Color.Transparent
 
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
-        if (details.isNotEmpty()) areDetailsVisible = !areDetailsVisible
+        if (creature.descriptions.isNotEmpty()) areDetailsVisible = !areDetailsVisible
     }) {
-        Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
-            Image(
-                painterResource(creature.image),
-                null,
-                modifier = Modifier.size(75.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, borderColor, CircleShape)
-                    .background(Brush.radialGradient(listOf(getTypeColor(creature.type1), getTypeColor(
-                        if (creature.type2 != Type.NONE) creature.type2 else creature.type1)), radius = 125f))
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Column {
-                Text("${creature.id}", fontSize = 10.sp)
-                Text(creature.name, fontSize = 16.sp)
-                Row {
-                    TypePill(creature.type1)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    TypePill(creature.type2)
+        Column {
+            Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
+                Image(
+                    painterResource(creature.image),
+                    null,
+                    modifier = Modifier.size(75.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, borderColor, CircleShape)
+                        .background(Brush.radialGradient(listOf(getTypeColor(creature.type1), getTypeColor(
+                            if (creature.type2 != Type.NONE) creature.type2 else creature.type1)), radius = 125f))
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column {
+                    Text("${creature.id}", fontSize = 10.sp)
+                    Text(creature.name, fontSize = 16.sp)
+                    Row {
+                        TypePill(creature.type1)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        TypePill(creature.type2)
+                    }
                 }
-
-                AnimatedVisibility(areDetailsVisible) {
-                    Text(details)
+            }
+            AnimatedVisibility(areDetailsVisible) {
+                LazyRow {
+                    items(creature.descriptions.size) {
+                        Text(creature.descriptions[it], modifier = Modifier.padding(4.dp, 8.dp).fillMaxWidth())
+                    }
                 }
             }
         }

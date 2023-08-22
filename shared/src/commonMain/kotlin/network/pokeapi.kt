@@ -9,6 +9,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import language
 
 class PokeApi {
     private val client = HttpClient {
@@ -74,12 +75,29 @@ class PokeApi {
         creature.isLegendary = data.is_legendary
         creature.isMithycal = data.is_mythical
         creature.generation = mapGenerationToNumber(data.generation.name)
+
+        creature.name = ""
+        var defaultName = ""
         for (name in data.names) {
             if (name.language.name == "en") {
+                defaultName = name.name
+
+            }
+
+            if (name.language.name == language) {
                 creature.name = name.name
                 break
             }
         }
+        if (creature.name.isEmpty()) creature.name = defaultName
+
+        creature.descriptions = ArrayList()
+        for (descr in data.flavor_text_entries) {
+            if (descr.language.name == language) {
+                creature.descriptions.add(descr.flavor_text)
+            }
+        }
+
         for (variety in data.varieties) {
             if (variety.is_default) {
                 val defaultVariety = client.get(variety.pokemon.url).body<Pokemon>()
@@ -93,12 +111,12 @@ class PokeApi {
         return creature
     }
 
-    suspend fun getCreatureData(name: String = "bulbasaur"): Creature {
+    suspend fun getCreatureData(name: String): Creature {
         val response = client.get("https://pokeapi.co/api/v2/pokemon-species/$name")
         return creatureFromPokemonSpecies(response.body())
     }
 
-    suspend fun getCreatureData(number: Int = 1): Creature {
+    suspend fun getCreatureData(number: Int): Creature {
         val response = client.get("https://pokeapi.co/api/v2/pokemon-species/$number")
         return creatureFromPokemonSpecies(response.body())
     }
@@ -125,7 +143,7 @@ class FlavorText(val flavor_text: String, val language: NamedAPIResource, val ve
 class Version(val id: Int, val name: String, val names: List<Name>, val version_group: NamedAPIResource)
 
 @Serializable
-class PokemonSpecies(val id: Int, val name: String, val order: Int, val generation: NamedAPIResource, val is_baby: Boolean, val is_legendary: Boolean, val is_mythical: Boolean, val names: List<Name>, val varieties: List<PokemonSpeciesVariety>)
+class PokemonSpecies(val id: Int, val name: String, val order: Int, val generation: NamedAPIResource, val is_baby: Boolean, val is_legendary: Boolean, val is_mythical: Boolean, val names: List<Name>, val varieties: List<PokemonSpeciesVariety>, val flavor_text_entries: List<FlavorText>)
 
 @Serializable
 class PokemonSpeciesVariety(val is_default: Boolean, val pokemon: NamedAPIResource)

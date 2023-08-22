@@ -17,12 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import data.Creature
 import data.Type
+import data.creaturesList
 import kotlinx.coroutines.launch
 import network.PokeApi
 import ui.CreatureCard
 import ui.CreatureRowElement
 
 expect fun getPlatformName(): String
+expect val language: String?
+expect val country: String?
 
 @Composable
 fun UITests() {
@@ -37,37 +40,54 @@ fun NetworkTests() {
 
     LaunchedEffect(true) {
         scope.launch {
-            number = try {
+            val n = try {
                 PokeApi().getNumberOfPokemons()
             } catch (e: Exception) {
                 0
             }
+            val creature = Creature().apply {
+                id = -1
+                name = "Loading..."
+                type1 = Type.NONE
+                type2 = Type.NONE
+            }
+            creaturesList = ArrayList(n)
+            for (ix in 0..n) {
+                creaturesList.add(creature)
+            }
+            number = n
         }
     }
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         items(count = number) {
-            var creature by remember { mutableStateOf(
-                Creature().apply {
-                    id = it + 1
+            var creature by remember { mutableStateOf(creaturesList[it]) }
+
+            if (creature.id == -1) {
+                creature.apply {
+                    id = -1
                     name = "Loading..."
                     type1 = Type.NONE
                     type2 = Type.NONE
-                }) }
-            LaunchedEffect(true) {
-                scope.launch {
-                    creature = try {
-                        PokeApi().getCreatureData(it + 1)
-                    } catch (e: Exception) {
-                        Creature().apply {
-                            id = it + 1
-                            name = e.message ?: "Error"
-                            type1 = Type.NONE
-                            type2 = Type.NONE
+                }
+
+                LaunchedEffect(true) {
+                    scope.launch {
+                        creaturesList[it] = try {
+                            PokeApi().getCreatureData(it + 1)
+                        } catch (e: Exception) {
+                            Creature().apply {
+                                id = -1
+                                name = e.message ?: "Error"
+                                type1 = Type.NONE
+                                type2 = Type.NONE
+                            }
                         }
+                        creature = creaturesList[it]
                     }
                 }
             }
+
             CreatureRowElement(creature)
         }
     }
