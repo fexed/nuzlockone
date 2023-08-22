@@ -21,13 +21,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalMapOf
 import data.Creature
+import data.Game
 import data.Location
 import data.Type
 import data.creaturesList
+import data.gamesList
 import data.locationsList
 import kotlinx.coroutines.launch
 import network.PokeApi
 import ui.CreatureRowElement
+import ui.GameElement
 import ui.LocationRowElement
 
 expect fun getPlatformName(): String
@@ -159,9 +162,55 @@ fun ListAllLocations() {
 }
 
 @Composable
-fun Tests() {
-    Column {
-        ListAllPokemons()
+fun ListAllGames() {
+    val scope = rememberCoroutineScope()
+    var number by remember { mutableStateOf(0) }
+
+    LaunchedEffect(true) {
+        scope.launch {
+            val n = try {
+                PokeApi().getNumberOfGames()
+            } catch (e: Exception) {
+                0
+            }
+            val game = Game().apply {
+                title = "Loading..."
+                isValid = true
+            }
+            gamesList = ArrayList(n)
+            for (ix in 0..n) {
+                gamesList.add(game)
+            }
+            number = n
+        }
+    }
+
+    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        items(count = number) {
+            var game by remember { mutableStateOf(gamesList[it]) }
+            var isLoading by remember { mutableStateOf(false) }
+
+            if (game.title == "Loading...") {
+                isLoading = true
+
+                LaunchedEffect(true) {
+                    scope.launch {
+                        gamesList[it] = try {
+                            PokeApi().getGameData(it + 1)
+                        } catch (e: Exception) {
+                            Game().apply {
+                                title = e.message ?: "Error"
+                            }
+                        }
+                        game.isValid = true
+                        game = gamesList[it]
+                        isLoading = false
+                    }
+                }
+            }
+
+            if (game.isValid) GameElement(game, isLoading)
+        }
     }
 }
 
@@ -175,6 +224,7 @@ fun MainScaffold() {
                 when(content) {
                     0 -> ListAllPokemons()
                     1 -> ListAllLocations()
+                    2 -> ListAllGames()
                     else -> ListAllPokemons()
                 }
             },
@@ -190,6 +240,9 @@ fun MainScaffold() {
                     }
                     Button(onClick = { content = 1 }) {
                         Text("Locations")
+                    }
+                    Button(onClick = { content = 2 }) {
+                        Text("Games")
                     }
                 }
             }

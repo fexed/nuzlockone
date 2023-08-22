@@ -1,6 +1,8 @@
 package network
 
 import data.Creature
+import data.Encounter
+import data.Game
 import data.Location
 import data.Type
 import io.ktor.client.HttpClient
@@ -8,6 +10,12 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import language
@@ -71,6 +79,24 @@ class PokeApi {
         }
     }
 
+    private fun getLocalizedOrDefaultName(nameList: List<Name>): String {
+        var name = ""
+        var defaultName = ""
+        for (currentName in nameList) {
+            if (currentName.language.name == "en") {
+                defaultName = currentName.name
+            }
+
+            if (currentName.language.name == language) {
+                name = currentName.name
+                break
+            }
+        }
+        if (name.isEmpty()) name = defaultName
+
+        return name
+    }
+
     private suspend fun creatureFromPokemonSpecies(data: PokemonSpecies): Creature {
         val creature = Creature()
         creature.id = data.id
@@ -79,19 +105,7 @@ class PokeApi {
         creature.isMithycal = data.is_mythical
         creature.generation = mapGenerationToNumber(data.generation.name)
 
-        creature.name = ""
-        var defaultName = ""
-        for (name in data.names) {
-            if (name.language.name == "en") {
-                defaultName = name.name
-            }
-
-            if (name.language.name == language) {
-                creature.name = name.name
-                break
-            }
-        }
-        if (creature.name.isEmpty()) creature.name = defaultName
+        creature.name = getLocalizedOrDefaultName(data.names)
 
         creature.descriptions = ArrayList()
         for (descr in data.flavor_text_entries) {
@@ -121,6 +135,11 @@ class PokeApi {
         return creatureFromPokemonSpecies(response.body())
     }
 
+    suspend fun getCreatureData(name: String): Creature {
+        val response = client.get("${baseURL}/pokemon-species/$name")
+        return creatureFromPokemonSpecies(response.body())
+    }
+
     suspend fun getNumberOfPokemons(): Int {
         val response = client.get("${baseURL}/pokemon-species/")
         return response.body<EndpointData>().count
@@ -137,37 +156,46 @@ class PokeApi {
         return Location().apply {
             id = data.id
 
-            name = ""
-            var defaultName = ""
-            for (currentName in data.names) {
-                if (currentName.language.name == "en") {
-                    defaultName = currentName.name
-                }
-
-                if (currentName.language.name == language) {
-                    name = currentName.name
-                    break
-                }
-            }
-            if (name.isEmpty()) name = defaultName
+            name = getLocalizedOrDefaultName(data.names)
 
             val region = client.get(data.region.url).body<Region>()
-            regionName = ""
-            defaultName = ""
-            for (currentName in region.names) {
-                if (currentName.language.name == "en") {
-                    defaultName = currentName.name
-                }
+            regionName = getLocalizedOrDefaultName(region.names)
 
-                if (currentName.language.name == language) {
-                    regionName = currentName.name
-                    break
-                }
+            for (area in data.areas) {
+                areaURLS.add(area.url)
             }
-            if (regionName.isEmpty()) regionName = defaultName
 
             isValid = true
         }
+    }
+
+    fun getLocationEncounters(location: Location): Flow<Encounter> = flow {
+        for (areaData in location.areaURLS) {
+            val area = client.get(areaData).body<LocationArea>()
+            for (encounter in area.pokemon_encounters) {
+                val creature = getCreatureData(encounter.pokemon.name)
+                for (versionDetail in encounter.version_details) {
+                    val version = client.get(versionDetail.version.url).body<Version>()
+                    for (encounterDetail in versionDetail.encounter_details) {
+                        val encounterMethod = client.get(encounterDetail.method.url).body<EncounterMethod>()
+                        val encounterMethodName = getLocalizedOrDefaultName(encounterMethod.names)
+                        val gameName = getLocalizedOrDefaultName(version.names)
+                        val newEncounter = Encounter(creature, encounterDetail.chance, encounterMethodName, gameName)
+                        emit(newEncounter)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getNumberOfGames(): Int {
+        val response = client.get("${baseURL}/version/")
+        return response.body<EndpointData>().count
+    }
+
+    suspend fun getGameData(id: Int): Game {
+        val version = client.get("${baseURL}/version/$id").body<Version>()
+        return Game(id = id, title = getLocalizedOrDefaultName(version.names), isValid = true)
     }
 }
 
@@ -205,7 +233,22 @@ class Type(val id: Int, val name: String, val damage_relations: TypeRelations)
 class TypeRelations(val no_damage_to: List<NamedAPIResource>, val half_damage_to: List<NamedAPIResource>, val double_damage_to: List<NamedAPIResource>, val no_damage_from: List<NamedAPIResource>, val half_damage_from: List<NamedAPIResource>, val double_damage_from: List<NamedAPIResource>)
 
 @Serializable
-class Location(val id: Int, val name: String, val region: NamedAPIResource, val names: List<Name>)
+class Location(val id: Int, val name: String, val region: NamedAPIResource, val names: List<Name>, val areas: List<NamedAPIResource>)
+
+@Serializable
+class LocationArea(val id: Int, val name: String, val names: List<Name>, val pokemon_encounters: List<PokemonEncounter>)
+
+@Serializable
+class PokemonEncounter(val pokemon: NamedAPIResource, val version_details: List<VersionEncounterDetail>)
+
+@Serializable
+class VersionEncounterDetail(val version: NamedAPIResource, val max_chance: Int, val encounter_details: List<network.Encounter>)
+
+@Serializable
+class Encounter(val chance: Int, val method: NamedAPIResource)
+
+@Serializable
+class EncounterMethod(val id: Int, val name: String, val order: Int, val names: List<Name>)
 
 @Serializable
 class Region(val id: Int, val name: String, val names: List<Name>, val main_generation: NamedAPIResource)
