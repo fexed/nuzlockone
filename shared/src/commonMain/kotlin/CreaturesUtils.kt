@@ -4,11 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,41 +24,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import data.Creature
+import data.Type
+import data.getTypeColor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-
-class Creature(
-    var number: Int = -1,
-    var name: String = "MissingNo",
-    var type1: Type = Type.UNKNOWN,
-    var type2: Type = Type.NONE,
-    var image: String = "compose-multiplatform.xml")
-
-enum class Type {
-    Grass,
-    Water,
-    Fire,
-    Ground,
-    Ghost,
-    Dragon,
-    Ice,
-    Rock,
-    Steel,
-    Fairy,
-    Electric,
-    Dark,
-    Bug,
-    Poison,
-    Normal,
-    Psychic,
-    Fighting,
-    Flying,
-    UNKNOWN,
-    NONE
-}
 
 
 @OptIn(ExperimentalResourceApi::class)
@@ -77,10 +49,10 @@ fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = fal
                 painterResource(creature.image),
                 null,
                 modifier = Modifier.size(75.dp)
-                    .border(2.dp, borderColor, CircleShape)
-                    .border(6.dp, getTypeColor(creature.type2), CircleShape)
                     .clip(CircleShape)
-                    .background(getTypeColor(creature.type1))
+                    .border(2.dp, borderColor, CircleShape)
+                    .background(Brush.radialGradient(listOf(getTypeColor(creature.type1), getTypeColor(
+                        if (creature.type2 != Type.NONE) creature.type2 else creature.type1)), radius = 125f))
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
@@ -97,31 +69,6 @@ fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = fal
                 }
             }
         }
-    }
-}
-
-fun getTypeColor(type: Type): Color {
-    return when (type) {
-        Type.Grass -> Color("FF7AC74C".toLong(radix = 16))
-        Type.Water -> Color("FF6390F0".toLong(radix = 16))
-        Type.Fire -> Color("FFEE8130".toLong(radix = 16))
-        Type.Ground -> Color("FFE2BF65".toLong(radix = 16))
-        Type.Ghost -> Color("FF735797".toLong(radix = 16))
-        Type.Dragon -> Color("FF6F35FC".toLong(radix = 16))
-        Type.Ice -> Color("FF96D9D6".toLong(radix = 16))
-        Type.Rock -> Color("FFB6A136".toLong(radix = 16))
-        Type.Steel -> Color("FFB7B7CE".toLong(radix = 16))
-        Type.Fairy -> Color("FFD685AD".toLong(radix = 16))
-        Type.Electric -> Color("FFF7D02C".toLong(radix = 16))
-        Type.Dark -> Color("FF705746".toLong(radix = 16))
-        Type.Bug -> Color("FFA6B91A".toLong(radix = 16))
-        Type.Poison -> Color("FFA33EA1".toLong(radix = 16))
-        Type.Normal -> Color("FFA8A77A".toLong(radix = 16))
-        Type.Psychic -> Color("FFF95587".toLong(radix = 16))
-        Type.Fighting -> Color("FFC22E28".toLong(radix = 16))
-        Type.Flying -> Color("FFA98FF3".toLong(radix = 16))
-        Type.UNKNOWN -> Color("FFA8A77A".toLong(radix = 16))
-        Type.NONE -> Color.Transparent
     }
 }
 
