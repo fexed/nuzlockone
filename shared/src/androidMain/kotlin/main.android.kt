@@ -8,4 +8,4 @@ actual val language: String?
 
 actual val country: String?
     get() = Locale.getDefault().country
-@Composable fun MainView() = MainScaffold(content = { Tests() })
+@Composable fun MainView() = MainScaffold()

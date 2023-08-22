@@ -6,10 +6,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -43,41 +45,57 @@ import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun CreatureRowElement(creature: Creature, caught: Boolean = false) {
+fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: Boolean = false) {
     var areDetailsVisible by mutableStateOf(false)
     val borderColor = if (caught) Color.Green else Color.Transparent
 
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
         if (creature.descriptions.isNotEmpty()) areDetailsVisible = !areDetailsVisible
     }) {
-        Column {
-            Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
-                Image(
-                    painterResource(creature.image),
-                    null,
-                    modifier = Modifier.size(75.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, borderColor, CircleShape)
-                        .background(Brush.radialGradient(listOf(getTypeColor(creature.type1), getTypeColor(
-                            if (creature.type2 != Type.NONE) creature.type2 else creature.type1)), radius = 125f))
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Column {
-                    Text("${creature.id}", fontSize = 10.sp)
-                    Text(creature.name, fontSize = 16.sp)
-                    Row {
-                        TypePill(creature.type1)
-                        Spacer(modifier = Modifier.width(4.dp))
-                        TypePill(creature.type2)
+        Column(modifier = Modifier.background(
+            shimmerBrush(showShimmer = isLoading)
+        )) {
+            if (!isLoading) {
+                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
+                    Image(
+                        painterResource(creature.image),
+                        null,
+                        modifier = Modifier.size(75.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, borderColor, CircleShape)
+                            .background(
+                                Brush.radialGradient(
+                                    listOf(
+                                        getTypeColor(creature.type1), getTypeColor(
+                                            if (creature.type2 != Type.NONE) creature.type2 else creature.type1
+                                        )
+                                    ), radius = 125f
+                                )
+                            )
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Column {
+                        Text("${creature.id}", fontSize = 10.sp)
+                        Text(creature.name, fontSize = 16.sp)
+                        Row {
+                            TypePill(creature.type1)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            TypePill(creature.type2)
+                        }
                     }
                 }
-            }
-            AnimatedVisibility(areDetailsVisible) {
-                LazyRow {
-                    items(creature.descriptions.size) {
-                        Text(creature.descriptions[it], modifier = Modifier.padding(4.dp, 8.dp).fillMaxWidth())
+                AnimatedVisibility(areDetailsVisible) {
+                    LazyRow {
+                        items(creature.descriptions.size) {
+                            Text(
+                                creature.descriptions[it],
+                                modifier = Modifier.padding(4.dp, 8.dp).fillMaxWidth()
+                            )
+                        }
                     }
                 }
+            } else {
+                Box(modifier = Modifier.height(80.dp))
             }
         }
     }

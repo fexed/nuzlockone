@@ -11,4 +11,4 @@ actual val language: String?
 actual val country:String?
     get() = NSLocale.currentLocale.countryCode
 
-fun MainViewController() = ComposeUIViewController { MainScaffold(content = { Tests() }) }
+fun MainViewController() = ComposeUIViewController { MainScaffold() }

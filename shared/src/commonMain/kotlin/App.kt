@@ -1,7 +1,11 @@
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -15,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import data.Creature
 import data.Location
 import data.Type
@@ -46,6 +51,7 @@ fun ListAllPokemons() {
                 name = "Loading..."
                 type1 = Type.NONE
                 type2 = Type.NONE
+                isValid = true
             }
             creaturesList = ArrayList(n)
             for (ix in 0..n) {
@@ -59,8 +65,10 @@ fun ListAllPokemons() {
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         items(count = number) {
             var creature by remember { mutableStateOf(creaturesList[it]) }
+            var isLoading by remember { mutableStateOf(false) }
 
             if (creature.name == "Loading...") {
+                isLoading = true
                 creature.apply {
                     id = it + 1
                     name = "Loading..."
@@ -81,11 +89,12 @@ fun ListAllPokemons() {
                             }
                         }
                         creature = creaturesList[it]
+                        isLoading = false
                     }
                 }
             }
 
-            if (creature.isValid) CreatureRowElement(creature)
+            if (creature.isValid) CreatureRowElement(creature, isLoading = isLoading)
         }
     }
 }
@@ -105,7 +114,10 @@ fun ListAllLocations() {
             val location = Location()
             locationsList = ArrayList(n)
             for (ix in 0..n) {
-                location.apply { id = ix + 1 }
+                location.apply {
+                    id = ix + 1
+                    isValid = true
+                }
                 locationsList.add(location)
             }
             number = n
@@ -115,8 +127,11 @@ fun ListAllLocations() {
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         items(count = number) {
             var location by remember { mutableStateOf(locationsList[it]) }
+            var isLoading by remember { mutableStateOf(false) }
 
             if (location.name == "Loading...") {
+                isLoading = true
+
                 location.apply {
                     id = it + 1
                     name = "Loading..."
@@ -133,11 +148,12 @@ fun ListAllLocations() {
                             }
                         }
                         location = locationsList[it]
+                        isLoading = false
                     }
                 }
             }
 
-            if (location.isValid) LocationRowElement(location)
+            if (location.isValid) LocationRowElement(location, isLoading = isLoading)
         }
     }
 }
@@ -145,18 +161,36 @@ fun ListAllLocations() {
 @Composable
 fun Tests() {
     Column {
-        ListAllLocations()
+        ListAllPokemons()
     }
 }
 
 @Composable
-fun MainScaffold(content: @Composable (PaddingValues) -> Unit) {
+fun MainScaffold() {
     MaterialTheme {
+        var content by remember { mutableStateOf( 0 ) }
+
         Scaffold(
-            content = content,
+            content = {
+                when(content) {
+                    0 -> ListAllPokemons()
+                    1 -> ListAllLocations()
+                    else -> ListAllPokemons()
+                }
+            },
             topBar = {
                 TopAppBar {
                     Text("Nuzlockone")
+                }
+            },
+            bottomBar = {
+                BottomAppBar {
+                    Button(onClick = { content = 0 }) {
+                        Text("Pokemon")
+                    }
+                    Button(onClick = { content = 1 }) {
+                        Text("Locations")
+                    }
                 }
             }
         )
