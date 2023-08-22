@@ -1,7 +1,5 @@
 package data
 
-var locationsList: MutableList<Location> = mutableListOf(Location())
-
 class Location(
     var id: Int = -1,
     var name: String = "Loading...",

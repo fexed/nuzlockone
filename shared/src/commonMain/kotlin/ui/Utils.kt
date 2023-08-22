@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import data.Creature
+import data.Type
 
 @Composable
 fun shimmerBrush(showShimmer: Boolean = true,targetValue:Float = 1000f): Brush {
@@ -39,4 +41,28 @@ fun shimmerBrush(showShimmer: Boolean = true,targetValue:Float = 1000f): Brush {
             end = Offset.Zero
         )
     }
+}
+
+@Composable
+fun isFiltered(creature: Creature): Boolean {
+    var isFiltered = false
+
+    val instance = FilterState.instance
+
+    val currentType = instance.currentSelectedType
+    val currentGame = instance.currentSelectedGame
+
+    if (currentType.value != Type.NONE) {
+        if (creature.type1 != currentType.value && creature.type2 != currentType.value) {
+            isFiltered = true
+        }
+    }
+
+    if(currentGame.value != -1) {
+        if (!creature.gameIndexes.contains(currentGame.value)) {
+            isFiltered = true
+        }
+    }
+
+    return isFiltered
 }

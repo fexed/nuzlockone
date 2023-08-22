@@ -1,7 +1,3 @@
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.BottomAppBar
@@ -19,19 +15,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import data.Creature
 import data.Game
 import data.Location
 import data.Type
-import data.creaturesList
-import data.gamesList
-import data.locationsList
 import kotlinx.coroutines.launch
+import network.Cache
 import network.PokeApi
 import ui.CreatureRowElement
+import ui.FilterState
 import ui.GameElement
 import ui.LocationRowElement
+import ui.isFiltered
 
 expect fun getPlatformName(): String
 expect val language: String?
@@ -40,34 +35,37 @@ expect val country: String?
 @Composable
 fun ListAllPokemons() {
     val scope = rememberCoroutineScope()
-    var number by remember { mutableStateOf(0) }
+    var number by remember { mutableStateOf(Cache.instance.numberOfPokemons) }
 
     LaunchedEffect(true) {
-        scope.launch {
-            val n = try {
-                PokeApi().getNumberOfPokemons()
-            } catch (e: Exception) {
-                0
+        if (Cache.instance.numberOfPokemons == 0) {
+            scope.launch {
+                val n = try {
+                    PokeApi().getNumberOfPokemons()
+                } catch (e: Exception) {
+                    0
+                }
+                val creature = Creature().apply {
+                    id = -1
+                    name = "Loading..."
+                    type1 = Type.NONE
+                    type2 = Type.NONE
+                    isValid = true
+                }
+                Cache.instance.creaturesList = ArrayList(n)
+                for (ix in 0 until n) {
+                    creature.apply { id = ix + 1 }
+                    Cache.instance.creaturesList.add(ix, creature)
+                }
+                Cache.instance.numberOfPokemons = n
+                number = n
             }
-            val creature = Creature().apply {
-                id = -1
-                name = "Loading..."
-                type1 = Type.NONE
-                type2 = Type.NONE
-                isValid = true
-            }
-            creaturesList = ArrayList(n)
-            for (ix in 0..n) {
-                creature.apply { id = ix + 1 }
-                creaturesList.add(creature)
-            }
-            number = n
         }
     }
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         items(count = number) {
-            var creature by remember { mutableStateOf(creaturesList[it]) }
+            var creature by remember { mutableStateOf(Cache.instance.creaturesList[it]) }
             var isLoading by remember { mutableStateOf(false) }
 
             if (creature.name == "Loading...") {
@@ -81,7 +79,7 @@ fun ListAllPokemons() {
 
                 LaunchedEffect(true) {
                     scope.launch {
-                        creaturesList[it] = try {
+                        Cache.instance.creaturesList[it] = try {
                             PokeApi().getCreatureData(it + 1)
                         } catch (e: Exception) {
                             Creature().apply {
@@ -91,13 +89,17 @@ fun ListAllPokemons() {
                                 type2 = Type.NONE
                             }
                         }
-                        creature = creaturesList[it]
+                        creature = Cache.instance.creaturesList[it]
                         isLoading = false
                     }
                 }
             }
 
-            if (creature.isValid) CreatureRowElement(creature, isLoading = isLoading)
+            if (creature.isValid) {
+                if (isLoading || !isLoading && !isFiltered(creature)) {
+                    CreatureRowElement(creature, isLoading = isLoading)
+                }
+            }
         }
     }
 }
@@ -105,31 +107,34 @@ fun ListAllPokemons() {
 @Composable
 fun ListAllLocations() {
     val scope = rememberCoroutineScope()
-    var number by remember { mutableStateOf(0) }
+    var number by remember { mutableStateOf(Cache.instance.numberOfLocations) }
 
     LaunchedEffect(true) {
-        scope.launch {
-            val n = try {
-                PokeApi().getNumberOfLocations()
-            } catch (e: Exception) {
-                0
-            }
-            val location = Location()
-            locationsList = ArrayList(n)
-            for (ix in 0..n) {
-                location.apply {
-                    id = ix + 1
-                    isValid = true
+        if (Cache.instance.numberOfLocations == 0) {
+            scope.launch {
+                val n = try {
+                    PokeApi().getNumberOfLocations()
+                } catch (e: Exception) {
+                    0
                 }
-                locationsList.add(location)
+                val location = Location()
+                Cache.instance.locationsList = ArrayList(n)
+                for (ix in 0 until n) {
+                    location.apply {
+                        id = ix + 1
+                        isValid = true
+                    }
+                    Cache.instance.locationsList.add(location)
+                }
+                Cache.instance.numberOfLocations = n
+                number = n
             }
-            number = n
         }
     }
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         items(count = number) {
-            var location by remember { mutableStateOf(locationsList[it]) }
+            var location by remember { mutableStateOf(Cache.instance.locationsList[it]) }
             var isLoading by remember { mutableStateOf(false) }
 
             if (location.name == "Loading...") {
@@ -143,14 +148,14 @@ fun ListAllLocations() {
 
                 LaunchedEffect(true) {
                     scope.launch {
-                        locationsList[it] = try {
+                        Cache.instance.locationsList[it] = try {
                             PokeApi().getLocationData(it + 1)
                         } catch (e: Exception) {
                             Location().apply {
                                 name = e.message ?: "Error"
                             }
                         }
-                        location = locationsList[it]
+                        location = Cache.instance.locationsList[it]
                         isLoading = false
                     }
                 }
@@ -164,30 +169,33 @@ fun ListAllLocations() {
 @Composable
 fun ListAllGames() {
     val scope = rememberCoroutineScope()
-    var number by remember { mutableStateOf(0) }
+    var number by remember { mutableStateOf(Cache.instance.numberOfGames) }
 
     LaunchedEffect(true) {
-        scope.launch {
-            val n = try {
-                PokeApi().getNumberOfGames()
-            } catch (e: Exception) {
-                0
+        if (Cache.instance.numberOfGames == 0) {
+            scope.launch {
+                val n = try {
+                    PokeApi().getNumberOfGames()
+                } catch (e: Exception) {
+                    0
+                }
+                val game = Game().apply {
+                    title = "Loading..."
+                    isValid = true
+                }
+                Cache.instance.gamesList = ArrayList(n)
+                for (ix in 0 until n) {
+                    Cache.instance.gamesList.add(game)
+                }
+                Cache.instance.numberOfGames = n
+                number = n
             }
-            val game = Game().apply {
-                title = "Loading..."
-                isValid = true
-            }
-            gamesList = ArrayList(n)
-            for (ix in 0..n) {
-                gamesList.add(game)
-            }
-            number = n
         }
     }
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         items(count = number) {
-            var game by remember { mutableStateOf(gamesList[it]) }
+            var game by remember { mutableStateOf(Cache.instance.gamesList[it]) }
             var isLoading by remember { mutableStateOf(false) }
 
             if (game.title == "Loading...") {
@@ -195,7 +203,7 @@ fun ListAllGames() {
 
                 LaunchedEffect(true) {
                     scope.launch {
-                        gamesList[it] = try {
+                        Cache.instance.gamesList[it] = try {
                             PokeApi().getGameData(it + 1)
                         } catch (e: Exception) {
                             Game().apply {
@@ -203,7 +211,7 @@ fun ListAllGames() {
                             }
                         }
                         game.isValid = true
-                        game = gamesList[it]
+                        game = Cache.instance.gamesList[it]
                         isLoading = false
                     }
                 }
@@ -216,6 +224,9 @@ fun ListAllGames() {
 
 @Composable
 fun MainScaffold() {
+    FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
+    FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
+
     MaterialTheme {
         var content by remember { mutableStateOf( 0 ) }
 

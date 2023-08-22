@@ -140,10 +140,17 @@ fun TypePill(type: Type) {
 
     if (type != Type.NONE) {
         OutlinedButton(
-            onClick = {},
+            onClick = {
+                val currentType = FilterState.instance.currentSelectedType
+                if (currentType.value == type) {
+                    currentType.value = Type.NONE
+                } else {
+                    currentType.value = type
+                }
+            },
             border = BorderStroke(1.dp, color),
             shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = color)
+            colors = if (FilterState.instance.currentSelectedType.value != type) ButtonDefaults.outlinedButtonColors(contentColor = color) else ButtonDefaults.buttonColors(contentColor = color)
         ) { Text("$type") }
     }
 }

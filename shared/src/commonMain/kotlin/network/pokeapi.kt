@@ -121,6 +121,9 @@ class PokeApi {
                 if (defaultVariety.types.size > 1) {
                     creature.type2 = mapTypenameToType(defaultVariety.types[1].type.name)
                 }
+                for (id in defaultVariety.game_indices) {
+                    creature.gameIndexes.add(id.game_index)
+                }
                 break
             }
         }
@@ -221,7 +224,10 @@ class PokemonSpecies(val id: Int, val name: String, val order: Int, val generati
 class PokemonSpeciesVariety(val is_default: Boolean, val pokemon: NamedAPIResource)
 
 @Serializable
-class Pokemon(val id: Int, val name: String, val order: Int, val types: List<PokemonType>)
+class Pokemon(val id: Int, val name: String, val order: Int, val types: List<PokemonType>, val game_indices: List<VersionGameIndex>)
+
+@Serializable
+class VersionGameIndex(val game_index: Int, val version: NamedAPIResource)
 
 @Serializable
 class PokemonType(val slot: Int, val type: NamedAPIResource)

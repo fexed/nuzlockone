@@ -1,6 +1,7 @@
 package ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,10 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import data.Game
+import data.Type
 
 @Composable
 fun GameElement(game: Game, isLoading: Boolean = false) {
-    Card(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(8.dp)) {
+    Card(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(8.dp).clickable {
+        val currentGame = FilterState.instance.currentSelectedGame
+        if (currentGame.value == game.id) {
+            currentGame.value = -1
+        } else {
+            currentGame.value = game.id
+        }
+    }) {
         Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().background(shimmerBrush(showShimmer = isLoading))) {
             if (!isLoading) {
                 Text("Pokémon ${game.title}", modifier = Modifier.padding(8.dp))

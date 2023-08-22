@@ -2,11 +2,6 @@ package data
 
 import androidx.compose.ui.graphics.Color
 
-var creaturesList: MutableList<Creature> = mutableListOf(Creature().apply {
-    name = "Loading..."
-    type1 = Type.NONE
-})
-
 class Creature(
     var id: Int = -1,
     var name: String = "MissingNo",
@@ -18,6 +13,7 @@ class Creature(
     var generation: Int = -1,
     var descriptions: MutableList<String> = listOf<String>().toMutableList(),
     var image: String = "compose-multiplatform.xml",
+    var gameIndexes: MutableList<Int> = mutableListOf(),
     var isValid: Boolean = false
 )
 
