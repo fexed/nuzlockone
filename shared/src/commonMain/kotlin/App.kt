@@ -53,6 +53,7 @@ fun NetworkTests() {
             }
             creaturesList = ArrayList(n)
             for (ix in 0..n) {
+                creature.apply { id = ix + 1 }
                 creaturesList.add(creature)
             }
             number = n
@@ -63,9 +64,9 @@ fun NetworkTests() {
         items(count = number) {
             var creature by remember { mutableStateOf(creaturesList[it]) }
 
-            if (creature.id == -1) {
+            if (creature.name == "Loading...") {
                 creature.apply {
-                    id = -1
+                    id = it + 1
                     name = "Loading..."
                     type1 = Type.NONE
                     type2 = Type.NONE
