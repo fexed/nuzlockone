@@ -46,6 +46,7 @@ enum class Type {
     Normal,
     Psychic,
     Fighting,
+    Flying,
     UNKNOWN,
     NONE
 }
@@ -72,29 +73,34 @@ fun CreatureCard(creature: Creature) {
     }
 }
 
-@Composable
-fun TypePill(type: Type) {
-    val color = when (type) {
-        Type.Grass -> Color(0.0f, 1.0f, 0.0f)
-        Type.Water -> Color(0.0f, 1.0f, 0.0f)
-        Type.Fire -> Color(0.0f, 1.0f, 0.0f)
-        Type.Ground -> Color(0.0f, 1.0f, 0.0f)
-        Type.Ghost -> Color(0.0f, 1.0f, 0.0f)
-        Type.Dragon -> Color(0.0f, 1.0f, 0.0f)
-        Type.Ice -> Color(0.0f, 1.0f, 0.0f)
-        Type.Rock -> Color(0.0f, 1.0f, 0.0f)
-        Type.Steel -> Color(0.0f, 1.0f, 0.0f)
-        Type.Fairy -> Color(0.0f, 1.0f, 0.0f)
-        Type.Electric -> Color(0.0f, 1.0f, 0.0f)
-        Type.Dark -> Color(0.0f, 1.0f, 0.0f)
-        Type.Bug -> Color(0.0f, 1.0f, 0.0f)
-        Type.Poison -> Color(0.0f, 1.0f, 0.0f)
-        Type.Normal -> Color(0.0f, 1.0f, 0.0f)
-        Type.Psychic -> Color(0.0f, 1.0f, 0.0f)
-        Type.Fighting -> Color(0.0f, 1.0f, 0.0f)
-        Type.UNKNOWN -> Color(0.0f, 1.0f, 0.0f)
+fun getTypeColor(type: Type): Color {
+    return when (type) {
+        Type.Grass -> Color("7AC74C".toLong(radix = 16))
+        Type.Water -> Color("6390F0".toLong(radix = 16))
+        Type.Fire -> Color("EE8130".toLong(radix = 16))
+        Type.Ground -> Color("E2BF65".toLong(radix = 16))
+        Type.Ghost -> Color("735797".toLong(radix = 16))
+        Type.Dragon -> Color("6F35FC".toLong(radix = 16))
+        Type.Ice -> Color("96D9D6".toLong(radix = 16))
+        Type.Rock -> Color("B6A136".toLong(radix = 16))
+        Type.Steel -> Color("B7B7CE".toLong(radix = 16))
+        Type.Fairy -> Color("D685AD".toLong(radix = 16))
+        Type.Electric -> Color("F7D02C".toLong(radix = 16))
+        Type.Dark -> Color("705746".toLong(radix = 16))
+        Type.Bug -> Color("A6B91A".toLong(radix = 16))
+        Type.Poison -> Color("A33EA1".toLong(radix = 16))
+        Type.Normal -> Color("A8A77A".toLong(radix = 16))
+        Type.Psychic -> Color("F95587".toLong(radix = 16))
+        Type.Fighting -> Color("C22E28".toLong(radix = 16))
+        Type.Flying -> Color("A98FF3".toLong(radix = 16))
+        Type.UNKNOWN -> Color("A8A77A".toLong(radix = 16))
         Type.NONE -> Color.Transparent
     }
+}
+
+@Composable
+fun TypePill(type: Type) {
+    val color = getTypeColor(type)
 
     if (type != Type.NONE) {
         OutlinedButton(
