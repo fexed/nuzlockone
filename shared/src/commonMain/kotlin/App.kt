@@ -17,8 +17,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -128,7 +131,7 @@ fun MainScaffold() {
                             content = 0
                         })
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.List, "")
+                        Icon(imageVector = Icons.Default.LocationOn, "")
                     },
                         label = { Text(text = "Locations") },
                         selected = (content == 1),
@@ -137,7 +140,7 @@ fun MainScaffold() {
                         })
 
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.List, "")
+                        Icon(imageVector = Icons.Default.PlayArrow, "")
                     },
                         label = { Text(text = "Games") },
                         selected = (content == 2),
