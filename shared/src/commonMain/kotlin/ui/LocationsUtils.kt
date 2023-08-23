@@ -19,17 +19,20 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.Encounter
 import data.Location
 import kotlinx.coroutines.launch
+import network.Cache
 import network.PokeApi
 
 @Composable
@@ -99,6 +102,44 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
             } else {
                 Box(modifier = Modifier.height(80.dp))
             }
+        }
+    }
+}
+
+@Composable
+fun ListAllLocations() {
+    val scope = rememberCoroutineScope()
+
+    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        items(count = Cache.instance.numberOfLocations.value) {
+            var location by remember { mutableStateOf(Cache.instance.locationsList[it]) }
+            var isLoading by remember { mutableStateOf(false) }
+
+            if (location.name == "Loading...") {
+                isLoading = true
+
+                location.apply {
+                    id = it + 1
+                    name = "Loading..."
+                    regionName = "Loading..."
+                }
+
+                LaunchedEffect(true) {
+                    scope.launch {
+                        Cache.instance.locationsList[it] = try {
+                            PokeApi().getLocationData(it + 1)
+                        } catch (e: Exception) {
+                            Location().apply {
+                                name = e.message ?: "Error"
+                            }
+                        }
+                        location = Cache.instance.locationsList[it]
+                        isLoading = false
+                    }
+                }
+            }
+
+            if (location.isValid) LocationRowElement(location, isLoading = isLoading)
         }
     }
 }

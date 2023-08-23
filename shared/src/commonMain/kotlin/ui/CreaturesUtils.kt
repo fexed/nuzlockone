@@ -28,8 +28,11 @@ import androidx.compose.material.Card
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +44,9 @@ import androidx.compose.ui.unit.sp
 import data.Creature
 import data.Type
 import data.getTypeColor
+import kotlinx.coroutines.launch
+import network.Cache
+import network.PokeApi
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -161,5 +167,50 @@ fun TypePill(type: Type) {
             shape = RoundedCornerShape(50),
             colors = if (FilterState.instance.currentSelectedType.value != type) ButtonDefaults.outlinedButtonColors(contentColor = color) else ButtonDefaults.buttonColors(contentColor = color)
         ) { Text("$type") }
+    }
+}
+
+@Composable
+fun ListAllPokemons() {
+    val scope = rememberCoroutineScope()
+
+    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        items(count = Cache.instance.numberOfPokemons.value) {
+            var creature by remember { mutableStateOf(Cache.instance.creaturesList[it]) }
+            var isLoading by remember { mutableStateOf(false) }
+
+            if (creature.name == "Loading..." || !creature.isValid) {
+                isLoading = true
+                creature.apply {
+                    id = it + 1
+                    name = "Loading..."
+                    type1 = Type.NONE
+                    type2 = Type.NONE
+                }
+
+                LaunchedEffect(true) {
+                    scope.launch {
+                        Cache.instance.creaturesList[it] = try {
+                            PokeApi().getCreatureData(it + 1)
+                        } catch (e: Exception) {
+                            Creature().apply {
+                                id = -1
+                                name = e.message ?: "Error"
+                                type1 = Type.NONE
+                                type2 = Type.NONE
+                            }
+                        }
+                        creature = Cache.instance.creaturesList[it]
+                        isLoading = false
+                    }
+                }
+            }
+
+            if (creature.isValid) {
+                if (isLoading || !isLoading && !isFiltered(creature)) {
+                    CreatureRowElement(creature, isLoading = isLoading)
+                }
+            }
+        }
     }
 }
