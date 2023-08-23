@@ -103,12 +103,9 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = false) {
-    var areDetailsVisible by mutableStateOf(false)
     val borderColor = if (caught) Color.Green else Color.Transparent
 
-    Card(modifier = Modifier.wrapContentHeight().width(150.dp).padding(8.dp).clickable {
-        if (details.isNotEmpty()) areDetailsVisible = !areDetailsVisible
-    }) {
+    Card(modifier = Modifier.wrapContentHeight().width(150.dp).padding(8.dp)) {
         Column(modifier = Modifier.wrapContentHeight().wrapContentWidth().padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text("${creature.id}", fontSize = 10.sp)
@@ -127,10 +124,7 @@ fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = fal
             TypePill(creature.type1)
             Spacer(modifier = Modifier.width(4.dp))
             TypePill(creature.type2)
-
-            AnimatedVisibility(areDetailsVisible) {
-                Text(details)
-            }
+            Text(details)
         }
     }
 }

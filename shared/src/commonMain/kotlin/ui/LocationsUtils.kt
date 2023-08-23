@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +45,13 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
             scope.launch {
                 encounterList = ArrayList()
                 PokeApi().getLocationEncounters(location).collect {
-                    encounterList!!.add(it)
+                    var added = false
+                    for (encounter in encounterList!!) {
+                        if (encounter.creature.name == it.creature.name && encounter.typeId == it.typeId) {
+                            added = true
+                        }
+                    }
+                    if (!added) encounterList!!.add(it)
                     encounterNumber = encounterList!!.size
                 }
                 areEncountersLoaded = true
@@ -60,25 +69,27 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
                         Text(location.name, fontSize = 16.sp)
                         Text(location.regionName, fontSize = 14.sp)
                         AnimatedVisibility(areDetailsVisible) {
-                            Spacer(modifier = Modifier.padding(8.dp))
-                            LazyColumn(modifier = Modifier.height(14.dp * (encounterNumber) + 25.dp)) {
-                                item {
-                                    Text("Encounter list: ", fontSize = 14.sp)
-                                }
-                                items(encounterNumber) {
-                                    if (it < encounterList!!.size) {
-                                        Text(
-                                            encounterList!![it].toString(),
-                                            modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 4.dp),
-                                            fontSize = 12.sp
-                                        )
+                            Column {
+                                Spacer(modifier = Modifier.padding(8.dp))
+                                Text("Encounter list: ", fontSize = 14.sp)
+                                LazyRow(modifier = Modifier.wrapContentWidth()) {
+                                    items(encounterNumber) {
+                                        if (it < encounterList!!.size) {
+                                            CreatureCard(
+                                                encounterList!![it].creature,
+                                                details = encounterList!![it].typeName
+                                            )
+                                        }
                                     }
-                                }
-                                item {
-                                    if (!areEncountersLoaded) {
-                                        Box(modifier = Modifier.width(80.dp).height(25.dp).background(
-                                            shimmerBrush(!areEncountersLoaded)
-                                        ))
+                                    item {
+                                        if (!areEncountersLoaded) {
+                                            Box(
+                                                modifier = Modifier.fillMaxHeight().width(150.dp)
+                                                    .height(225.dp).padding(8.dp).background(
+                                                    shimmerBrush(!areEncountersLoaded)
+                                                )
+                                            )
+                                        }
                                     }
                                 }
                             }
