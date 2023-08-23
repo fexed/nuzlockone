@@ -1,4 +1,11 @@
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Button
@@ -15,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import data.Creature
 import data.Game
 import data.Location
@@ -27,6 +35,7 @@ import ui.FilterState
 import ui.GameElement
 import ui.LocationRowElement
 import ui.isFiltered
+import ui.shimmerBrush
 
 expect fun getPlatformName(): String
 expect val language: String?
@@ -35,36 +44,9 @@ expect val country: String?
 @Composable
 fun ListAllPokemons() {
     val scope = rememberCoroutineScope()
-    var number by remember { mutableStateOf(Cache.instance.numberOfPokemons) }
-
-    LaunchedEffect(true) {
-        if (Cache.instance.numberOfPokemons == 1) {
-            scope.launch {
-                val n = try {
-                    PokeApi().getNumberOfPokemons()
-                } catch (e: Exception) {
-                    0
-                }
-                val creature = Creature().apply {
-                    id = -1
-                    name = "Loading..."
-                    type1 = Type.NONE
-                    type2 = Type.NONE
-                    isValid = true
-                }
-                Cache.instance.creaturesList = ArrayList(n)
-                for (ix in 0 until n) {
-                    creature.apply { id = ix + 1 }
-                    Cache.instance.creaturesList.add(ix, creature)
-                }
-                Cache.instance.numberOfPokemons = n
-                number = n
-            }
-        }
-    }
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        items(count = number) {
+        items(count = Cache.instance.numberOfPokemons.value) {
             var creature by remember { mutableStateOf(Cache.instance.creaturesList[it]) }
             var isLoading by remember { mutableStateOf(false) }
 
@@ -107,33 +89,9 @@ fun ListAllPokemons() {
 @Composable
 fun ListAllLocations() {
     val scope = rememberCoroutineScope()
-    var number by remember { mutableStateOf(Cache.instance.numberOfLocations) }
-
-    LaunchedEffect(true) {
-        if (Cache.instance.numberOfLocations == 1) {
-            scope.launch {
-                val n = try {
-                    PokeApi().getNumberOfLocations()
-                } catch (e: Exception) {
-                    0
-                }
-                val location = Location()
-                Cache.instance.locationsList = ArrayList(n)
-                for (ix in 0 until n) {
-                    location.apply {
-                        id = ix + 1
-                        isValid = true
-                    }
-                    Cache.instance.locationsList.add(location)
-                }
-                Cache.instance.numberOfLocations = n
-                number = n
-            }
-        }
-    }
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        items(count = number) {
+        items(count = Cache.instance.numberOfLocations.value) {
             var location by remember { mutableStateOf(Cache.instance.locationsList[it]) }
             var isLoading by remember { mutableStateOf(false) }
 
@@ -169,32 +127,9 @@ fun ListAllLocations() {
 @Composable
 fun ListAllGames() {
     val scope = rememberCoroutineScope()
-    var number by remember { mutableStateOf(Cache.instance.numberOfGames) }
-
-    LaunchedEffect(true) {
-        if (Cache.instance.numberOfGames == 1) {
-            scope.launch {
-                val n = try {
-                    PokeApi().getNumberOfGames()
-                } catch (e: Exception) {
-                    0
-                }
-                val game = Game().apply {
-                    title = "Loading..."
-                    isValid = true
-                }
-                Cache.instance.gamesList = ArrayList(n)
-                for (ix in 0 until n) {
-                    Cache.instance.gamesList.add(game)
-                }
-                Cache.instance.numberOfGames = n
-                number = n
-            }
-        }
-    }
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        items(count = number) {
+        items(count = Cache.instance.numberOfGames.value) {
             var game by remember { mutableStateOf(Cache.instance.gamesList[it]) }
             var isLoading by remember { mutableStateOf(false) }
 
@@ -223,12 +158,95 @@ fun ListAllGames() {
 }
 
 @Composable
+fun mainPage() {
+    val cache = Cache.instance
+
+    Column(modifier = Modifier.wrapContentHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(modifier = Modifier.wrapContentHeight().fillMaxWidth().background(shimmerBrush(cache.numberOfPokemons.value == 1)).padding(8.dp)) {
+            Text("There are ${cache.numberOfPokemons.value} creatures in the database",
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+        Box(modifier = Modifier.wrapContentHeight().fillMaxWidth().background(shimmerBrush(cache.numberOfLocations.value == 1)).padding(8.dp)) {
+            Text("There are ${cache.numberOfLocations.value} locations in the database",
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+        Box(modifier = Modifier.wrapContentHeight().fillMaxWidth().background(shimmerBrush(cache.numberOfGames.value == 1)).padding(8.dp)) {
+            Text("There are ${cache.numberOfGames.value} games in the database",
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
 fun MainScaffold() {
+    val cache = Cache.instance
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
     FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
 
     MaterialTheme {
-        var content by remember { mutableStateOf( 0 ) }
+        var content by remember { mutableStateOf( -1 ) }
+        val scope = rememberCoroutineScope()
+
+        scope.launch {
+            val n = try {
+                PokeApi().getNumberOfGames()
+            } catch (e: Exception) {
+                0
+            }
+            val game = Game().apply {
+                title = "Loading..."
+                isValid = true
+            }
+            cache.gamesList = ArrayList(n)
+            for (ix in 0 until n) {
+                cache.gamesList.add(game)
+            }
+            cache.numberOfGames.value = n
+        }
+
+        scope.launch {
+            scope.launch {
+                val n = try {
+                    PokeApi().getNumberOfLocations()
+                } catch (e: Exception) {
+                    0
+                }
+                val location = Location()
+                cache.locationsList = ArrayList(n)
+                for (ix in 0 until n) {
+                    location.apply {
+                        id = ix + 1
+                        isValid = true
+                    }
+                    cache.locationsList.add(location)
+                }
+                cache.numberOfLocations.value = n
+            }
+        }
+
+        scope.launch {
+            val n = try {
+                PokeApi().getNumberOfPokemons()
+            } catch (e: Exception) {
+                0
+            }
+            val creature = Creature().apply {
+                id = -1
+                name = "Loading..."
+                type1 = Type.NONE
+                type2 = Type.NONE
+                isValid = true
+            }
+            cache.creaturesList = ArrayList(n)
+            for (ix in 0 until n) {
+                creature.apply { id = ix + 1 }
+                cache.creaturesList.add(ix, creature)
+            }
+            cache.numberOfPokemons.value = n
+        }
 
         Scaffold(
             content = {
@@ -236,7 +254,7 @@ fun MainScaffold() {
                     0 -> ListAllPokemons()
                     1 -> ListAllLocations()
                     2 -> ListAllGames()
-                    else -> ListAllPokemons()
+                    else -> mainPage()
                 }
             },
             topBar = {
