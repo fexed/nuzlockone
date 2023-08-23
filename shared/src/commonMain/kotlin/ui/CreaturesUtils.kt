@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.OutlinedButton
@@ -48,6 +50,7 @@ import org.jetbrains.compose.resources.painterResource
 fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: Boolean = false) {
     var areDetailsVisible by mutableStateOf(false)
     val borderColor = if (caught) Color.Green else Color.Transparent
+    var currentDescription by mutableStateOf(0)
 
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
         if (creature.descriptions.isNotEmpty()) areDetailsVisible = !areDetailsVisible
@@ -85,12 +88,24 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                     }
                 }
                 AnimatedVisibility(areDetailsVisible) {
-                    LazyRow {
-                        items(creature.descriptions.size) {
-                            Text(
-                                creature.descriptions[it],
-                                modifier = Modifier.padding(4.dp, 8.dp).fillMaxWidth()
-                            )
+                    Column {
+                        Text(
+                            creature.descriptions[currentDescription],
+                            modifier = Modifier.padding(4.dp, 8.dp).fillMaxWidth().wrapContentHeight()
+                        )
+                        Row(modifier = Modifier.fillMaxWidth().wrapContentHeight(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Button(
+                                onClick = {
+                                    currentDescription -= 1
+                                },
+                                enabled = currentDescription > 0
+                            ) { Text("Previous") }
+                            Button(
+                                onClick = {
+                                    currentDescription += 1
+                                },
+                                enabled = currentDescription < creature.descriptions.size-1
+                            ) { Text("Next") }
                         }
                     }
                 }

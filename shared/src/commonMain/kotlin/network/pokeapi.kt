@@ -110,7 +110,7 @@ class PokeApi {
         creature.descriptions = ArrayList()
         for (descr in data.flavor_text_entries) {
             if (descr.language.name == language) {
-                creature.descriptions.add(descr.flavor_text)
+                creature.descriptions.add(descr.flavor_text + "\n(${getLocalizedOrDefaultName(client.get(descr.version.url).body<Version>().names)})")
             }
         }
 
