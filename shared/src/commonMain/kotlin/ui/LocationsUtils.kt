@@ -42,13 +42,7 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
             scope.launch {
                 encounterList = ArrayList()
                 PokeApi().getLocationEncounters(location).collect {
-                    var added = false
-                    for (encounter in encounterList!!) {
-                        if (encounter.creature.name == it.creature.name && encounter.typeId == it.typeId && encounter.chance == it.chance) {
-                            added = true
-                        }
-                    }
-                    if (!added) encounterList!!.add(it)
+                    encounterList!!.add(it)
                     encounterNumber = encounterList!!.size
                 }
                 areEncountersLoaded = true
