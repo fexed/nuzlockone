@@ -12,9 +12,9 @@ class Encounter(
     var creature: Creature,
     var chance: Int,
     var type: String,
-    var game: String
+    var game: Game
 ) {
     override fun toString(): String {
-        return "${creature.name} ($chance% $type in $game)"
+        return "${creature.name} ($chance% $type in ${game.title})"
     }
 }
