@@ -1,5 +1,6 @@
 package network
 
+import androidx.compose.ui.graphics.*
 import data.Creature
 import data.Encounter
 import data.Game
@@ -9,16 +10,15 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.statement.readBytes
+import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import language
+//import org.jetbrains.skia.Image
 
 class PokeApi {
     val baseURL: String = "https://pokeapi.co/api/v2"
@@ -199,6 +199,14 @@ class PokeApi {
     suspend fun getGameData(id: Int): Game {
         val version = client.get("${baseURL}/version/$id").body<Version>()
         return Game(id = id, title = getLocalizedOrDefaultName(version.names), isValid = true)
+    }
+
+    suspend fun getImage(url: String): ImageBitmap? {
+        val bmp: ImageBitmap
+        val byteArray = client.get(Url(url)).readBytes()
+
+//        bmp = Image.makeFromEncoded(byteArray).toComposeImageBitmap()
+        return null
     }
 }
 
