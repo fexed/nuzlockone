@@ -1,16 +1,15 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.BottomAppBar
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -20,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,21 +27,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.Creature
-import data.Game
-import data.Location
 import data.Type
-import kotlinx.coroutines.launch
 import network.Cache
-import network.PokeApi
-import ui.CreatureRowElement
 import ui.FilterState
-import ui.GameElement
 import ui.ListAllGames
 import ui.ListAllLocations
 import ui.ListAllPokemons
-import ui.LocationRowElement
-import ui.isFiltered
 import ui.shimmerBrush
 
 expect fun getPlatformName(): String
@@ -51,24 +40,36 @@ expect val language: String?
 expect val country: String?
 
 @Composable
-fun mainPage() {
+fun StatisticsPage() {
     val cache = Cache.instance
 
     Column(modifier = Modifier.wrapContentHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(modifier = Modifier.wrapContentHeight().fillMaxWidth().background(shimmerBrush(cache.numberOfPokemons.value == 1)).padding(8.dp)) {
-            Text("There are ${cache.numberOfPokemons.value} creatures in the database",
-                modifier = Modifier.padding(16.dp)
-            )
+        Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
+            Text("There are")
+            if (cache.numberOfPokemons.value != 1) {
+                Text("${cache.numberOfPokemons.value}")
+            } else {
+                Box(modifier = Modifier.background(shimmerBrush(cache.numberOfPokemons.value == 1)).width(50.dp).height(20.dp))
+            }
+            Text("creatures in the database")
         }
-        Box(modifier = Modifier.wrapContentHeight().fillMaxWidth().background(shimmerBrush(cache.numberOfLocations.value == 1)).padding(8.dp)) {
-            Text("There are ${cache.numberOfLocations.value} locations in the database",
-                modifier = Modifier.padding(16.dp)
-            )
+        Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 4.dp), horizontalArrangement = Arrangement.SpaceAround) {
+            Text("There are")
+            if (cache.numberOfLocations.value != 1) {
+                Text("${cache.numberOfLocations.value}")
+            } else {
+                Box(modifier = Modifier.background(shimmerBrush(cache.numberOfLocations.value == 1)).width(50.dp).height(20.dp))
+            }
+            Text("locations in the database")
         }
-        Box(modifier = Modifier.wrapContentHeight().fillMaxWidth().background(shimmerBrush(cache.numberOfGames.value == 1)).padding(8.dp)) {
-            Text("There are ${cache.numberOfGames.value} games in the database",
-                modifier = Modifier.padding(16.dp)
-            )
+        Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
+            Text("There are")
+            if (cache.numberOfGames.value != 1) {
+                Text("${cache.numberOfGames.value}")
+            } else {
+                Box(modifier = Modifier.background(shimmerBrush(cache.numberOfGames.value == 1)).width(50.dp).height(20.dp))
+            }
+            Text("games in the database")
         }
     }
 }
@@ -93,7 +94,7 @@ fun MainScaffold() {
                     0 -> ListAllPokemons()
                     1 -> ListAllLocations()
                     2 -> ListAllGames()
-                    else -> mainPage()
+                    else -> StatisticsPage()
                 }
             },
             topBar = {
@@ -104,7 +105,7 @@ fun MainScaffold() {
                     BottomNavigationItem(icon = {
                         Icon(imageVector = Icons.Default.Home, "")
                     },
-                        label = { Text(text = "Home") },
+                        label = { Text(text = "Stats") },
                         selected = (content == -1),
                         onClick = {
                             content = -1
