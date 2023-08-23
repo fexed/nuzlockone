@@ -116,7 +116,7 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                         }
                         Text(
                             creature.descriptions[currentDescription],
-                            modifier = Modifier.padding(4.dp, 8.dp).fillMaxWidth().wrapContentHeight()
+                            modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().wrapContentHeight()
                         )
                     }
                 }
