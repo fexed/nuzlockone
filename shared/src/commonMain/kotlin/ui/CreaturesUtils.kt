@@ -25,8 +25,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -95,24 +99,25 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                 }
                 AnimatedVisibility(areDetailsVisible) {
                     Column {
-                        Text(
-                            creature.descriptions[currentDescription],
-                            modifier = Modifier.padding(4.dp, 8.dp).fillMaxWidth().wrapContentHeight()
-                        )
-                        Row(modifier = Modifier.fillMaxWidth().wrapContentHeight(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Button(
+                        Row(modifier = Modifier.fillMaxWidth().wrapContentHeight(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Button(modifier = Modifier.padding(8.dp),
                                 onClick = {
                                     currentDescription -= 1
                                 },
                                 enabled = currentDescription > 0
-                            ) { Text("Previous") }
-                            Button(
+                            ) { Icon(Icons.Default.ArrowBack, contentDescription = "") }
+                            Text("Flavor texts")
+                            Button(modifier = Modifier.padding(8.dp),
                                 onClick = {
                                     currentDescription += 1
                                 },
                                 enabled = currentDescription < creature.descriptions.size-1
-                            ) { Text("Next") }
+                            ) { Icon(Icons.Default.ArrowForward, contentDescription = "") }
                         }
+                        Text(
+                            creature.descriptions[currentDescription],
+                            modifier = Modifier.padding(4.dp, 8.dp).fillMaxWidth().wrapContentHeight()
+                        )
                     }
                 }
             } else {
