@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,17 +20,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import data.Type
 import network.Cache
+import ui.DarkColors
 import ui.FilterState
+import ui.LightColors
 import ui.ListAllGames
 import ui.ListAllLocations
 import ui.ListAllPokemons
@@ -80,7 +87,9 @@ fun MainScaffold() {
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
     FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
 
-    MaterialTheme {
+    MaterialTheme(
+        colors = if (isSystemInDarkTheme()) DarkColors else LightColors
+    ) {
         var content by remember { mutableStateOf( -1 ) }
         val scope = rememberCoroutineScope()
 
