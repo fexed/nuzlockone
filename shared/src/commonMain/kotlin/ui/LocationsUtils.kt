@@ -44,9 +44,7 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
                 PokeApi().getLocationEncounters(location).collect {
                     var added = false
                     for (encounter in encounterList!!) {
-                        if (encounter.creature.name == it.creature.name && encounter.type == it.type && encounter.chance == it.chance) {
-                            encounter.game += ", ${it.game}"
-                            println(it.toString() + "->" + encounter.toString())
+                        if (encounter.creature.name == it.creature.name && encounter.typeId == it.typeId && encounter.chance == it.chance) {
                             added = true
                         }
                     }

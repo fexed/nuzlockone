@@ -183,7 +183,7 @@ class PokeApi {
                         val encounterMethod = client.get(encounterDetail.method.url).body<EncounterMethod>()
                         val encounterMethodName = getLocalizedOrDefaultName(encounterMethod.names)
                         val gameName = getLocalizedOrDefaultName(version.names)
-                        val newEncounter = Encounter(creature, encounterDetail.chance, encounterMethodName, Game(id = version.id, title = gameName, isValid = true))
+                        val newEncounter = Encounter(creature, encounterDetail.chance, encounterMethod.order, encounterMethodName, Game(id = version.id, title = gameName, isValid = true))
                         emit(newEncounter)
                     }
                 }

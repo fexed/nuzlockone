@@ -11,10 +11,11 @@ class Location(
 class Encounter(
     var creature: Creature,
     var chance: Int,
-    var type: String,
+    var typeId: Int,
+    var typeName: String,
     var game: Game
 ) {
     override fun toString(): String {
-        return "${creature.name} ($chance% $type in ${game.title})"
+        return "${creature.name} ($chance% $typeName)"
     }
 }
