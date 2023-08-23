@@ -56,7 +56,7 @@ fun ListAllPokemons() {
             var creature by remember { mutableStateOf(Cache.instance.creaturesList[it]) }
             var isLoading by remember { mutableStateOf(false) }
 
-            if (creature.name == "Loading...") {
+            if (creature.name == "Loading..." || !creature.isValid) {
                 isLoading = true
                 creature.apply {
                     id = it + 1
