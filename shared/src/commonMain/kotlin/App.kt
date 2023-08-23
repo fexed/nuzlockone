@@ -8,11 +8,17 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.BottomAppBar
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -258,21 +264,43 @@ fun MainScaffold() {
                 }
             },
             topBar = {
-                TopAppBar {
-                    Text("Nuzlockone")
-                }
+                     TopAppBar(title = { Text("Nuzlockone") })
             },
             bottomBar = {
-                BottomAppBar {
-                    Button(onClick = { content = 0 }) {
-                        Text("Pokemon")
-                    }
-                    Button(onClick = { content = 1 }) {
-                        Text("Locations")
-                    }
-                    Button(onClick = { content = 2 }) {
-                        Text("Games")
-                    }
+                BottomNavigation {
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.Home, "")
+                    },
+                        label = { Text(text = "Home") },
+                        selected = (content == -1),
+                        onClick = {
+                            content = -1
+                        })
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.List, "")
+                    },
+                        label = { Text(text = "Pokemon") },
+                        selected = (content == 0),
+                        onClick = {
+                            content = 0
+                        })
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.List, "")
+                    },
+                        label = { Text(text = "Locations") },
+                        selected = (content == 1),
+                        onClick = {
+                            content = 1
+                        })
+
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.List, "")
+                    },
+                        label = { Text(text = "Games") },
+                        selected = (content == 2),
+                        onClick = {
+                            content = 2
+                        })
                 }
             }
         )
