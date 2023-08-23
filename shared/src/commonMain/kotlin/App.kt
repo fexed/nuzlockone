@@ -38,7 +38,7 @@ fun ListAllPokemons() {
     var number by remember { mutableStateOf(Cache.instance.numberOfPokemons) }
 
     LaunchedEffect(true) {
-        if (Cache.instance.numberOfPokemons == 0) {
+        if (Cache.instance.numberOfPokemons == 1) {
             scope.launch {
                 val n = try {
                     PokeApi().getNumberOfPokemons()
@@ -110,7 +110,7 @@ fun ListAllLocations() {
     var number by remember { mutableStateOf(Cache.instance.numberOfLocations) }
 
     LaunchedEffect(true) {
-        if (Cache.instance.numberOfLocations == 0) {
+        if (Cache.instance.numberOfLocations == 1) {
             scope.launch {
                 val n = try {
                     PokeApi().getNumberOfLocations()
@@ -172,7 +172,7 @@ fun ListAllGames() {
     var number by remember { mutableStateOf(Cache.instance.numberOfGames) }
 
     LaunchedEffect(true) {
-        if (Cache.instance.numberOfGames == 0) {
+        if (Cache.instance.numberOfGames == 1) {
             scope.launch {
                 val n = try {
                     PokeApi().getNumberOfGames()

@@ -6,16 +6,18 @@ import data.Location
 import data.Type
 
 class Cache {
-    var numberOfPokemons: Int = 0
+    var numberOfPokemons: Int = 1
     var creaturesList: MutableList<Creature> = mutableListOf(Creature().apply {
         name = "Loading..."
         type1 = Type.NONE
     })
 
-    var numberOfLocations: Int = 0
-    var locationsList: MutableList<Location> = mutableListOf(Location())
+    var numberOfLocations: Int = 1
+    var locationsList: MutableList<Location> = mutableListOf(Location().apply {
+        name = "Loading..."
+    })
 
-    var numberOfGames: Int = 0
+    var numberOfGames: Int = 1
     var gamesList: MutableList<Game> = mutableListOf(Game().apply {
         title = "Loading..."
     })
