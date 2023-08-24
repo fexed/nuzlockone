@@ -1,3 +1,4 @@
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.NuzlockRun
 import data.Type
+import korlibs.io.async.launch
 import kotlinx.datetime.Clock
 import network.Cache
 import ui.DarkColors
@@ -56,53 +59,67 @@ expect val country: String?
 
 @Composable
 fun MainPage(paddingValues: PaddingValues) {
+    val scope = rememberCoroutineScope()
     val cache = Cache.instance
 
-    Column(modifier = Modifier.wrapContentHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-
+    Column(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally) {
         LazyColumn {
             items(cache.numberOfNuzlockes.value) {
-                if(!isFiltered(cache.nuzlockes[it])) {
+                AnimatedVisibility(!isFiltered(cache.nuzlockes[it])) {
                     NuzlockeElement(cache.nuzlockes[it])
                 }
             }
             item {
-                Row {
-                    Button(onClick = {
-                        cache.nuzlockes.add(NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt()))
+                Row(modifier = Modifier.fillParentMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    OutlinedButton(onClick = {
+                        val newNuzlocke = NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
+                        newNuzlocke.name = newNuzlocke.nuzlockeId.toString()
+                        cache.nuzlockes.add(newNuzlocke)
+                        scope.launch {
+//                            cache.saveNuzlockeRun(newNuzlocke)
+                        }
                         cache.numberOfNuzlockes.value += 1
-                    }) {
+                    }, enabled = FilterState.instance.currentSelectedNuzlocke.value == null) {
                         Icon(Icons.Default.Add, contentDescription = "")
                     }
                 }
             }
-        }
-        Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
-            Text("There are")
-            if (cache.numberOfPokemons.value != 1) {
-                Text("${cache.numberOfPokemons.value}")
-            } else {
-                Box(modifier = Modifier.background(shimmerBrush(cache.numberOfPokemons.value == 1)).width(50.dp).height(20.dp))
+
+            item {
+                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
+                    Text("There are")
+                    if (cache.numberOfPokemons.value != 1) {
+                        Text("${cache.numberOfPokemons.value}")
+                    } else {
+                        Box(modifier = Modifier.background(shimmerBrush(cache.numberOfPokemons.value == 1)).width(50.dp).height(20.dp))
+                    }
+                    Text("creatures in the database")
+                }
             }
-            Text("creatures in the database")
-        }
-        Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 4.dp), horizontalArrangement = Arrangement.SpaceAround) {
-            Text("There are")
-            if (cache.numberOfLocations.value != 1) {
-                Text("${cache.numberOfLocations.value}")
-            } else {
-                Box(modifier = Modifier.background(shimmerBrush(cache.numberOfLocations.value == 1)).width(50.dp).height(20.dp))
+
+            item {
+                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 4.dp), horizontalArrangement = Arrangement.SpaceAround) {
+                    Text("There are")
+                    if (cache.numberOfLocations.value != 1) {
+                        Text("${cache.numberOfLocations.value}")
+                    } else {
+                        Box(modifier = Modifier.background(shimmerBrush(cache.numberOfLocations.value == 1)).width(50.dp).height(20.dp))
+                    }
+                    Text("locations in the database")
+                }
             }
-            Text("locations in the database")
-        }
-        Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
-            Text("There are")
-            if (cache.numberOfGames.value != 1) {
-                Text("${cache.numberOfGames.value}")
-            } else {
-                Box(modifier = Modifier.background(shimmerBrush(cache.numberOfGames.value == 1)).width(50.dp).height(20.dp))
+
+            item {
+                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
+                    Text("There are")
+                    if (cache.numberOfGames.value != 1) {
+                        Text("${cache.numberOfGames.value}")
+                    } else {
+                        Box(modifier = Modifier.background(shimmerBrush(cache.numberOfGames.value == 1)).width(50.dp).height(20.dp))
+                    }
+                    Text("games in the database")
+                }
             }
-            Text("games in the database")
         }
     }
 }
@@ -123,6 +140,7 @@ fun MainScaffold() {
         cache.preloadPokemons(scope)
         cache.preloadLocations(scope)
         cache.preloadGames(scope)
+        cache.loadNuzlockes(scope)
 
         Scaffold(
             content = {

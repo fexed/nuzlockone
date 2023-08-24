@@ -44,6 +44,7 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+                implementation("com.soywiz.korlibs.korio:korio:4.0.2")
                 api("io.github.qdsfdhvh:image-loader:1.6.4")
             }
         }

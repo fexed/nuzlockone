@@ -41,6 +41,7 @@ import network.PokeApi
 fun GameElement(game: Game, isLoading: Boolean = false) {
     val scope = rememberCoroutineScope()
     val currentGame = FilterState.instance.currentSelectedGame
+    val currentNuzlocke = FilterState.instance.currentSelectedNuzlocke
     var painter = rememberImagePainter(game.imageUrl)
 
     Card(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(8.dp).clickable {
