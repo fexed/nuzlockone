@@ -3,6 +3,7 @@ package ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,7 +54,7 @@ fun GameElement(game: Game, isLoading: Boolean = false) {
             if (!isLoading) {
                 Box(contentAlignment = Alignment.BottomStart) {
                 Image(painter = painter, contentDescription = "", modifier = Modifier.fillMaxWidth(), contentScale = ContentScale.FillWidth)
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().background(Color.Black.copy(alpha = 0.5f))) {
+                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().background((if (isSystemInDarkTheme()) Color.Black else Color.White).copy(alpha = 0.5f))) {
                     Text("Pokémon", modifier = Modifier.padding(8.dp, 8.dp, 0.dp, 0.dp))
                     Text(game.title, modifier = Modifier.padding(4.dp), fontSize = 20.sp)
                     if (currentGame.value == game.id) {
