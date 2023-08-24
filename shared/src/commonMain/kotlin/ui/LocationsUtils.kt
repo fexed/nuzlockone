@@ -67,11 +67,10 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
                 shimmerBrush(showShimmer = isLoading)
         )) {
             if (!isLoading) {
-                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
+                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp)) {
                     Column {
-                        Text("${location.id}", fontSize = 10.sp)
-                        Text(location.name, fontSize = 16.sp)
                         Text(location.regionName, fontSize = 14.sp)
+                        Text(location.name, fontSize = 20.sp, modifier = Modifier.padding(0.dp, 8.dp))
                         AnimatedVisibility(areDetailsVisible) {
                             Column {
                                 Spacer(modifier = Modifier.padding(8.dp))
