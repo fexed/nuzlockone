@@ -10,6 +10,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import data.Creature
+import data.NuzlockRun
 import data.Type
 
 @Composable
@@ -62,6 +63,20 @@ fun isFiltered(creature: Creature): Boolean {
         if (!creature.gameIndexes.contains(currentGame.value)) {
             isFiltered = true
         }
+    }
+
+    return isFiltered
+}
+
+@Composable
+fun isFiltered(nuzlockRun: NuzlockRun): Boolean {
+    var isFiltered = false
+
+    val instance = FilterState.instance
+
+    val currentNuzlockRun = instance.currentSelectedNuzlocke
+    if (currentNuzlockRun.value != null) {
+        if (nuzlockRun.nuzlockeId != currentNuzlockRun.value!!.nuzlockeId) isFiltered = true
     }
 
     return isFiltered

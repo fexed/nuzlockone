@@ -5,25 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import data.Creature
 import data.Game
 import data.Location
+import data.NuzlockRun
 import data.Type
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 
 class Cache {
     var numberOfPokemons: MutableState<Int> = mutableStateOf(1)
     var creaturesList: MutableList<Creature> = mutableListOf(Creature().apply {
         name = "Loading..."
         type1 = Type.NONE
-    })
-
-    var numberOfLocations: MutableState<Int> = mutableStateOf(1)
-    var locationsList: MutableList<Location> = mutableListOf(Location().apply {
-        name = "Loading..."
-    })
-
-    var numberOfGames: MutableState<Int> = mutableStateOf(1)
-    var gamesList: MutableList<Game> = mutableListOf(Game().apply {
-        title = "Loading..."
     })
 
     fun preloadPokemons(scope: CoroutineScope) {
@@ -49,6 +42,11 @@ class Cache {
         }
     }
 
+    var numberOfLocations: MutableState<Int> = mutableStateOf(1)
+    var locationsList: MutableList<Location> = mutableListOf(Location().apply {
+        name = "Loading..."
+    })
+
     fun preloadLocations(scope: CoroutineScope) {
         scope.launch {
             scope.launch {
@@ -71,6 +69,11 @@ class Cache {
         }
     }
 
+    var numberOfGames: MutableState<Int> = mutableStateOf(1)
+    var gamesList: MutableList<Game> = mutableListOf(Game().apply {
+        title = "Loading..."
+    })
+
     fun preloadGames(scope: CoroutineScope) {
         scope.launch {
             val n = try {
@@ -89,6 +92,14 @@ class Cache {
             numberOfGames.value = n
         }
     }
+
+    var numberOfNuzlockes: MutableState<Int> = mutableStateOf(0)
+    var nuzlockes: MutableList<NuzlockRun> = mutableListOf()
+    fun saveNuzlockeRun(nuzlockRun: NuzlockRun) {
+        val json = Json.encodeToJsonElement(nuzlockRun)
+        println(json)
+    }
+
     companion object {
         val instance: Cache by lazy {
             Cache()
