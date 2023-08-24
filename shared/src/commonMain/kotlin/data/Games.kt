@@ -4,6 +4,7 @@ import language
 
 class Game(
     var id: Int = -1,
+    var index: Int = -1,
     var title: String = "",
     var imageUrl: String = "",
     var isValid: Boolean = false

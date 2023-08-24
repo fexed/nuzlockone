@@ -120,7 +120,7 @@ class PokeApi {
                     creature.type2 = mapTypenameToType(defaultVariety.types[1].type.name)
                 }
                 for (id in defaultVariety.game_indices) {
-                    creature.gameIndexes.add(id.game_index)
+                    creature.gameIndexes.add(gameIdFromGameIndex(id))
                 }
                 break
             }
@@ -197,6 +197,11 @@ class PokeApi {
     suspend fun getGameData(id: Int): Game {
         val version = client.get("${baseURL}/version/$id").body<Version>()
         return Game(id = id, title = gameNameFix(id, getLocalizedOrDefaultName(version.names)), imageUrl = getGameImageUrl(id), isValid = true)
+    }
+
+    suspend fun gameIdFromGameIndex(gameIndex: VersionGameIndex): Int {
+        val version = client.get(gameIndex.version.url).body<Version>()
+        return version.id
     }
 
 }
