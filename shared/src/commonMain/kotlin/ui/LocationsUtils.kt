@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -107,10 +108,10 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
 }
 
 @Composable
-fun ListAllLocations() {
+fun ListAllLocations(paddingValues: PaddingValues) {
     val scope = rememberCoroutineScope()
 
-    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, contentPadding = paddingValues) {
         items(count = Cache.instance.numberOfLocations.value) {
             var location by remember { mutableStateOf(Cache.instance.locationsList[it]) }
             var isLoading by remember { mutableStateOf(false) }

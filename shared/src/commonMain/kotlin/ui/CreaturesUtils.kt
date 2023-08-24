@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -176,10 +177,10 @@ fun TypePill(type: Type) {
 }
 
 @Composable
-fun ListAllPokemons() {
+fun ListAllPokemons(paddingValues: PaddingValues) {
     val scope = rememberCoroutineScope()
 
-    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, contentPadding = paddingValues) {
         items(count = Cache.instance.numberOfPokemons.value) {
             var creature by remember { mutableStateOf(Cache.instance.creaturesList[it]) }
             var isLoading by remember { mutableStateOf(false) }

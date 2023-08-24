@@ -3,6 +3,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,7 +46,7 @@ expect val language: String?
 expect val country: String?
 
 @Composable
-fun StatisticsPage() {
+fun StatisticsPage(paddingValues: PaddingValues) {
     val cache = Cache.instance
 
     Column(modifier = Modifier.wrapContentHeight().fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -98,10 +99,10 @@ fun MainScaffold() {
         Scaffold(
             content = {
                 when(content) {
-                    0 -> ListAllPokemons()
-                    1 -> ListAllLocations()
-                    2 -> ListAllGames()
-                    else -> StatisticsPage()
+                    0 -> ListAllPokemons(it)
+                    1 -> ListAllLocations(it)
+                    2 -> ListAllGames(it)
+                    else -> StatisticsPage(it)
                 }
             },
             topBar = {
