@@ -40,8 +40,10 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
         if (currentNuzlocke.value?.nuzlockeId == nuzlockRun.nuzlockeId) {
             isDeletePressed = false
             currentNuzlocke.value = null
+            FilterState.instance.currentSelectedGame.value = -1
         } else {
             currentNuzlocke.value = nuzlockRun
+            FilterState.instance.currentSelectedGame.value = nuzlockRun.gameId
         }
     }) {
         Column {
@@ -84,20 +86,11 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
                     Text("Currently selected", modifier = Modifier.padding(8.dp, 0.dp))
                     Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                            if (currentNuzlocke.value!!.gameId > 0) {
+                            if (currentNuzlocke.value != null && currentNuzlocke.value!!.gameId > 0) {
                                 Text(Cache.instance.gamesList[currentNuzlocke.value!!.gameId - 1].title)
                                 Text("Game")
                             } else {
                                 Text("No game selected")
-                            }
-                            OutlinedButton(
-                                onClick = {
-                                    currentNuzlocke.value!!.gameId = FilterState.instance.currentSelectedGame.value
-                                    currentNuzlocke.value = currentNuzlocke.value
-                                },
-                                enabled = (FilterState.instance.currentSelectedGame.value != -1 && FilterState.instance.currentSelectedGame.value != currentNuzlocke.value!!.gameId)
-                            ) {
-                                Text("Set current game")
                             }
                         }
                         Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {

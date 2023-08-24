@@ -45,10 +45,17 @@ fun GameElement(game: Game, isLoading: Boolean = false) {
     var painter = rememberImagePainter(game.imageUrl)
 
     Card(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(8.dp).clickable {
-        if (currentGame.value == game.id) {
-            currentGame.value = -1
+        if (currentNuzlocke.value == null) {
+            if (currentGame.value == game.id) {
+                currentGame.value = -1
+            } else {
+                currentGame.value = game.id
+            }
         } else {
-            currentGame.value = game.id
+            if (currentNuzlocke.value!!.gameId == -1) {
+                currentNuzlocke.value!!.gameId = game.id
+                currentGame.value = game.id
+            }
         }
     }) {
         Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().background(shimmerBrush(showShimmer = isLoading))) {
