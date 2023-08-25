@@ -44,6 +44,7 @@ import com.vanpra.composematerialdialogs.title
 import data.NuzlockRun
 import data.Type
 import io.ktor.client.plugins.cache.storage.CacheStorage
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import network.Cache
@@ -191,10 +192,12 @@ fun MainScaffold() {
         var content by remember { mutableStateOf( -1 ) }
         val scope = rememberCoroutineScope()
 
-        cache.preloadPokemons(scope)
-        cache.preloadLocations(scope)
-        cache.preloadGames(scope)
-        cache.loadNuzlockes(scope)
+        scope.launch {
+            coroutineScope { cache.preloadPokemons() }
+            coroutineScope { cache.preloadLocations() }
+            coroutineScope { cache.preloadGames() }
+            coroutineScope { cache.loadNuzlockes() }
+        }
 
         Scaffold(
             content = {

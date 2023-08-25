@@ -14,6 +14,7 @@ import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.request.get
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.Serializable
@@ -112,32 +113,36 @@ class PokeApi {
 
         creature.name = getLocalizedOrDefaultName(data.names)
 
-        creature.descriptions = ArrayList()
-        for (descr in data.flavor_text_entries) {
-            if (descr.language.name == language) {
-                creature.descriptions.add(descr.flavor_text + "\n(${getLocalizedOrDefaultName(client.get(descr.version.url).body<Version>().names)})")
+        coroutineScope {
+            creature.descriptions = ArrayList()
+            for (descr in data.flavor_text_entries) {
+                if (descr.language.name == language) {
+                    creature.descriptions.add(descr.flavor_text + "\n(${getLocalizedOrDefaultName(client.get(descr.version.url).body<Version>().names)})")
+                }
             }
         }
 
-        for (variety in data.varieties) {
-            if (variety.is_default) {
-                val defaultVariety = client.get(variety.pokemon.url).body<Pokemon>()
-                creature.type1 = mapTypenameToType(defaultVariety.types[0].type.name)
-                if (defaultVariety.types.size > 1) {
-                    creature.type2 = mapTypenameToType(defaultVariety.types[1].type.name)
-                }
-                for (id in defaultVariety.game_indices) {
-                    creature.gameIndexes.add(gameIdFromGameIndex(id))
-                }
-
-                for (form_url in defaultVariety.forms) {
-                    val form = client.get(form_url.url).body<PokemonForm>()
-                    if (form.is_default) {
-                        creature.spriteImageUrl = form.sprites.front_default
-                        break
+        coroutineScope {
+            for (variety in data.varieties) {
+                if (variety.is_default) {
+                    val defaultVariety = client.get(variety.pokemon.url).body<Pokemon>()
+                    creature.type1 = mapTypenameToType(defaultVariety.types[0].type.name)
+                    if (defaultVariety.types.size > 1) {
+                        creature.type2 = mapTypenameToType(defaultVariety.types[1].type.name)
                     }
+                    for (id in defaultVariety.game_indices) {
+                        creature.gameIndexes.add(gameIdFromGameIndex(id))
+                    }
+
+                    for (form_url in defaultVariety.forms) {
+                        val form = client.get(form_url.url).body<PokemonForm>()
+                        if (form.is_default) {
+                            creature.spriteImageUrl = form.sprites.front_default
+                            break
+                        }
+                    }
+                    break
                 }
-                break
             }
         }
 

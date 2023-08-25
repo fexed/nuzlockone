@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.Encounter
 import data.Location
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import network.Cache
 import network.PokeApi
@@ -127,7 +128,7 @@ fun ListAllLocations(paddingValues: PaddingValues) {
                 }
 
                 LaunchedEffect(true) {
-                    scope.launch {
+                    coroutineScope {
                         Cache.instance.locationsList[it] = try {
                             PokeApi().getLocationData(it + 1)
                         } catch (e: Exception) {

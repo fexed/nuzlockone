@@ -32,6 +32,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +51,7 @@ import com.seiko.imageloader.rememberImagePainter
 import data.Creature
 import data.Type
 import data.getTypeColor
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import network.Cache
 import network.PokeApi
@@ -93,11 +95,18 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Column {
-                        Text("${creature.id}", fontSize = 10.sp)
-                        Text(creature.name, fontSize = 16.sp)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("${creature.id}", fontSize = 10.sp)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(creature.name, fontSize = 16.sp)
+                            if (creature.isLegendary || creature.isMithycal) {
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Icon(Icons.Default.Star, contentDescription = "")
+                            }
+                        }
                         Row {
                             TypePill(creature.type1)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
                             TypePill(creature.type2)
                         }
                     }
@@ -183,15 +192,12 @@ fun TypePill(type: Type) {
 
 @Composable
 fun ListAllPokemons(paddingValues: PaddingValues) {
-    val scope = rememberCoroutineScope()
-
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, contentPadding = paddingValues) {
         items(count = Cache.instance.numberOfPokemons.value) {
             var creature by remember { mutableStateOf(Cache.instance.creaturesList[it]) }
-            var isLoading by remember { mutableStateOf(false) }
+            val isLoading = creature.name == "Loading..."
 
-            if (creature.name == "Loading..." || !creature.isValid) {
-                isLoading = true
+            if (isLoading || !creature.isValid) {
                 creature.apply {
                     id = it + 1
                     name = "Loading..."
@@ -200,7 +206,7 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
                 }
 
                 LaunchedEffect(true) {
-                    scope.launch {
+                    coroutineScope {
                         Cache.instance.creaturesList[it] = try {
                             PokeApi().getCreatureData(it + 1)
                         } catch (e: Exception) {
@@ -212,7 +218,6 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
                             }
                         }
                         creature = Cache.instance.creaturesList[it]
-                        isLoading = false
                     }
                 }
             }

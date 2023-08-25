@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.seiko.imageloader.rememberImagePainter
 import data.Game
 import data.Type
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import network.Cache
 import network.PokeApi
@@ -91,7 +92,7 @@ fun ListAllGames(paddingValues: PaddingValues) {
                 isLoading = true
 
                 LaunchedEffect(true) {
-                    scope.launch {
+                    coroutineScope {
                         Cache.instance.gamesList[it] = try {
                             PokeApi().getGameData(it + 1)
                         } catch (e: Exception) {
