@@ -28,9 +28,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import data.NuzlockRun
 import network.Cache
 
+
+@Composable
+fun DummyNuzlockeElement() {
+    Card(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(8.dp)) {
+        Column {
+            Row(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.wrapContentHeight()) {
+                    Text("No Nuzlockes saved")
+                    Text("Use the button below to add one", fontSize = 10.sp)
+                }
+            }
+        }
+    }
+}
 @Composable
 fun NuzlockeElement(nuzlockRun: NuzlockRun) {
     val currentNuzlocke = FilterState.instance.currentSelectedNuzlocke

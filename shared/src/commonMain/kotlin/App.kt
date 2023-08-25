@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,6 +47,7 @@ import korlibs.io.async.launch
 import kotlinx.datetime.Clock
 import network.Cache
 import ui.DarkColors
+import ui.DummyNuzlockeElement
 import ui.FilterState
 import ui.LightColors
 import ui.ListAllGames
@@ -68,13 +70,19 @@ fun MainPage(paddingValues: PaddingValues) {
 
     Column(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally) {
         LazyColumn {
-            items(cache.numberOfNuzlockes.value) {
-                AnimatedVisibility(!isFiltered(cache.nuzlockes[it])) {
-                    NuzlockeElement(cache.nuzlockes[it])
+            if (cache.numberOfNuzlockes.value == 0) {
+                item {
+                    DummyNuzlockeElement()
+                }
+            } else {
+                items(cache.numberOfNuzlockes.value) {
+                    AnimatedVisibility(!isFiltered(cache.nuzlockes[it])) {
+                        NuzlockeElement(cache.nuzlockes[it])
+                    }
                 }
             }
             item {
-                Row(modifier = Modifier.fillParentMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     OutlinedButton(onClick = {
                         val newNuzlocke = NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
                         newNuzlocke.name = newNuzlocke.nuzlockeId.toString()
@@ -90,6 +98,7 @@ fun MainPage(paddingValues: PaddingValues) {
             }
 
             item {
+                Spacer(modifier = Modifier.padding(4.dp))
                 Divider()
             }
 
