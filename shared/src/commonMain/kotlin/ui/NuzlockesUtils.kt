@@ -65,6 +65,16 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
             Row(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.wrapContentHeight()) {
                     Text(nuzlockRun.name)
+                    AnimatedVisibility(currentNuzlocke.value?.nuzlockeId != nuzlockRun.nuzlockeId) {
+                        if (nuzlockRun.gameId > 0) {
+                            Text(
+                                "Pokémon " + Cache.instance.gamesList[nuzlockRun.gameId - 1].title,
+                                fontSize = 10.sp
+                            )
+                        } else {
+                            Text("No game selected", fontSize = 10.sp)
+                        }
+                    }
                 }
                 AnimatedVisibility(currentNuzlocke.value?.nuzlockeId == nuzlockRun.nuzlockeId) {
                     AnimatedVisibility(isDeletePressed) {
@@ -98,11 +108,10 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
             }
             AnimatedVisibility(currentNuzlocke.value?.nuzlockeId == nuzlockRun.nuzlockeId) {
                 Column {
-                    Text("Currently selected", modifier = Modifier.padding(8.dp, 0.dp))
                     Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                             if (currentNuzlocke.value != null && currentNuzlocke.value!!.gameId > 0) {
-                                Text(Cache.instance.gamesList[currentNuzlocke.value!!.gameId - 1].title)
+                                Text("Pokémon " + Cache.instance.gamesList[currentNuzlocke.value!!.gameId - 1].title)
                                 Text("Game")
                             } else {
                                 Text("No game selected")
