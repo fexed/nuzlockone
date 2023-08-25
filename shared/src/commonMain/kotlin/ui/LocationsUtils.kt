@@ -141,7 +141,7 @@ fun ListAllLocations(paddingValues: PaddingValues) {
                 }
             }
 
-            if (location.isValid) LocationRowElement(location, isLoading = isLoading)
+            if (location.isValid && !isFiltered(location)) LocationRowElement(location, isLoading = isLoading)
         }
     }
 }

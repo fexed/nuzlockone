@@ -5,6 +5,7 @@ class Location(
     var name: String = "Loading...",
     var regionName: String = "Loading...",
     var areaURLS: MutableList<String> = arrayListOf(),
+    var gameIndexes: MutableList<Int> = arrayListOf(),
     var isValid: Boolean = false
 )
 

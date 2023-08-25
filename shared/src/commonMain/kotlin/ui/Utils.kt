@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import data.Creature
 import data.Encounter
+import data.Location
 import data.NuzlockRun
 import data.Type
 
@@ -83,6 +84,22 @@ fun isFiltered(nuzlockRun: NuzlockRun): Boolean {
     val currentNuzlockRun = instance.currentSelectedNuzlocke
     if (currentNuzlockRun.value != null) {
         if (nuzlockRun.nuzlockeId != currentNuzlockRun.value!!.nuzlockeId) isFiltered = true
+    }
+
+    return isFiltered
+}
+
+fun isFiltered(location: Location): Boolean {
+    var isFiltered = false
+
+    val instance = FilterState.instance
+
+    val currentGame = instance.currentSelectedGame
+
+    if(currentGame.value != -1) {
+        if (!location.gameIndexes.contains(currentGame.value)) {
+            isFiltered = true
+        }
     }
 
     return isFiltered

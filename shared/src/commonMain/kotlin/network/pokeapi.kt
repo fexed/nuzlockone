@@ -11,7 +11,6 @@ import getCacheFile
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.cache.HttpCache
-import io.ktor.client.plugins.cache.storage.CacheStorage
 import io.ktor.client.request.get
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.json
@@ -174,6 +173,17 @@ class PokeApi {
                 areaURLS.add(area.url)
             }
 
+            for (game_index in data.game_indices) {
+                val generation = client.get(game_index.generation.url).body<Generation>()
+                for (version_group_urls in generation.version_groups) {
+                    val version_group = client.get(version_group_urls.url).body<VersionGroup>()
+                    for (versions_url in version_group.versions) {
+                        val version = client.get(versions_url.url).body<Version>()
+                        gameIndexes.add(version.id)
+                    }
+                }
+            }
+
             isValid = true
         }
     }
@@ -251,7 +261,16 @@ class Type(val id: Int, val name: String, val damage_relations: TypeRelations)
 class TypeRelations(val no_damage_to: List<NamedAPIResource>, val half_damage_to: List<NamedAPIResource>, val double_damage_to: List<NamedAPIResource>, val no_damage_from: List<NamedAPIResource>, val half_damage_from: List<NamedAPIResource>, val double_damage_from: List<NamedAPIResource>)
 
 @Serializable
-class Location(val id: Int, val name: String, val region: NamedAPIResource, val names: List<Name>, val areas: List<NamedAPIResource>)
+class Location(val id: Int, val name: String, val region: NamedAPIResource, val names: List<Name>, val areas: List<NamedAPIResource>, val game_indices: List<GenerationGameIndex>)
+
+@Serializable
+class GenerationGameIndex(val game_index: Int, val generation: NamedAPIResource)
+
+@Serializable
+class Generation(val id: Int, val name: String, val names: List<Name>, val main_region: NamedAPIResource, val moves: List<NamedAPIResource>, val pokemon_species: List<NamedAPIResource>, val types: List<NamedAPIResource>, val version_groups: List<NamedAPIResource>)
+
+@Serializable
+class VersionGroup(val id: Int, val name: String, val order: Int, val regions: List<NamedAPIResource>, val versions: List<NamedAPIResource>)
 
 @Serializable
 class LocationArea(val id: Int, val name: String, val names: List<Name>, val pokemon_encounters: List<PokemonEncounter>)
