@@ -106,11 +106,12 @@ class Cache {
     suspend fun saveNuzlockeRun(nuzlockRun: NuzlockRun) {
         val json = Json.encodeToJsonElement(nuzlockRun).toString()
         val cwd = localCurrentDirVfs
-        println("LOGFX ${cwd.fullPathNormalized}")
-        cwd["nuzlocke_${nuzlockRun.nuzlockeId}"].open(mode = VfsOpenMode.CREATE).apply {
-            writeStringz(json)
-            close()
-        }
+        try {
+            cwd["nuzlocke_${nuzlockRun.nuzlockeId}"].open(mode = VfsOpenMode.CREATE).apply {
+                writeStringz(json)
+                close()
+            }
+        } catch (_: Exception) {}
     }
 
     fun loadNuzlockes(scope: CoroutineScope) {
@@ -119,8 +120,10 @@ class Cache {
             val files = cwd.list()
             files.collect {
                 if (it.baseName.startsWith("nuzlocke")) {
-                    val json = it.open().readAll().toString()
-                    nuzlockes.add(Json.decodeFromString(json))
+                    try {
+                        val json = it.open().readAll().toString()
+                        nuzlockes.add(Json.decodeFromString(json))
+                    } catch (_: Exception) {}
                 }
             }
         }

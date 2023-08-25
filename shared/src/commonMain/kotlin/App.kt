@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.NuzlockRun
 import data.Type
+import io.ktor.client.plugins.cache.storage.CacheStorage
 import korlibs.io.async.launch
 import kotlinx.datetime.Clock
 import network.Cache
@@ -56,6 +57,7 @@ import kotlin.random.Random
 expect fun getPlatformName(): String
 expect val language: String?
 expect val country: String?
+expect fun getCacheFile(): CacheStorage
 
 @Composable
 fun MainPage(paddingValues: PaddingValues) {
@@ -76,7 +78,7 @@ fun MainPage(paddingValues: PaddingValues) {
                         newNuzlocke.name = newNuzlocke.nuzlockeId.toString()
                         cache.nuzlockes.add(newNuzlocke)
                         scope.launch {
-//                            cache.saveNuzlockeRun(newNuzlocke)
+                            cache.saveNuzlockeRun(newNuzlocke)
                         }
                         cache.numberOfNuzlockes.value += 1
                     }, enabled = FilterState.instance.currentSelectedNuzlocke.value == null) {

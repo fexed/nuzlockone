@@ -1,5 +1,5 @@
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
+import io.ktor.client.plugins.cache.storage.CacheStorage
 import java.util.Locale
 
 actual fun getPlatformName(): String = "Android"
@@ -8,4 +8,8 @@ actual val language: String?
 
 actual val country: String?
     get() = Locale.getDefault().country
+actual fun getCacheFile(): CacheStorage {
+    return CacheStorage.Unlimited()
+}
+
 @Composable fun MainView() = MainScaffold()

@@ -1,4 +1,5 @@
 import androidx.compose.ui.window.ComposeUIViewController
+import io.ktor.client.plugins.cache.storage.CacheStorage
 import platform.Foundation.NSLocale
 import platform.Foundation.countryCode
 import platform.Foundation.currentLocale
@@ -11,4 +12,7 @@ actual val language: String?
 actual val country:String?
     get() = NSLocale.currentLocale.countryCode
 
+actual fun getCacheFile(): CacheStorage {
+    return CacheStorage.Unlimited()
+}
 fun MainViewController() = ComposeUIViewController { MainScaffold() }

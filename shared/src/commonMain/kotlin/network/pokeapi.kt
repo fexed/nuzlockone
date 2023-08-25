@@ -7,8 +7,11 @@ import data.gameNameFix
 import data.Location
 import data.Type
 import data.getGameImageUrl
+import getCacheFile
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.cache.HttpCache
+import io.ktor.client.plugins.cache.storage.CacheStorage
 import io.ktor.client.request.get
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.json
@@ -27,6 +30,11 @@ class PokeApi {
                 isLenient = true
                 ignoreUnknownKeys = true
             })
+        }
+
+        install(HttpCache) {
+            val cachefile = getCacheFile()
+            publicStorage(cachefile)
         }
     }
 
