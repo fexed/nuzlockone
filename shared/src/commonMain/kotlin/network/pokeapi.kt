@@ -34,7 +34,7 @@ class PokeApi {
 
         install(HttpCache) {
             val cachefile = getCacheFile()
-            privateStorage(cachefile)
+            publicStorage(cachefile)
         }
     }
 
