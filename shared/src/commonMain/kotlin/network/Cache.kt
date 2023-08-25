@@ -7,18 +7,8 @@ import data.Game
 import data.Location
 import data.NuzlockRun
 import data.Type
-import korlibs.io.file.VfsOpenMode
-import korlibs.io.file.baseName
-import korlibs.io.file.fullPathNormalized
-import korlibs.io.file.std.localCurrentDirVfs
-import korlibs.io.stream.readAll
-import korlibs.io.stream.writeStringz
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
 
 class Cache {
     var numberOfPokemons: MutableState<Int> = mutableStateOf(1)
@@ -104,28 +94,12 @@ class Cache {
     var numberOfNuzlockes: MutableState<Int> = mutableStateOf(0)
     var nuzlockes: MutableList<NuzlockRun> = mutableListOf()
     suspend fun saveNuzlockeRun(nuzlockRun: NuzlockRun) {
-        val json = Json.encodeToJsonElement(nuzlockRun).toString()
-        val cwd = localCurrentDirVfs
-        try {
-            cwd["nuzlocke_${nuzlockRun.nuzlockeId}"].open(mode = VfsOpenMode.CREATE).apply {
-                writeStringz(json)
-                close()
-            }
-        } catch (_: Exception) {}
+
     }
 
     fun loadNuzlockes(scope: CoroutineScope) {
         scope.launch {
-            val cwd = localCurrentDirVfs
-            val files = cwd.list()
-            files.collect {
-                if (it.baseName.startsWith("nuzlocke")) {
-                    try {
-                        val json = it.open().readAll().toString()
-                        nuzlockes.add(Json.decodeFromString(json))
-                    } catch (_: Exception) {}
-                }
-            }
+
         }
     }
 
