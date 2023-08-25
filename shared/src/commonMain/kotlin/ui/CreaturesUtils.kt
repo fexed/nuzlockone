@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.seiko.imageloader.rememberImagePainter
 import data.Creature
 import data.Type
 import data.getTypeColor
@@ -56,12 +57,12 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: Boolean = false) {
     var areDetailsVisible by mutableStateOf(false)
     val borderColor = if (caught) Color.Green else Color.Transparent
     var currentDescription by mutableStateOf(0)
+    val painter = rememberImagePainter(creature.spriteImageUrl)
 
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
         if (creature.descriptions.isNotEmpty()) areDetailsVisible = !areDetailsVisible
@@ -72,7 +73,7 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
             if (!isLoading) {
                 Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
                     Image(
-                        painterResource(creature.image),
+                        painter,
                         null,
                         modifier = Modifier.size(75.dp)
                             .clip(CircleShape)
@@ -80,9 +81,12 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                             .background(
                                 Brush.radialGradient(
                                     listOf(
-                                        getTypeColor(creature.type1), getTypeColor(
-                                            if (creature.type2 != Type.NONE) creature.type2 else creature.type1
-                                        )
+                                        getTypeColor(creature.type1).copy(alpha = 0.75f), getTypeColor(
+                                            if (creature.type2 != Type.NONE)
+                                                creature.type2
+                                            else
+                                                creature.type1
+                                        ).copy(alpha = 0.25f)
                                     ), radius = 125f
                                 )
                             )
@@ -127,10 +131,11 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
         }
     }
 }
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = false) {
     val borderColor = if (caught) Color.Green else Color.Transparent
+    val painter = rememberImagePainter(creature.spriteImageUrl)
 
     Card(modifier = Modifier.wrapContentHeight().width(150.dp).padding(8.dp)) {
         Column(modifier = Modifier.wrapContentHeight().wrapContentWidth().padding(4.dp),
@@ -139,7 +144,7 @@ fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = fal
             Text(creature.name, fontSize = 16.sp)
             Spacer(modifier = Modifier.width(8.dp))
             Image(
-                painterResource(creature.image),
+                painter,
                 null,
                 modifier = Modifier.size(75.dp)
                     .clip(CircleShape)

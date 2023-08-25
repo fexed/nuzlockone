@@ -12,8 +12,8 @@ class Creature(
     var isMithycal: Boolean = false,
     var generation: Int = -1,
     var descriptions: MutableList<String> = listOf<String>().toMutableList(),
-    var image: String = "compose-multiplatform.xml",
     var gameIndexes: MutableList<Int> = mutableListOf(),
+    var spriteImageUrl: String = "",
     var isValid: Boolean = false
 )
 

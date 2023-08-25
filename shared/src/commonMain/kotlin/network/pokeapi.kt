@@ -33,7 +33,7 @@ class PokeApi {
 
         install(HttpCache) {
             val cachefile = getCacheFile()
-            publicStorage(cachefile)
+            privateStorage(cachefile)
         }
     }
 
@@ -129,6 +129,14 @@ class PokeApi {
                 for (id in defaultVariety.game_indices) {
                     creature.gameIndexes.add(gameIdFromGameIndex(id))
                 }
+
+                for (form_url in defaultVariety.forms) {
+                    val form = client.get(form_url.url).body<PokemonForm>()
+                    if (form.is_default) {
+                        creature.spriteImageUrl = form.sprites.front_default
+                        break
+                    }
+                }
                 break
             }
         }
@@ -187,7 +195,6 @@ class PokeApi {
             isValid = true
         }
     }
-
     fun getLocationEncounters(location: Location): Flow<Encounter> = flow {
         for (areaData in location.areaURLS) {
             val area = client.get(areaData).body<LocationArea>()
@@ -246,7 +253,13 @@ class PokemonSpecies(val id: Int, val name: String, val order: Int, val generati
 class PokemonSpeciesVariety(val is_default: Boolean, val pokemon: NamedAPIResource)
 
 @Serializable
-class Pokemon(val id: Int, val name: String, val order: Int, val types: List<PokemonType>, val game_indices: List<VersionGameIndex>)
+class Pokemon(val id: Int, val name: String, val order: Int, val types: List<PokemonType>, val game_indices: List<VersionGameIndex>, val forms: List<NamedAPIResource>)
+
+@Serializable
+class PokemonForm(val id: Int, val name: String, val is_default: Boolean, val sprites: PokemonFormSprites)
+
+@Serializable
+class PokemonFormSprites(val front_default: String, val front_shiny: String, val back_default: String, val back_shiny: String)
 
 @Serializable
 class VersionGameIndex(val game_index: Int, val version: NamedAPIResource)
