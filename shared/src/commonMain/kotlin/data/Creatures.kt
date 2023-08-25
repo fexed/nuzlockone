@@ -14,7 +14,8 @@ class Creature(
     var descriptions: MutableList<String> = listOf<String>().toMutableList(),
     var gameIndexes: MutableList<Int> = mutableListOf(),
     var spriteImageUrl: String = "",
-    var isValid: Boolean = false
+    var isValid: Boolean = false,
+    var isPreloading: Boolean = false
 )
 
 enum class Type {

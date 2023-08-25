@@ -198,13 +198,6 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
             val isLoading = creature.name == "Loading..."
 
             if (isLoading || !creature.isValid) {
-                creature.apply {
-                    id = it + 1
-                    name = "Loading..."
-                    type1 = Type.NONE
-                    type2 = Type.NONE
-                }
-
                 LaunchedEffect(true) {
                     coroutineScope {
                         Cache.instance.creaturesList[it] = try {

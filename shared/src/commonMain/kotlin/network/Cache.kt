@@ -8,7 +8,11 @@ import data.Location
 import data.NuzlockRun
 import data.Type
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class Cache {
     var numberOfPokemons: MutableState<Int> = mutableStateOf(1)
@@ -36,6 +40,24 @@ class Cache {
             creaturesList.add(ix, creature)
         }
         numberOfPokemons.value = n
+//
+//        for (ix in 0 until n) {
+//            if (!creaturesList[ix].isPreloading) {
+//                creaturesList[ix].isPreloading = true
+//                coroutineScope {
+//                    creaturesList[ix] = try {
+//                        PokeApi().getCreatureData(ix + 1)
+//                    } catch (e: Exception) {
+//                        Creature().apply {
+//                            id = -1
+//                            name = e.message ?: "Error"
+//                            type1 = Type.NONE
+//                            type2 = Type.NONE
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     var numberOfLocations: MutableState<Int> = mutableStateOf(1)
