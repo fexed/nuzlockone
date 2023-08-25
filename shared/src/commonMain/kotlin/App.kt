@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Button
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -88,39 +90,61 @@ fun MainPage(paddingValues: PaddingValues) {
             }
 
             item {
-                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
-                    Text("There are")
+                Divider()
+            }
+
+            item {
+                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.List, contentDescription = "", modifier = Modifier.padding(8.dp))
+                        Text("Creatures")
+                    }
                     if (cache.numberOfPokemons.value != 1) {
                         Text("${cache.numberOfPokemons.value}")
                     } else {
                         Box(modifier = Modifier.background(shimmerBrush(cache.numberOfPokemons.value == 1)).width(50.dp).height(20.dp))
                     }
-                    Text("creatures in the database")
                 }
             }
 
             item {
-                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 4.dp), horizontalArrangement = Arrangement.SpaceAround) {
-                    Text("There are")
+                Divider()
+            }
+
+            item {
+                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Place, contentDescription = "", modifier = Modifier.padding(8.dp))
+                        Text("Locations")
+                    }
                     if (cache.numberOfLocations.value != 1) {
                         Text("${cache.numberOfLocations.value}")
                     } else {
                         Box(modifier = Modifier.background(shimmerBrush(cache.numberOfLocations.value == 1)).width(50.dp).height(20.dp))
                     }
-                    Text("locations in the database")
                 }
             }
 
             item {
-                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp, 8.dp), horizontalArrangement = Arrangement.SpaceAround) {
-                    Text("There are")
+                Divider()
+            }
+
+            item {
+                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = "", modifier = Modifier.padding(8.dp))
+                        Text("Games")
+                    }
                     if (cache.numberOfGames.value != 1) {
                         Text("${cache.numberOfGames.value}")
                     } else {
                         Box(modifier = Modifier.background(shimmerBrush(cache.numberOfGames.value == 1)).width(50.dp).height(20.dp))
                     }
-                    Text("games in the database")
                 }
+            }
+
+            item {
+                Divider()
             }
         }
     }
@@ -175,7 +199,7 @@ fun MainScaffold() {
                             content = 0
                         })
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.LocationOn, "")
+                        Icon(imageVector = Icons.Default.Place, "")
                     },
                         label = { Text(text = "Locations") },
                         selected = (content == 1),

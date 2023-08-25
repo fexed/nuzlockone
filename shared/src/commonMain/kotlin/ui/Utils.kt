@@ -10,6 +10,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import data.Creature
+import data.Encounter
 import data.NuzlockRun
 import data.Type
 
@@ -44,7 +45,13 @@ fun shimmerBrush(showShimmer: Boolean = true,targetValue:Float = 1000f): Brush {
     }
 }
 
-@Composable
+fun isFiltered(encounter: Encounter): Boolean {
+    var isFiltered = isFiltered(encounter.creature)
+    if (isFiltered) return isFiltered
+
+    return isFiltered
+}
+
 fun isFiltered(creature: Creature): Boolean {
     var isFiltered = false
 
@@ -68,7 +75,6 @@ fun isFiltered(creature: Creature): Boolean {
     return isFiltered
 }
 
-@Composable
 fun isFiltered(nuzlockRun: NuzlockRun): Boolean {
     var isFiltered = false
 

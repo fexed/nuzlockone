@@ -78,10 +78,12 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
                                 LazyRow(modifier = Modifier.wrapContentWidth()) {
                                     items(encounterNumber) {
                                         if (it < encounterList!!.size) {
-                                            CreatureCard(
-                                                encounterList!![it].creature,
-                                                details = encounterList!![it].typeName
-                                            )
+                                            if (!isFiltered(encounterList!![it])) {
+                                                CreatureCard(
+                                                    encounterList!![it].creature,
+                                                    details = encounterList!![it].typeName
+                                                )
+                                            }
                                         }
                                     }
                                     item {
