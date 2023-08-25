@@ -45,17 +45,13 @@ fun GameElement(game: Game, isLoading: Boolean = false) {
     var painter = rememberImagePainter(game.imageUrl)
 
     Card(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(8.dp).clickable {
-        if (currentNuzlocke.value == null) {
-            if (currentGame.value == game.id) {
-                currentGame.value = -1
-            } else {
-                currentGame.value = game.id
-            }
+        if (currentGame.value == game.id) {
+            currentGame.value = -1
         } else {
-            if (currentNuzlocke.value!!.gameId == -1) {
-                currentNuzlocke.value!!.gameId = game.id
-                currentGame.value = game.id
-            }
+            currentGame.value = game.id
+        }
+        if (currentNuzlocke.value != null) {
+            currentNuzlocke.value!!.gameId = currentGame.value
         }
     }) {
         Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().background(shimmerBrush(showShimmer = isLoading))) {
@@ -110,7 +106,7 @@ fun ListAllGames(paddingValues: PaddingValues) {
                 }
             }
 
-            if (game.isValid) GameElement(game, isLoading)
+            if (game.isValid && !isFiltered(game)) GameElement(game, isLoading)
         }
     }
 }

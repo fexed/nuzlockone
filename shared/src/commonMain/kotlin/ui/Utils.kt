@@ -11,9 +11,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import data.Creature
 import data.Encounter
+import data.Game
 import data.Location
 import data.NuzlockRun
 import data.Type
+import data.isGameIdBlacklisted
 
 @Composable
 fun shimmerBrush(showShimmer: Boolean = true,targetValue:Float = 1000f): Brush {
@@ -100,6 +102,16 @@ fun isFiltered(location: Location): Boolean {
         if (!location.gameIndexes.contains(currentGame.value)) {
             isFiltered = true
         }
+    }
+
+    return isFiltered
+}
+
+fun isFiltered(game: Game): Boolean {
+    var isFiltered = false
+
+    if (isGameIdBlacklisted(game.id)) {
+        isFiltered = true
     }
 
     return isFiltered

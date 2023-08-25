@@ -59,6 +59,18 @@ fun getGameImageUrl(id: Int): String {
     }
 }
 
+fun isGameIdBlacklisted(id: Int): Boolean {
+    return when (id) {
+        19 -> true
+        20 -> true
+        35 -> true
+        36 -> true
+        42 -> true
+        43 -> true
+        else -> false
+    }
+}
+
 fun gameNameFix(id: Int, title: String): String {
     return if (language == "it") {
         when (id) {
