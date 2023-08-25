@@ -1,4 +1,5 @@
 import androidx.compose.runtime.Composable
+import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.storage.CacheStorage
 import java.util.Locale
 
@@ -12,4 +13,7 @@ actual fun getCacheFile(): CacheStorage {
     return CacheStorage.Unlimited()
 }
 
+actual fun getPlatformHttpClient(): HttpClient {
+    return HttpClient()
+}
 @Composable fun MainView() = MainScaffold()

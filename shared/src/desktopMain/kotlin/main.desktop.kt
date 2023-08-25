@@ -1,5 +1,6 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable
+import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.storage.CacheStorage
 import io.ktor.client.plugins.cache.storage.FileStorage
 import java.nio.file.Files
@@ -16,6 +17,10 @@ actual val country: String?
 actual fun getCacheFile(): CacheStorage {
     val file = Files.createDirectories(Paths.get("cache")).toFile()
     return FileStorage(file)
+}
+
+actual fun getPlatformHttpClient(): HttpClient {
+    return HttpClient()
 }
 @Composable fun MainView() = MainScaffold()
 

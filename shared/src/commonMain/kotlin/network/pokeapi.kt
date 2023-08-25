@@ -8,6 +8,7 @@ import data.Location
 import data.Type
 import data.getGameImageUrl
 import getCacheFile
+import getPlatformHttpClient
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.cache.HttpCache
@@ -24,7 +25,7 @@ import language
 class PokeApi {
     val baseURL: String = "https://pokeapi.co/api/v2"
 
-    private val client = HttpClient {
+    private val client = getPlatformHttpClient().config {
         install(ContentNegotiation) {
             json(Json {
                 isLenient = true

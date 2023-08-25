@@ -1,4 +1,6 @@
 import androidx.compose.ui.window.ComposeUIViewController
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.cache.storage.CacheStorage
 import platform.Foundation.NSLocale
 import platform.Foundation.countryCode
@@ -14,5 +16,15 @@ actual val country:String?
 
 actual fun getCacheFile(): CacheStorage {
     return CacheStorage.Unlimited()
+}
+
+actual fun getPlatformHttpClient(): HttpClient {
+    return HttpClient(Darwin) {
+        engine {
+            configureRequest {
+                setAllowsCellularAccess(true)
+            }
+        }
+    }
 }
 fun MainViewController() = ComposeUIViewController { MainScaffold() }

@@ -43,6 +43,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import data.NuzlockRun
 import data.Type
+import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.storage.CacheStorage
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -64,6 +65,7 @@ expect fun getPlatformName(): String
 expect val language: String?
 expect val country: String?
 expect fun getCacheFile(): CacheStorage
+expect fun getPlatformHttpClient(): HttpClient
 
 @Composable
 fun MainPage(paddingValues: PaddingValues) {

@@ -7,12 +7,6 @@ import data.Game
 import data.Location
 import data.NuzlockRun
 import data.Type
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class Cache {
     var numberOfPokemons: MutableState<Int> = mutableStateOf(1)
@@ -25,6 +19,7 @@ class Cache {
         val n = try {
             PokeApi().getNumberOfPokemons()
         } catch (e: Exception) {
+            println(e.message)
             0
         }
         val creature = Creature().apply {
