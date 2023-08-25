@@ -40,6 +40,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.input
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.title
 import data.NuzlockRun
 import data.Type
 import io.ktor.client.plugins.cache.storage.CacheStorage
@@ -65,8 +70,10 @@ expect fun getCacheFile(): CacheStorage
 
 @Composable
 fun MainPage(paddingValues: PaddingValues) {
+    var dialogState = rememberMaterialDialogState()
     val scope = rememberCoroutineScope()
     val cache = Cache.instance
+    var newNuzlocke: NuzlockRun? = null
 
     Column(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally) {
         LazyColumn {
@@ -84,13 +91,9 @@ fun MainPage(paddingValues: PaddingValues) {
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     OutlinedButton(onClick = {
-                        val newNuzlocke = NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
-                        newNuzlocke.name = newNuzlocke.nuzlockeId.toString()
-                        cache.nuzlockes.add(newNuzlocke)
-                        scope.launch {
-                            cache.saveNuzlockeRun(newNuzlocke)
-                        }
-                        cache.numberOfNuzlockes.value += 1
+                        newNuzlocke = NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
+                        newNuzlocke!!.name = "New Nuzlocke"
+                        dialogState.show()
                     }, enabled = FilterState.instance.currentSelectedNuzlocke.value == null) {
                         Icon(Icons.Default.Add, contentDescription = "")
                     }
@@ -155,6 +158,26 @@ fun MainPage(paddingValues: PaddingValues) {
             item {
                 Divider()
             }
+        }
+    }
+
+    MaterialDialog(
+        dialogState = dialogState,
+        buttons = {
+            positiveButton("OK") {
+                cache.nuzlockes.add(newNuzlocke!!)
+                scope.launch {
+                    cache.saveNuzlockeRun(newNuzlocke!!)
+                }
+                cache.numberOfNuzlockes.value += 1
+                dialogState.hide()
+            }
+            negativeButton("Cancel")
+        }
+    ) {
+        title("Add new nuzlocke")
+        input(label = "Name", placeholder = newNuzlocke!!.name) {
+            newNuzlocke!!.name = it
         }
     }
 }
