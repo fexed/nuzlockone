@@ -55,22 +55,34 @@ fun GameElement(game: Game, isLoading: Boolean = false) {
             currentNuzlocke.value!!.gameId = currentGame.value
         }
     }) {
-        Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().background(shimmerBrush(showShimmer = isLoading))) {
+        Column(
+            modifier = Modifier.fillMaxWidth().wrapContentHeight()
+                .background(shimmerBrush(showShimmer = isLoading))
+        ) {
             if (!isLoading) {
                 Box(contentAlignment = Alignment.BottomStart) {
-                Image(painter = painter, contentDescription = "", modifier = Modifier.fillMaxWidth(), contentScale = ContentScale.FillWidth)
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().background((if (isSystemInDarkTheme()) Color.Black else Color.White).copy(alpha = 0.5f))) {
-                    Text("Pokémon", modifier = Modifier.padding(8.dp, 8.dp, 0.dp, 0.dp))
-                    Text(game.title, modifier = Modifier.padding(4.dp), fontSize = 20.sp)
-                    if (currentGame.value == game.id) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            Text("Selected", fontSize = 10.sp, color = Color.Green)
+                    Image(
+                        painter = painter,
+                        contentDescription = "",
+                        modifier = Modifier.fillMaxWidth(),
+                        contentScale = ContentScale.FillWidth
+                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth().wrapContentHeight().background(
+                            (if (isSystemInDarkTheme()) Color.Black else Color.White).copy(alpha = 0.5f)
+                        )
+                    ) {
+                        Text("Pokémon", modifier = Modifier.padding(8.dp, 8.dp, 0.dp, 0.dp))
+                        Text(game.title, modifier = Modifier.padding(4.dp), fontSize = 20.sp)
+                        if (currentGame.value == game.id) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                Text("Selected", fontSize = 10.sp, color = Color.Green)
+                            }
                         }
                     }
-                }
                 }
             } else {
                 Spacer(modifier = Modifier.padding(14.dp))
@@ -83,7 +95,11 @@ fun GameElement(game: Game, isLoading: Boolean = false) {
 fun ListAllGames(paddingValues: PaddingValues) {
     val scope = rememberCoroutineScope()
 
-    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, contentPadding = paddingValues) {
+    LazyColumn(
+        Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = paddingValues
+    ) {
         items(count = Cache.instance.numberOfGames.value) {
             var game by remember { mutableStateOf(Cache.instance.gamesList[it]) }
             var isLoading by remember { mutableStateOf(false) }

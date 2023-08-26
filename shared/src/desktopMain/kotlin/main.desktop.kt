@@ -8,6 +8,7 @@ import java.nio.file.Paths
 import java.util.Locale
 
 actual fun getPlatformName(): String = "Desktop"
+
 actual val language: String?
     get() = Locale.getDefault().language
 
@@ -22,7 +23,9 @@ actual fun getCacheFile(): CacheStorage {
 actual fun getPlatformHttpClient(): HttpClient {
     return HttpClient()
 }
-@Composable fun MainView() = MainScaffold()
+
+@Composable
+fun MainView() = MainScaffold()
 
 @Preview
 @Composable

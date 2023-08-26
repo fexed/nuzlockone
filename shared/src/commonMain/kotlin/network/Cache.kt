@@ -61,21 +61,21 @@ class Cache {
     })
 
     suspend fun preloadLocations() {
-            val n = try {
-                PokeApi().getNumberOfLocations()
-            } catch (e: Exception) {
-                0
+        val n = try {
+            PokeApi().getNumberOfLocations()
+        } catch (e: Exception) {
+            0
+        }
+        val location = Location()
+        locationsList = ArrayList(n)
+        for (ix in 0 until n) {
+            location.apply {
+                id = ix + 1
+                isValid = true
             }
-            val location = Location()
-            locationsList = ArrayList(n)
-            for (ix in 0 until n) {
-                location.apply {
-                    id = ix + 1
-                    isValid = true
-                }
-                locationsList.add(location)
-            }
-            numberOfLocations.value = n
+            locationsList.add(location)
+        }
+        numberOfLocations.value = n
     }
 
     var numberOfGames: MutableState<Int> = mutableStateOf(1)

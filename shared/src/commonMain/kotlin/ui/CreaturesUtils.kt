@@ -69,9 +69,11 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
         if (creature.descriptions.isNotEmpty()) areDetailsVisible = !areDetailsVisible
     }) {
-        Column(modifier = Modifier.background(
-            shimmerBrush(showShimmer = isLoading)
-        )) {
+        Column(
+            modifier = Modifier.background(
+                shimmerBrush(showShimmer = isLoading)
+            )
+        ) {
             if (!isLoading) {
                 Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
                     Image(
@@ -83,7 +85,8 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                             .background(
                                 Brush.radialGradient(
                                     listOf(
-                                        getTypeColor(creature.type1).copy(alpha = 0.75f), getTypeColor(
+                                        getTypeColor(creature.type1).copy(alpha = 0.75f),
+                                        getTypeColor(
                                             if (creature.type2 != Type.NONE)
                                                 creature.type2
                                             else
@@ -113,24 +116,31 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                 }
                 AnimatedVisibility(areDetailsVisible) {
                     Column {
-                        Row(modifier = Modifier.fillMaxWidth().wrapContentHeight(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                            Button(modifier = Modifier.padding(8.dp),
+                        Row(
+                            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Button(
+                                modifier = Modifier.padding(8.dp),
                                 onClick = {
                                     currentDescription -= 1
                                 },
                                 enabled = currentDescription > 0
                             ) { Icon(Icons.Default.ArrowBack, contentDescription = "") }
                             Text("Flavor texts")
-                            Button(modifier = Modifier.padding(8.dp),
+                            Button(
+                                modifier = Modifier.padding(8.dp),
                                 onClick = {
                                     currentDescription += 1
                                 },
-                                enabled = currentDescription < creature.descriptions.size-1
+                                enabled = currentDescription < creature.descriptions.size - 1
                             ) { Icon(Icons.Default.ArrowForward, contentDescription = "") }
                         }
                         Text(
                             creature.descriptions[currentDescription],
-                            modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().wrapContentHeight()
+                            modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth()
+                                .wrapContentHeight()
                         )
                     }
                 }
@@ -147,8 +157,10 @@ fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = fal
     val painter = rememberImagePainter(creature.spriteImageUrl)
 
     Card(modifier = Modifier.wrapContentHeight().width(150.dp).padding(8.dp)) {
-        Column(modifier = Modifier.wrapContentHeight().wrapContentWidth().padding(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.wrapContentHeight().wrapContentWidth().padding(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text("${creature.id}", fontSize = 10.sp)
             Text(creature.name, fontSize = 16.sp)
             Spacer(modifier = Modifier.width(8.dp))
@@ -158,8 +170,15 @@ fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = fal
                 modifier = Modifier.size(75.dp)
                     .clip(CircleShape)
                     .border(2.dp, borderColor, CircleShape)
-                    .background(Brush.radialGradient(listOf(getTypeColor(creature.type1), getTypeColor(
-                        if (creature.type2 != Type.NONE) creature.type2 else creature.type1)), radius = 125f))
+                    .background(
+                        Brush.radialGradient(
+                            listOf(
+                                getTypeColor(creature.type1), getTypeColor(
+                                    if (creature.type2 != Type.NONE) creature.type2 else creature.type1
+                                )
+                            ), radius = 125f
+                        )
+                    )
             )
             Spacer(modifier = Modifier.width(8.dp))
             TypePill(creature.type1)
@@ -169,6 +188,7 @@ fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = fal
         }
     }
 }
+
 @Composable
 fun TypePill(type: Type) {
     val color = getTypeColor(type)
@@ -185,14 +205,20 @@ fun TypePill(type: Type) {
             },
             border = BorderStroke(1.dp, color),
             shape = RoundedCornerShape(50),
-            colors = if (FilterState.instance.currentSelectedType.value != type) ButtonDefaults.outlinedButtonColors(contentColor = color) else ButtonDefaults.buttonColors(contentColor = color)
+            colors = if (FilterState.instance.currentSelectedType.value != type) ButtonDefaults.outlinedButtonColors(
+                contentColor = color
+            ) else ButtonDefaults.buttonColors(contentColor = color)
         ) { Text("$type") }
     }
 }
 
 @Composable
 fun ListAllPokemons(paddingValues: PaddingValues) {
-    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, contentPadding = paddingValues) {
+    LazyColumn(
+        Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = paddingValues
+    ) {
         items(count = Cache.instance.numberOfPokemons.value) {
             var creature by remember { mutableStateOf(Cache.instance.creaturesList[it]) }
             val isLoading = creature.name == "Loading..."

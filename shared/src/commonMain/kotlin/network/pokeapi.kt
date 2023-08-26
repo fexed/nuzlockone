@@ -40,7 +40,7 @@ class PokeApi {
     }
 
     private fun mapGenerationToNumber(generationName: String): Int {
-        return when(generationName) {
+        return when (generationName) {
             "generation-i" -> 1
             "generation-ii" -> 2
             "generation-iii" -> 3
@@ -61,7 +61,7 @@ class PokeApi {
     }
 
     private fun mapTypenameToType(typename: String): Type {
-        return when(typename) {
+        return when (typename) {
             "normal" -> Type.Normal
             "fighting" -> Type.Fighting
             "flying" -> Type.Flying
@@ -118,7 +118,13 @@ class PokeApi {
             creature.descriptions = ArrayList()
             for (descr in data.flavor_text_entries) {
                 if (descr.language.name == language) {
-                    creature.descriptions.add(descr.flavor_text + "\n(${getLocalizedOrDefaultName(client.get(descr.version.url).body<Version>().names)})")
+                    creature.descriptions.add(
+                        descr.flavor_text + "\n(${
+                            getLocalizedOrDefaultName(
+                                client.get(descr.version.url).body<Version>().names
+                            )
+                        })"
+                    )
                 }
             }
         }
@@ -201,6 +207,7 @@ class PokeApi {
             isValid = true
         }
     }
+
     fun getLocationEncounters(location: Location): Flow<Encounter> = flow {
         for (areaData in location.areaURLS) {
             val area = client.get(areaData).body<LocationArea>()
@@ -209,10 +216,17 @@ class PokeApi {
                 for (versionDetail in encounter.version_details) {
                     val version = client.get(versionDetail.version.url).body<Version>()
                     for (encounterDetail in versionDetail.encounter_details) {
-                        val encounterMethod = client.get(encounterDetail.method.url).body<EncounterMethod>()
+                        val encounterMethod =
+                            client.get(encounterDetail.method.url).body<EncounterMethod>()
                         val encounterMethodName = getLocalizedOrDefaultName(encounterMethod.names)
                         val gameName = getLocalizedOrDefaultName(version.names)
-                        val newEncounter = Encounter(creature, encounterDetail.chance, encounterMethod.order, encounterMethodName, Game(id = version.id, title = gameName, isValid = true))
+                        val newEncounter = Encounter(
+                            creature,
+                            encounterDetail.chance,
+                            encounterMethod.order,
+                            encounterMethodName,
+                            Game(id = version.id, title = gameName, isValid = true)
+                        )
                         emit(newEncounter)
                     }
                 }
@@ -227,7 +241,12 @@ class PokeApi {
 
     suspend fun getGameData(id: Int): Game {
         val version = client.get("${baseURL}/version/$id").body<Version>()
-        return Game(id = id, title = gameNameFix(id, getLocalizedOrDefaultName(version.names)), imageUrl = getGameImageUrl(id), isValid = true)
+        return Game(
+            id = id,
+            title = gameNameFix(id, getLocalizedOrDefaultName(version.names)),
+            imageUrl = getGameImageUrl(id),
+            isValid = true
+        )
     }
 
     suspend fun gameIdFromGameIndex(gameIndex: VersionGameIndex): Int {
@@ -238,7 +257,12 @@ class PokeApi {
 }
 
 @Serializable
-class EndpointData(val count: Int, val next: String?, val previous: String?, val results: List<NamedAPIResource>)
+class EndpointData(
+    val count: Int,
+    val next: String?,
+    val previous: String?,
+    val results: List<NamedAPIResource>
+)
 
 @Serializable
 class NamedAPIResource(val name: String, val url: String)
@@ -247,25 +271,62 @@ class NamedAPIResource(val name: String, val url: String)
 class Name(val name: String, val language: NamedAPIResource)
 
 @Serializable
-class FlavorText(val flavor_text: String, val language: NamedAPIResource, val version: NamedAPIResource)
+class FlavorText(
+    val flavor_text: String,
+    val language: NamedAPIResource,
+    val version: NamedAPIResource
+)
 
 @Serializable
-class Version(val id: Int, val name: String, val names: List<Name>, val version_group: NamedAPIResource)
+class Version(
+    val id: Int,
+    val name: String,
+    val names: List<Name>,
+    val version_group: NamedAPIResource
+)
 
 @Serializable
-class PokemonSpecies(val id: Int, val name: String, val order: Int, val generation: NamedAPIResource, val is_baby: Boolean, val is_legendary: Boolean, val is_mythical: Boolean, val names: List<Name>, val varieties: List<PokemonSpeciesVariety>, val flavor_text_entries: List<FlavorText>)
+class PokemonSpecies(
+    val id: Int,
+    val name: String,
+    val order: Int,
+    val generation: NamedAPIResource,
+    val is_baby: Boolean,
+    val is_legendary: Boolean,
+    val is_mythical: Boolean,
+    val names: List<Name>,
+    val varieties: List<PokemonSpeciesVariety>,
+    val flavor_text_entries: List<FlavorText>
+)
 
 @Serializable
 class PokemonSpeciesVariety(val is_default: Boolean, val pokemon: NamedAPIResource)
 
 @Serializable
-class Pokemon(val id: Int, val name: String, val order: Int, val types: List<PokemonType>, val game_indices: List<VersionGameIndex>, val forms: List<NamedAPIResource>)
+class Pokemon(
+    val id: Int,
+    val name: String,
+    val order: Int,
+    val types: List<PokemonType>,
+    val game_indices: List<VersionGameIndex>,
+    val forms: List<NamedAPIResource>
+)
 
 @Serializable
-class PokemonForm(val id: Int, val name: String, val is_default: Boolean, val sprites: PokemonFormSprites)
+class PokemonForm(
+    val id: Int,
+    val name: String,
+    val is_default: Boolean,
+    val sprites: PokemonFormSprites
+)
 
 @Serializable
-class PokemonFormSprites(val front_default: String, val front_shiny: String, val back_default: String, val back_shiny: String)
+class PokemonFormSprites(
+    val front_default: String,
+    val front_shiny: String,
+    val back_default: String,
+    val back_shiny: String
+)
 
 @Serializable
 class VersionGameIndex(val game_index: Int, val version: NamedAPIResource)
@@ -277,28 +338,69 @@ class PokemonType(val slot: Int, val type: NamedAPIResource)
 class Type(val id: Int, val name: String, val damage_relations: TypeRelations)
 
 @Serializable
-class TypeRelations(val no_damage_to: List<NamedAPIResource>, val half_damage_to: List<NamedAPIResource>, val double_damage_to: List<NamedAPIResource>, val no_damage_from: List<NamedAPIResource>, val half_damage_from: List<NamedAPIResource>, val double_damage_from: List<NamedAPIResource>)
+class TypeRelations(
+    val no_damage_to: List<NamedAPIResource>,
+    val half_damage_to: List<NamedAPIResource>,
+    val double_damage_to: List<NamedAPIResource>,
+    val no_damage_from: List<NamedAPIResource>,
+    val half_damage_from: List<NamedAPIResource>,
+    val double_damage_from: List<NamedAPIResource>
+)
 
 @Serializable
-class Location(val id: Int, val name: String, val region: NamedAPIResource, val names: List<Name>, val areas: List<NamedAPIResource>, val game_indices: List<GenerationGameIndex>)
+class Location(
+    val id: Int,
+    val name: String,
+    val region: NamedAPIResource,
+    val names: List<Name>,
+    val areas: List<NamedAPIResource>,
+    val game_indices: List<GenerationGameIndex>
+)
 
 @Serializable
 class GenerationGameIndex(val game_index: Int, val generation: NamedAPIResource)
 
 @Serializable
-class Generation(val id: Int, val name: String, val names: List<Name>, val main_region: NamedAPIResource, val moves: List<NamedAPIResource>, val pokemon_species: List<NamedAPIResource>, val types: List<NamedAPIResource>, val version_groups: List<NamedAPIResource>)
+class Generation(
+    val id: Int,
+    val name: String,
+    val names: List<Name>,
+    val main_region: NamedAPIResource,
+    val moves: List<NamedAPIResource>,
+    val pokemon_species: List<NamedAPIResource>,
+    val types: List<NamedAPIResource>,
+    val version_groups: List<NamedAPIResource>
+)
 
 @Serializable
-class VersionGroup(val id: Int, val name: String, val order: Int, val regions: List<NamedAPIResource>, val versions: List<NamedAPIResource>)
+class VersionGroup(
+    val id: Int,
+    val name: String,
+    val order: Int,
+    val regions: List<NamedAPIResource>,
+    val versions: List<NamedAPIResource>
+)
 
 @Serializable
-class LocationArea(val id: Int, val name: String, val names: List<Name>, val pokemon_encounters: List<PokemonEncounter>)
+class LocationArea(
+    val id: Int,
+    val name: String,
+    val names: List<Name>,
+    val pokemon_encounters: List<PokemonEncounter>
+)
 
 @Serializable
-class PokemonEncounter(val pokemon: NamedAPIResource, val version_details: List<VersionEncounterDetail>)
+class PokemonEncounter(
+    val pokemon: NamedAPIResource,
+    val version_details: List<VersionEncounterDetail>
+)
 
 @Serializable
-class VersionEncounterDetail(val version: NamedAPIResource, val max_chance: Int, val encounter_details: List<network.Encounter>)
+class VersionEncounterDetail(
+    val version: NamedAPIResource,
+    val max_chance: Int,
+    val encounter_details: List<network.Encounter>
+)
 
 @Serializable
 class Encounter(val chance: Int, val method: NamedAPIResource)
@@ -307,4 +409,9 @@ class Encounter(val chance: Int, val method: NamedAPIResource)
 class EncounterMethod(val id: Int, val name: String, val order: Int, val names: List<Name>)
 
 @Serializable
-class Region(val id: Int, val name: String, val names: List<Name>, val main_generation: NamedAPIResource)
+class Region(
+    val id: Int,
+    val name: String,
+    val names: List<Name>,
+    val main_generation: NamedAPIResource
+)

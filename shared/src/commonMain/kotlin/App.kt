@@ -74,7 +74,10 @@ fun MainPage(paddingValues: PaddingValues) {
     val cache = Cache.instance
     var newNuzlocke: NuzlockRun? = null
 
-    Column(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(paddingValues),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         LazyColumn {
             if (cache.numberOfNuzlockes.value == 0) {
                 item {
@@ -88,9 +91,13 @@ fun MainPage(paddingValues: PaddingValues) {
                 }
             }
             item {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     OutlinedButton(onClick = {
-                        newNuzlocke = NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
+                        newNuzlocke =
+                            NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
                         newNuzlocke!!.name = "New Nuzlocke"
                         dialogState.show()
                     }, enabled = FilterState.instance.currentSelectedNuzlocke.value == null) {
@@ -105,15 +112,26 @@ fun MainPage(paddingValues: PaddingValues) {
             }
 
             item {
-                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.List, contentDescription = "", modifier = Modifier.padding(8.dp))
+                        Icon(
+                            Icons.Default.List,
+                            contentDescription = "",
+                            modifier = Modifier.padding(8.dp)
+                        )
                         Text("Creatures")
                     }
                     if (cache.numberOfPokemons.value != 1) {
                         Text("${cache.numberOfPokemons.value}")
                     } else {
-                        Box(modifier = Modifier.background(shimmerBrush(cache.numberOfPokemons.value == 1)).width(50.dp).height(20.dp))
+                        Box(
+                            modifier = Modifier.background(shimmerBrush(cache.numberOfPokemons.value == 1))
+                                .width(50.dp).height(20.dp)
+                        )
                     }
                 }
             }
@@ -123,15 +141,26 @@ fun MainPage(paddingValues: PaddingValues) {
             }
 
             item {
-                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Place, contentDescription = "", modifier = Modifier.padding(8.dp))
+                        Icon(
+                            Icons.Default.Place,
+                            contentDescription = "",
+                            modifier = Modifier.padding(8.dp)
+                        )
                         Text("Locations")
                     }
                     if (cache.numberOfLocations.value != 1) {
                         Text("${cache.numberOfLocations.value}")
                     } else {
-                        Box(modifier = Modifier.background(shimmerBrush(cache.numberOfLocations.value == 1)).width(50.dp).height(20.dp))
+                        Box(
+                            modifier = Modifier.background(shimmerBrush(cache.numberOfLocations.value == 1))
+                                .width(50.dp).height(20.dp)
+                        )
                     }
                 }
             }
@@ -141,15 +170,26 @@ fun MainPage(paddingValues: PaddingValues) {
             }
 
             item {
-                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = "", modifier = Modifier.padding(8.dp))
+                        Icon(
+                            Icons.Default.PlayArrow,
+                            contentDescription = "",
+                            modifier = Modifier.padding(8.dp)
+                        )
                         Text("Games")
                     }
                     if (cache.numberOfGames.value != 1) {
                         Text("${cache.numberOfGames.value}")
                     } else {
-                        Box(modifier = Modifier.background(shimmerBrush(cache.numberOfGames.value == 1)).width(50.dp).height(20.dp))
+                        Box(
+                            modifier = Modifier.background(shimmerBrush(cache.numberOfGames.value == 1))
+                                .width(50.dp).height(20.dp)
+                        )
                     }
                 }
             }
@@ -191,7 +231,7 @@ fun MainScaffold() {
     MaterialTheme(
         colors = if (isSystemInDarkTheme()) DarkColors else LightColors
     ) {
-        var content by remember { mutableStateOf( -1 ) }
+        var content by remember { mutableStateOf(-1) }
         val scope = rememberCoroutineScope()
 
         scope.launch {
@@ -203,7 +243,7 @@ fun MainScaffold() {
 
         Scaffold(
             content = {
-                when(content) {
+                when (content) {
                     0 -> ListAllPokemons(it)
                     1 -> ListAllLocations(it)
                     2 -> ListAllGames(it)
@@ -211,7 +251,7 @@ fun MainScaffold() {
                 }
             },
             topBar = {
-                     TopAppBar(title = { Text("Nuzlockone") })
+                TopAppBar(title = { Text("Nuzlockone") })
             },
             bottomBar = {
                 BottomNavigation {

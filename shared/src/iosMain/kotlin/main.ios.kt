@@ -8,10 +8,11 @@ import platform.Foundation.currentLocale
 import platform.Foundation.languageCode
 
 actual fun getPlatformName(): String = "iOS"
+
 actual val language: String?
     get() = NSLocale.currentLocale.languageCode
 
-actual val country:String?
+actual val country: String?
     get() = NSLocale.currentLocale.countryCode
 
 actual fun getCacheFile(): CacheStorage {
@@ -27,4 +28,5 @@ actual fun getPlatformHttpClient(): HttpClient {
         }
     }
 }
+
 fun MainViewController() = ComposeUIViewController { MainScaffold() }
