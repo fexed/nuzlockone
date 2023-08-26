@@ -1,6 +1,8 @@
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.storage.CacheStorage
+import ui.MainScaffold
 import java.util.Locale
 
 actual fun getPlatformName(): String = "Android"
@@ -21,3 +23,9 @@ actual fun getPlatformHttpClient(): HttpClient {
 
 @Composable
 fun MainView() = MainScaffold()
+
+@Preview
+@Composable
+fun AppPreview() {
+    MainScaffold()
+}

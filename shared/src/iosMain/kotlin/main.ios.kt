@@ -6,6 +6,7 @@ import platform.Foundation.NSLocale
 import platform.Foundation.countryCode
 import platform.Foundation.currentLocale
 import platform.Foundation.languageCode
+import ui.MainScaffold
 
 actual fun getPlatformName(): String = "iOS"
 

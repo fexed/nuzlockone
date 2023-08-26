@@ -59,6 +59,7 @@ kotlin {
                 api("androidx.core:core-ktx:1.10.1")
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion")
+                implementation("androidx.compose.ui:ui-tooling-preview-android:1.6.0-alpha04")
             }
         }
         val iosX64Main by getting
