@@ -66,9 +66,9 @@ import org.jetbrains.compose.resources.painterResource
 fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
     var areDetailsVisible by mutableStateOf(false)
     val currentNuzlocke = FilterState.instance.currentSelectedNuzlocke
-    val caught = if (currentNuzlocke.value != null) {
+    var caught by remember { mutableStateOf( if (currentNuzlocke.value != null) {
         currentNuzlocke.value!!.speciesCaughtIds.contains(creature.id)
-    } else false
+    } else false) }
     val borderColor = if (caught) Color.Green else Color.Transparent
     var currentDescription by mutableStateOf(0)
     val painter = rememberImagePainter(creature.spriteImageUrl)
@@ -133,6 +133,7 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
                             } else {
                                 currentNuzlocke.value!!.speciesCaughtIds.remove(creature.id)
                             }
+                            caught = !caught
                         })
                     }
                 }
