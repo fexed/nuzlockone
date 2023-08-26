@@ -41,6 +41,11 @@ enum class Type {
     NONE
 }
 
+
+val typeNames: Array<String> = arrayOf("Grass", "Water", "Fire", "Ground", "Ghost", "Dragon", "Ice",
+    "Rock", "Steel", "Fairy", "Electric", "Dark", "Bug", "Poison", "Normal", "Psychic", "Fighting", "Flying",
+    "UNKNOWN", "NONE")
+
 fun getTypeColor(type: Type): Color {
     return when (type) {
         Type.Grass -> Color("FF7AC74C".toLong(radix = 16))
@@ -64,6 +69,10 @@ fun getTypeColor(type: Type): Color {
         Type.UNKNOWN -> Color("FFA8A77A".toLong(radix = 16))
         Type.NONE -> Color.Transparent
     }
+}
+
+fun getTypeName(type: Type): String {
+    return typeNames[type.ordinal]
 }
 
 class FlavorText(val language: String, val text: String)

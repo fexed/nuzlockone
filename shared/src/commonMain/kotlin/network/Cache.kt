@@ -7,8 +7,10 @@ import data.Game
 import data.Location
 import data.NuzlockRun
 import data.Type
+import data.typeNames
 
 class Cache {
+    val api = PokeApi()
     var numberOfPokemons: MutableState<Int> = mutableStateOf(1)
     var creaturesList: MutableList<Creature> = mutableListOf(Creature().apply {
         name = "Loading..."
@@ -17,7 +19,7 @@ class Cache {
 
     suspend fun preloadPokemons() {
         val n = try {
-            PokeApi().getNumberOfPokemons()
+            api.getNumberOfPokemons()
         } catch (e: Exception) {
             println(e.message)
             0
@@ -41,7 +43,7 @@ class Cache {
 //                creaturesList[ix].isPreloading = true
 //                coroutineScope {
 //                    creaturesList[ix] = try {
-//                        PokeApi().getCreatureData(ix + 1)
+//                        api.getCreatureData(ix + 1)
 //                    } catch (e: Exception) {
 //                        Creature().apply {
 //                            id = -1
@@ -62,7 +64,7 @@ class Cache {
 
     suspend fun preloadLocations() {
         val n = try {
-            PokeApi().getNumberOfLocations()
+            api.getNumberOfLocations()
         } catch (e: Exception) {
             0
         }
@@ -85,7 +87,7 @@ class Cache {
 
     suspend fun preloadGames() {
         val n = try {
-            PokeApi().getNumberOfGames()
+            api.getNumberOfGames()
         } catch (e: Exception) {
             0
         }
@@ -98,6 +100,16 @@ class Cache {
             gamesList.add(game)
         }
         numberOfGames.value = n
+    }
+
+    suspend fun preloadTypes() {
+        for (ix in 0 until 17) {
+            val type = api.getTypeData(ix + 1)
+            val ix = api.mapTypenameToType(type.name).ordinal
+            if (ix < 18) {
+                typeNames[ix] = api.getLocalizedOrDefaultName(type.names)
+            }
+        }
     }
 
     var numberOfNuzlockes: MutableState<Int> = mutableStateOf(0)

@@ -220,6 +220,7 @@ fun MainScaffold() {
         val scope = rememberCoroutineScope()
 
         scope.launch {
+            coroutineScope { cache.preloadTypes() }
             coroutineScope { cache.preloadPokemons() }
             coroutineScope { cache.preloadLocations() }
             coroutineScope { cache.preloadGames() }

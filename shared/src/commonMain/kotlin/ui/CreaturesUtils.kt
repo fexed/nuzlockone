@@ -51,6 +51,7 @@ import com.seiko.imageloader.rememberImagePainter
 import data.Creature
 import data.Type
 import data.getTypeColor
+import data.getTypeName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import network.Cache
@@ -208,7 +209,7 @@ fun TypePill(type: Type) {
             colors = if (FilterState.instance.currentSelectedType.value != type) ButtonDefaults.outlinedButtonColors(
                 contentColor = color
             ) else ButtonDefaults.buttonColors(contentColor = color)
-        ) { Text("$type") }
+        ) { Text(getTypeName(type)) }
     }
 }
 

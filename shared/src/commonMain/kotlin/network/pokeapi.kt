@@ -22,7 +22,7 @@ import kotlinx.serialization.json.Json
 import language
 
 class PokeApi {
-    val baseURL: String = "https://pokeapi.co/api/v2"
+    private val baseURL: String = "https://pokeapi.co/api/v2"
 
     private val client = getPlatformHttpClient().config {
         install(ContentNegotiation) {
@@ -33,8 +33,7 @@ class PokeApi {
         }
 
         install(HttpCache) {
-            val cachefile = getCacheFile()
-            publicStorage(cachefile)
+            publicStorage(getCacheFile())
         }
     }
 
@@ -59,7 +58,7 @@ class PokeApi {
         }
     }
 
-    private fun mapTypenameToType(typename: String): Type {
+    fun mapTypenameToType(typename: String): Type {
         return when (typename) {
             "normal" -> Type.Normal
             "fighting" -> Type.Fighting
@@ -85,7 +84,7 @@ class PokeApi {
         }
     }
 
-    private fun getLocalizedOrDefaultName(nameList: List<Name>): String {
+    fun getLocalizedOrDefaultName(nameList: List<Name>): String {
         var name = ""
         var defaultName = ""
         for (currentName in nameList) {
@@ -115,11 +114,13 @@ class PokeApi {
 
         for (descr in netData.flavor_text_entries) {
             if (descr.language.name == language) {
-                creature.flavorTexts.add(data.FlavorText(descr.language.name, descr.flavor_text +"\n(${
-                    getLocalizedOrDefaultName(
-                        client.get(descr.version.url).body<Version>().names
+                val version = client.get(descr.version.url).body<Version>()
+                val title = gameNameFix(version.id, getLocalizedOrDefaultName(version.names))
+                creature.flavorTexts.add(
+                    data.FlavorText(
+                        descr.language.name, descr.flavor_text + "\n(${title})"
                     )
-                })"))
+                )
             }
         }
 
@@ -248,6 +249,20 @@ class PokeApi {
         return version.id
     }
 
+    suspend fun getNumberOfTypes(): Int {
+        val response = client.get("${baseURL}/type/")
+        return response.body<EndpointData>().count
+    }
+
+    suspend fun getTypeData(id: Int): network.Type {
+        val type = client.get("${baseURL}/type/$id").body<network.Type>()
+        return type
+    }
+
+    suspend fun getTypeName(id: Int): String {
+        val type = getTypeData(id)
+        return getLocalizedOrDefaultName(type.names)
+    }
 }
 
 @Serializable
@@ -329,7 +344,7 @@ class VersionGameIndex(val game_index: Int, val version: NamedAPIResource)
 class PokemonType(val slot: Int, val type: NamedAPIResource)
 
 @Serializable
-class Type(val id: Int, val name: String, val damage_relations: TypeRelations)
+class Type(val id: Int, val name: String, val damage_relations: TypeRelations, val names: List<Name>)
 
 @Serializable
 class TypeRelations(
