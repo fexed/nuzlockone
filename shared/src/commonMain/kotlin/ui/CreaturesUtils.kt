@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -61,8 +63,12 @@ import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
-fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: Boolean = false) {
+fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
     var areDetailsVisible by mutableStateOf(false)
+    val currentNuzlocke = FilterState.instance.currentSelectedNuzlocke
+    val caught = if (currentNuzlocke.value != null) {
+        currentNuzlocke.value!!.speciesCaughtIds.contains(creature.id)
+    } else false
     val borderColor = if (caught) Color.Green else Color.Transparent
     var currentDescription by mutableStateOf(0)
     val painter = rememberImagePainter(creature.spriteImageUrl)
@@ -76,7 +82,10 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
             )
         ) {
             if (!isLoading) {
-                Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp)) {
+                Row(
+                    modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Image(
                         painter,
                         null,
@@ -113,6 +122,18 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                             Spacer(modifier = Modifier.width(8.dp))
                             TypePill(creature.type2)
                         }
+                    }
+                    if (currentNuzlocke.value != null) {
+                        Spacer(
+                            Modifier.weight(1f).fillMaxHeight()
+                        )
+                        RadioButton(selected = caught, onClick = {
+                            if (!caught) {
+                                currentNuzlocke.value!!.speciesCaughtIds.add(creature.id)
+                            } else {
+                                currentNuzlocke.value!!.speciesCaughtIds.remove(creature.id)
+                            }
+                        })
                     }
                 }
                 AnimatedVisibility(areDetailsVisible) {

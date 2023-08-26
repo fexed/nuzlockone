@@ -236,9 +236,9 @@ fun MainScaffold() {
                     else -> MainPage(it)
                 }
             },
-            topBar = {
-                TopAppBar(title = { Text("Nuzlockone") })
-            },
+//            topBar = {
+//                TopAppBar(title = { Text("Nuzlockone") })
+//            },
             bottomBar = {
                 BottomNavigation {
                     BottomNavigationItem(icon = {
