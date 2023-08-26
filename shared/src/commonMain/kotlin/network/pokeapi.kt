@@ -9,7 +9,6 @@ import data.Type
 import data.getGameImageUrl
 import getCacheFile
 import getPlatformHttpClient
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.request.get
@@ -104,33 +103,28 @@ class PokeApi {
         return name
     }
 
-    private suspend fun creatureFromPokemonSpecies(data: PokemonSpecies): Creature {
+    private suspend fun creatureFromPokemonSpecies(netData: PokemonSpecies): Creature {
         val creature = Creature()
-        creature.id = data.id
-        creature.isBaby = data.is_baby
-        creature.isLegendary = data.is_legendary
-        creature.isMithycal = data.is_mythical
-        creature.generation = mapGenerationToNumber(data.generation.name)
+        creature.id = netData.id
+        creature.isBaby = netData.is_baby
+        creature.isLegendary = netData.is_legendary
+        creature.isMithycal = netData.is_mythical
+        creature.generation = mapGenerationToNumber(netData.generation.name)
 
-        creature.name = getLocalizedOrDefaultName(data.names)
+        creature.name = getLocalizedOrDefaultName(netData.names)
 
-        coroutineScope {
-            creature.descriptions = ArrayList()
-            for (descr in data.flavor_text_entries) {
-                if (descr.language.name == language) {
-                    creature.descriptions.add(
-                        descr.flavor_text + "\n(${
-                            getLocalizedOrDefaultName(
-                                client.get(descr.version.url).body<Version>().names
-                            )
-                        })"
+        for (descr in netData.flavor_text_entries) {
+            if (descr.language.name == language) {
+                creature.flavorTexts.add(data.FlavorText(descr.language.name, descr.flavor_text +"\n(${
+                    getLocalizedOrDefaultName(
+                        client.get(descr.version.url).body<Version>().names
                     )
-                }
+                })"))
             }
         }
 
         coroutineScope {
-            for (variety in data.varieties) {
+            for (variety in netData.varieties) {
                 if (variety.is_default) {
                     val defaultVariety = client.get(variety.pokemon.url).body<Pokemon>()
                     creature.type1 = mapTypenameToType(defaultVariety.types[0].type.name)

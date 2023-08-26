@@ -11,8 +11,8 @@ class Creature(
     var isLegendary: Boolean = false,
     var isMithycal: Boolean = false,
     var generation: Int = -1,
-    var descriptions: MutableList<String> = listOf<String>().toMutableList(),
     var gameIndexes: MutableList<Int> = mutableListOf(),
+    val flavorTexts: MutableList<FlavorText> = mutableListOf(),
     var spriteImageUrl: String = "",
     var isValid: Boolean = false,
     var isPreloading: Boolean = false
@@ -65,3 +65,5 @@ fun getTypeColor(type: Type): Color {
         Type.NONE -> Color.Transparent
     }
 }
+
+class FlavorText(val language: String, val text: String)

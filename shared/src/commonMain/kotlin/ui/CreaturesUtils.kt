@@ -67,7 +67,7 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
     val painter = rememberImagePainter(creature.spriteImageUrl)
 
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
-        if (creature.descriptions.isNotEmpty()) areDetailsVisible = !areDetailsVisible
+        if (creature.flavorTexts.isNotEmpty()) areDetailsVisible = !areDetailsVisible
     }) {
         Column(
             modifier = Modifier.background(
@@ -134,11 +134,11 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false, caught: B
                                 onClick = {
                                     currentDescription += 1
                                 },
-                                enabled = currentDescription < creature.descriptions.size - 1
+                                enabled = currentDescription < creature.flavorTexts.size - 1
                             ) { Icon(Icons.Default.ArrowForward, contentDescription = "") }
                         }
                         Text(
-                            creature.descriptions[currentDescription],
+                            creature.flavorTexts[currentDescription].text,
                             modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth()
                                 .wrapContentHeight()
                         )
