@@ -114,8 +114,8 @@ fun ListAllGames(paddingValues: PaddingValues) {
                                 title = e.message ?: "Error"
                             }
                         }
-                        game.isValid = true
                         game = Cache.instance.gamesList[it]
+                        game.isValid = true
                         isLoading = false
                     }
                 }
