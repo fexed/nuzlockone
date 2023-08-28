@@ -174,30 +174,18 @@ class PokeApi {
     }
 
     suspend fun getLocationData(number: Int): Location {
-        val response = client.get("${baseURL}/location/$number")
-        val data = response.body<network.Location>()
+        val response = client.get("${baseURL}/location-area/$number")
+        val data = response.body<LocationArea>()
         return Location().apply {
             id = data.id
 
             name = getLocalizedOrDefaultName(data.names)
 
-            val region = client.get(data.region.url).body<Region>()
-            regionName = getLocalizedOrDefaultName(region.names)
+            regionName = ""
 
-            for (area in data.areas) {
-                areaURLS.add(area.url)
-            }
+            areaURLS.add("${baseURL}/location-area/$number")
 
-            for (game_index in data.game_indices) {
-                val generation = client.get(game_index.generation.url).body<Generation>()
-                for (version_group_urls in generation.version_groups) {
-                    val version_group = client.get(version_group_urls.url).body<VersionGroup>()
-                    for (versions_url in version_group.versions) {
-                        val version = client.get(versions_url.url).body<Version>()
-                        gameIndexes.add(version.id)
-                    }
-                }
-            }
+            gameIndexes.add(data.game_index)
 
             isValid = true
         }
@@ -395,6 +383,7 @@ class LocationArea(
     val id: Int,
     val name: String,
     val names: List<Name>,
+    val game_index: Int,
     val pokemon_encounters: List<PokemonEncounter>
 )
 
