@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +51,7 @@ fun MainScaffold() {
                     0 -> ListAllPokemons(it)
                     1 -> ListAllLocations(it)
                     2 -> ListAllGames(it)
+                    3 -> Settings(it)
                     else -> MainPage(it)
                 }
             },
@@ -59,39 +61,43 @@ fun MainScaffold() {
             bottomBar = {
                 BottomNavigation {
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Home, "")
+                        Icon(imageVector = Icons.Default.Home, "Home")
                     },
-                        label = { Text(text = "Home") },
                         selected = (content == -1),
                         onClick = {
                             content = -1
                         })
 
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.List, "")
+                        Icon(imageVector = Icons.Default.List, "Pokémons")
                     },
-                        label = { Text(text = "Pokemon") },
                         selected = (content == 0),
                         onClick = {
                             content = 0
                         })
 
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Place, "")
+                        Icon(imageVector = Icons.Default.Place, "Locations")
                     },
-                        label = { Text(text = "Locations") },
                         selected = (content == 1),
                         onClick = {
                             content = 1
                         })
 
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.PlayArrow, "")
+                        Icon(imageVector = Icons.Default.PlayArrow, "Games")
                     },
-                        label = { Text(text = "Games") },
                         selected = (content == 2),
                         onClick = {
                             content = 2
+                        })
+
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.Settings, "Settings")
+                    },
+                        selected = (content == 3),
+                        onClick = {
+                            content = 3
                         })
                 }
             }

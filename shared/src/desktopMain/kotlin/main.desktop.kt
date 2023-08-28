@@ -9,6 +9,7 @@ import java.nio.file.Paths
 import java.util.Locale
 
 actual fun getPlatformName(): String = "Desktop"
+actual val appVersion: String = "1.1"
 
 actual val language: String?
     get() = Locale.getDefault().language

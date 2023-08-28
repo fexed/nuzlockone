@@ -1,3 +1,4 @@
+import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import io.ktor.client.HttpClient
@@ -8,6 +9,7 @@ import java.io.File
 import java.util.Locale
 
 actual fun getPlatformName(): String = "Android"
+actual val appVersion: String = "1.1"
 
 actual val language: String?
     get() = Locale.getDefault().language

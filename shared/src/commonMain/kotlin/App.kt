@@ -64,5 +64,8 @@ import kotlin.random.Random
 expect fun getPlatformName(): String
 expect val language: String?
 expect val country: String?
+expect val appVersion: String
+const val sharedVersion: String = "1.0"
+
 expect fun getCacheFile(): CacheStorage
 expect fun getPlatformHttpClient(): HttpClient

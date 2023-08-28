@@ -9,6 +9,7 @@ import platform.Foundation.languageCode
 import ui.MainScaffold
 
 actual fun getPlatformName(): String = "iOS"
+actual val appVersion: String = "1.0"
 
 actual val language: String?
     get() = NSLocale.currentLocale.languageCode
