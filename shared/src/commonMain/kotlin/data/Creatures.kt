@@ -14,6 +14,9 @@ class Creature(
     var gameIndexes: MutableList<Int> = mutableListOf(),
     val flavorTexts: MutableList<FlavorText> = mutableListOf(),
     var spriteImageUrl: String = "",
+    var shinySpriteImageUrl: String = "",
+    var backSpriteImageUrl: String = "",
+    var backShinySpriteImageUrl: String = "",
     var isValid: Boolean = false,
     var isPreloading: Boolean = false
 )

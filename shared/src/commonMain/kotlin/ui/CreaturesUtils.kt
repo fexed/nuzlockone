@@ -40,7 +40,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,16 +49,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.seiko.imageloader.rememberImagePainter
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.MaterialDialogProperties
+import com.vanpra.composematerialdialogs.customView
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.title
 import data.Creature
 import data.Type
 import data.getTypeColor
 import data.getTypeName
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import network.Cache
 import network.PokeApi
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
@@ -72,6 +73,7 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
     val borderColor = if (caught) Color.Green else Color.Transparent
     var currentDescription by mutableStateOf(0)
     val painter = rememberImagePainter(creature.spriteImageUrl)
+    var dialogState = rememberMaterialDialogState()
 
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
         if (creature.flavorTexts.isNotEmpty()) areDetailsVisible = !areDetailsVisible
@@ -104,7 +106,9 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
                                         ).copy(alpha = 0.25f)
                                     ), radius = 125f
                                 )
-                            )
+                            ).clickable {
+                                dialogState.show()
+                            }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Column {
@@ -169,6 +173,43 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
                 }
             } else {
                 Box(modifier = Modifier.height(80.dp))
+            }
+        }
+    }
+
+    MaterialDialog(
+        dialogState = dialogState,
+    ) {
+        title("Sprites for ${creature.name}")
+        customView {
+            Column(modifier = Modifier.fillMaxWidth().wrapContentHeight(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Row {
+                    Image(
+                        rememberImagePainter(creature.spriteImageUrl),
+                        null,
+                        modifier = Modifier.size(75.dp)
+                    )
+
+                    Image(
+                        rememberImagePainter(creature.shinySpriteImageUrl),
+                        null,
+                        modifier = Modifier.size(75.dp)
+                    )
+                }
+
+                Row {
+                    Image(
+                        rememberImagePainter(creature.backSpriteImageUrl),
+                        null,
+                        modifier = Modifier.size(75.dp)
+                    )
+
+                    Image(
+                        rememberImagePainter(creature.backShinySpriteImageUrl),
+                        null,
+                        modifier = Modifier.size(75.dp)
+                    )
+                }
             }
         }
     }

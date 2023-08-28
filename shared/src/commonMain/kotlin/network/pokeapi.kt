@@ -140,6 +140,9 @@ class PokeApi {
                         val form = client.get(form_url.url).body<PokemonForm>()
                         if (form.is_default) {
                             creature.spriteImageUrl = form.sprites.front_default
+                            creature.shinySpriteImageUrl = form.sprites.front_shiny
+                            creature.backSpriteImageUrl = form.sprites.back_default
+                            creature.backShinySpriteImageUrl = form.sprites.back_shiny
                             break
                         }
                     }
