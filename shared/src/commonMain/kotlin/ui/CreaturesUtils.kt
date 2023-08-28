@@ -268,7 +268,7 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
                 if (isLoading || !isLoading && !isFiltered(creature)) {
                     CreatureRowElement(creature, isLoading = isLoading)
                 }
-            }
+            } else CreatureRowElement(creature, isLoading = true)
         }
     }
 }
