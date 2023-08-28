@@ -17,8 +17,11 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -103,7 +106,7 @@ fun MainScaffold() {
                         })
 
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Search, "Items")
+                        Icon(imageVector = Icons.Default.Category, "Items")
                     },
                         selected = (content == 4),
                         onClick = {
@@ -111,7 +114,7 @@ fun MainScaffold() {
                         })
 
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Place, "Locations")
+                        Icon(imageVector = Icons.Default.Map, "Locations")
                     },
                         selected = (content == 1),
                         onClick = {
@@ -119,7 +122,7 @@ fun MainScaffold() {
                         })
 
                     BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.PlayArrow, "Games")
+                        Icon(imageVector = Icons.Default.VideogameAsset, "Games")
                     },
                         selected = (content == 2),
                         onClick = {
