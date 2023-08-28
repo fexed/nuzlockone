@@ -352,7 +352,12 @@ class VersionGameIndex(val game_index: Int, val version: NamedAPIResource)
 class PokemonType(val slot: Int, val type: NamedAPIResource)
 
 @Serializable
-class Type(val id: Int, val name: String, val damage_relations: TypeRelations, val names: List<Name>)
+class Type(
+    val id: Int,
+    val name: String,
+    val damage_relations: TypeRelations,
+    val names: List<Name>
+)
 
 @Serializable
 class TypeRelations(

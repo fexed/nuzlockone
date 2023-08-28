@@ -67,9 +67,13 @@ import network.PokeApi
 fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
     var areDetailsVisible by mutableStateOf(false)
     val currentNuzlocke = FilterState.instance.currentSelectedNuzlocke
-    var caught by remember { mutableStateOf( if (currentNuzlocke.value != null) {
-        currentNuzlocke.value!!.speciesCaughtIds.contains(creature.id)
-    } else false) }
+    var caught by remember {
+        mutableStateOf(
+            if (currentNuzlocke.value != null) {
+                currentNuzlocke.value!!.speciesCaughtIds.contains(creature.id)
+            } else false
+        )
+    }
     val borderColor = if (caught) Color.Green else Color.Transparent
     var currentDescription by mutableStateOf(0)
     val painter = rememberImagePainter(creature.spriteImageUrl)
@@ -182,7 +186,11 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
     ) {
         title("Sprites for ${creature.name}")
         customView {
-            Column(modifier = Modifier.fillMaxWidth().wrapContentHeight(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+            Column(
+                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
                 Row {
                     Image(
                         rememberImagePainter(creature.spriteImageUrl),
