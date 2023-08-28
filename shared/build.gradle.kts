@@ -31,7 +31,6 @@ kotlin {
         val ktorVersion = "2.3.3"
         val kotlinxCoroutinesVersion = "1.7.2"
         val kotlinxDatetimeVersion = "0.4.0"
-        val composeMaterialDialogsVersion = "0.9.3"
         val imageLoaderVersion = "1.6.4"
 
         val commonMain by getting {
@@ -48,8 +47,6 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
-                implementation("ca.gosyer:compose-material-dialogs-core:$composeMaterialDialogsVersion")
-                implementation("ca.gosyer:compose-material-dialogs-color:$composeMaterialDialogsVersion")
                 api("io.github.qdsfdhvh:image-loader:$imageLoaderVersion")
             }
         }

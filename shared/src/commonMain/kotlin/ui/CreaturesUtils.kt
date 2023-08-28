@@ -48,12 +48,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.seiko.imageloader.rememberImagePainter
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.MaterialDialogProperties
-import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 import data.Creature
 import data.Type
 import data.getTypeColor
@@ -77,7 +73,7 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
     val borderColor = if (caught) Color.Green else Color.Transparent
     var currentDescription by mutableStateOf(0)
     val painter = rememberImagePainter(creature.spriteImageUrl)
-    var dialogState = rememberMaterialDialogState()
+    var showDialog by remember { mutableStateOf(false) }
 
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
         if (creature.flavorTexts.isNotEmpty()) areDetailsVisible = !areDetailsVisible
@@ -111,7 +107,7 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
                                     ), radius = 125f
                                 )
                             ).clickable {
-                                dialogState.show()
+                                showDialog = true
                             }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -181,42 +177,43 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
         }
     }
 
-    MaterialDialog(
-        dialogState = dialogState,
-    ) {
-        title("Sprites for ${creature.name}")
-        customView {
-            Column(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Row {
-                    Image(
-                        rememberImagePainter(creature.spriteImageUrl),
-                        null,
-                        modifier = Modifier.size(75.dp)
-                    )
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = { showDialog = false },
+        ) {
+            Card {
+                Column(
+                    modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row {
+                        Image(
+                            rememberImagePainter(creature.spriteImageUrl),
+                            null,
+                            modifier = Modifier.size(75.dp)
+                        )
 
-                    Image(
-                        rememberImagePainter(creature.shinySpriteImageUrl),
-                        null,
-                        modifier = Modifier.size(75.dp)
-                    )
-                }
+                        Image(
+                            rememberImagePainter(creature.shinySpriteImageUrl),
+                            null,
+                            modifier = Modifier.size(75.dp)
+                        )
+                    }
 
-                Row {
-                    Image(
-                        rememberImagePainter(creature.backSpriteImageUrl),
-                        null,
-                        modifier = Modifier.size(75.dp)
-                    )
+                    Row {
+                        Image(
+                            rememberImagePainter(creature.backSpriteImageUrl),
+                            null,
+                            modifier = Modifier.size(75.dp)
+                        )
 
-                    Image(
-                        rememberImagePainter(creature.backShinySpriteImageUrl),
-                        null,
-                        modifier = Modifier.size(75.dp)
-                    )
+                        Image(
+                            rememberImagePainter(creature.backShinySpriteImageUrl),
+                            null,
+                            modifier = Modifier.size(75.dp)
+                        )
+                    }
                 }
             }
         }
