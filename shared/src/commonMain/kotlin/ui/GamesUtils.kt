@@ -93,8 +93,6 @@ fun GameElement(game: Game, isLoading: Boolean = false) {
 
 @Composable
 fun ListAllGames(paddingValues: PaddingValues) {
-    val scope = rememberCoroutineScope()
-
     LazyColumn(
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,

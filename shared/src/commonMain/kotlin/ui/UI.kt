@@ -2,6 +2,11 @@ package ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -23,6 +28,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import data.Type
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -68,16 +76,42 @@ fun MainScaffold() {
             topBar = {
                  AnimatedVisibility(filterSelected) {
                      TopAppBar {
-                         Icon(Icons.Default.FilterList, contentDescription = "")
                          AnimatedVisibility(FilterState.instance.currentSelectedType.value != Type.NONE) {
-                             TypePill(FilterState.instance.currentSelectedType.value)
+                             Row(
+                                 modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                                 verticalAlignment = Alignment.CenterVertically
+                             ) {
+                                 Spacer(modifier = Modifier.size(8.dp))
+                                 TypePill(FilterState.instance.currentSelectedType.value)
+                             }
                          }
                          AnimatedVisibility(FilterState.instance.currentSelectedGame.value != -1) {
-                             Text("Game: ${Cache.instance.gamesList[FilterState.instance.currentSelectedGame.value].title}")
+                             Row(
+                                 modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                                 verticalAlignment = Alignment.CenterVertically
+                             ) {
+                                 Spacer(modifier = Modifier.size(8.dp))
+                                 Icon(Icons.Default.VideogameAsset, contentDescription = "")
+                                 Spacer(modifier = Modifier.size(4.dp))
+                                 if (FilterState.instance.currentSelectedGame.value > 0) {
+                                     Text(Cache.instance.gamesList[FilterState.instance.currentSelectedGame.value - 1].title)
+                                 }
+                             }
                          }
                          AnimatedVisibility(FilterState.instance.currentSelectedNuzlocke.value != null) {
-                             Text("Run: ${FilterState.instance.currentSelectedNuzlocke.value!!.name}")
+                             Row(
+                                 modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                                 verticalAlignment = Alignment.CenterVertically
+                             ) {
+                                 Spacer(modifier = Modifier.size(8.dp))
+                                 if (FilterState.instance.currentSelectedNuzlocke.value != null) {
+                                     Text("Run: ${FilterState.instance.currentSelectedNuzlocke.value!!.name}")
+                                 }
+                             }
                          }
+                         Spacer(Modifier.weight(1f).fillMaxHeight())
+                         Icon(Icons.Default.FilterList, contentDescription = "")
+                        Spacer(modifier = Modifier.size(8.dp))
                      }
                  }
             },
