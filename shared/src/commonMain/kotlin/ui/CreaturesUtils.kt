@@ -192,13 +192,13 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
                         Image(
                             rememberImagePainter(creature.spriteImageUrl),
                             null,
-                            modifier = Modifier.size(75.dp)
+                            modifier = Modifier.size(125.dp)
                         )
 
                         Image(
                             rememberImagePainter(creature.shinySpriteImageUrl),
                             null,
-                            modifier = Modifier.size(75.dp)
+                            modifier = Modifier.size(125.dp)
                         )
                     }
 
@@ -206,13 +206,13 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
                         Image(
                             rememberImagePainter(creature.backSpriteImageUrl),
                             null,
-                            modifier = Modifier.size(75.dp)
+                            modifier = Modifier.size(125.dp)
                         )
 
                         Image(
                             rememberImagePainter(creature.backShinySpriteImageUrl),
                             null,
-                            modifier = Modifier.size(75.dp)
+                            modifier = Modifier.size(125.dp)
                         )
                     }
                 }
