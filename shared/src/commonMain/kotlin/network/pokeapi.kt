@@ -3,6 +3,7 @@ package network
 import data.Creature
 import data.Encounter
 import data.Game
+import data.Item
 import data.gameNameFix
 import data.Location
 import data.Type
@@ -254,6 +255,22 @@ class PokeApi {
         val type = getTypeData(id)
         return getLocalizedOrDefaultName(type.names)
     }
+
+    suspend fun getNumberOfItems(): Int {
+        val response = client.get("${baseURL}/item/")
+        return response.body<EndpointData>().count
+    }
+
+    suspend fun getItemData(id: Int): Item {
+        val item = client.get("${baseURL}/item/$id").body<network.Item>()
+        return Item().apply {
+            this.id = item.id
+            name = getLocalizedOrDefaultName(item.names)
+            cost = item.cost
+            imageURL = item.sprites.default
+            isValid = true
+        }
+    }
 }
 
 @Serializable
@@ -415,4 +432,18 @@ class Region(
     val name: String,
     val names: List<Name>,
     val main_generation: NamedAPIResource
+)
+
+@Serializable
+class Item(
+    val id: Int,
+    val name: String,
+    val cost: Int,
+    val sprites: ItemSprites,
+    val names: List<Name>
+)
+
+@Serializable
+class ItemSprites(
+    val default: String
 )

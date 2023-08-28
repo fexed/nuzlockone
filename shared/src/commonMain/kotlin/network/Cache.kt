@@ -102,6 +102,28 @@ class Cache {
         numberOfGames.value = n
     }
 
+    var numberOfItems: MutableState<Int> = mutableStateOf(1)
+    var itemsList: MutableList<data.Item> = mutableListOf(data.Item().apply {
+        name = "Loading..."
+    })
+
+    suspend fun preloadItems() {
+        val n = try {
+            api.getNumberOfItems()
+        } catch (e: Exception) {
+            0
+        }
+        val item = data.Item().apply {
+            name = "Loading..."
+            isValid = true
+        }
+        itemsList = ArrayList(n)
+        for (ix in 0 until n) {
+            itemsList.add(item)
+        }
+        numberOfItems.value = n
+    }
+
     suspend fun preloadTypes() {
         for (ix in 0 until 17) {
             val type = api.getTypeData(ix + 1)

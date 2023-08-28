@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +43,7 @@ fun MainScaffold() {
             coroutineScope { cache.preloadPokemons() }
             coroutineScope { cache.preloadLocations() }
             coroutineScope { cache.preloadGames() }
+            coroutineScope { cache.preloadItems() }
             coroutineScope { cache.loadNuzlockes() }
         }
 
@@ -52,6 +54,7 @@ fun MainScaffold() {
                     1 -> ListAllLocations(it)
                     2 -> ListAllGames(it)
                     3 -> Settings(it)
+                    4 -> ListAllItems(it)
                     else -> MainPage(it)
                 }
             },
@@ -74,6 +77,14 @@ fun MainScaffold() {
                         selected = (content == 0),
                         onClick = {
                             content = 0
+                        })
+
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.Search, "Items")
+                    },
+                        selected = (content == 4),
+                        onClick = {
+                            content = 4
                         })
 
                     BottomNavigationItem(icon = {
