@@ -2,7 +2,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.storage.CacheStorage
+import io.ktor.client.plugins.cache.storage.FileStorage
 import ui.MainScaffold
+import java.io.File
 import java.util.Locale
 
 actual fun getPlatformName(): String = "Android"
@@ -13,8 +15,9 @@ actual val language: String?
 actual val country: String?
     get() = Locale.getDefault().country
 
+lateinit var cacheFilesDir: File
 actual fun getCacheFile(): CacheStorage {
-    return CacheStorage.Unlimited()
+    return FileStorage(cacheFilesDir)
 }
 
 actual fun getPlatformHttpClient(): HttpClient {
