@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -93,95 +94,12 @@ fun MainPage(paddingValues: PaddingValues) {
 
             item {
                 Spacer(modifier = Modifier.padding(4.dp))
-                Divider()
             }
 
             item {
-                Row(
-                    modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.List,
-                            contentDescription = "",
-                            modifier = Modifier.padding(8.dp)
-                        )
-                        Text("Creatures")
-                    }
-                    if (cache.numberOfPokemons.value != 1) {
-                        Text("${cache.numberOfPokemons.value}")
-                    } else {
-                        Box(
-                            modifier = Modifier.background(shimmerBrush(cache.numberOfPokemons.value == 1))
-                                .width(50.dp).height(20.dp)
-                        )
-                    }
-                }
+                StatsCard()
             }
 
-            item {
-                Divider()
-            }
-
-            item {
-                Row(
-                    modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.Place,
-                            contentDescription = "",
-                            modifier = Modifier.padding(8.dp)
-                        )
-                        Text("Locations")
-                    }
-                    if (cache.numberOfLocations.value != 1) {
-                        Text("${cache.numberOfLocations.value}")
-                    } else {
-                        Box(
-                            modifier = Modifier.background(shimmerBrush(cache.numberOfLocations.value == 1))
-                                .width(50.dp).height(20.dp)
-                        )
-                    }
-                }
-            }
-
-            item {
-                Divider()
-            }
-
-            item {
-                Row(
-                    modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.PlayArrow,
-                            contentDescription = "",
-                            modifier = Modifier.padding(8.dp)
-                        )
-                        Text("Games")
-                    }
-                    if (cache.numberOfGames.value != 1) {
-                        Text("${cache.numberOfGames.value}")
-                    } else {
-                        Box(
-                            modifier = Modifier.background(shimmerBrush(cache.numberOfGames.value == 1))
-                                .width(50.dp).height(20.dp)
-                        )
-                    }
-                }
-            }
-
-            item {
-                Divider()
-            }
         }
     }
 
@@ -202,6 +120,84 @@ fun MainPage(paddingValues: PaddingValues) {
         title("Add new nuzlocke")
         input(label = "Name", placeholder = newNuzlocke!!.name) {
             newNuzlocke!!.name = it
+        }
+    }
+}
+
+@Composable
+fun StatsCard() {
+    val cache = Cache.instance
+
+    Card(modifier = Modifier.padding(32.dp)) {
+        Column {
+            Row(
+                modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.List,
+                        contentDescription = "",
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    Text("Creatures")
+                }
+                if (cache.numberOfPokemons.value != 1) {
+                    Text("${cache.numberOfPokemons.value}")
+                } else {
+                    Box(
+                        modifier = Modifier.background(shimmerBrush(cache.numberOfPokemons.value == 1))
+                            .width(50.dp).height(20.dp)
+                    )
+                }
+            }
+            Divider()
+            Row(
+                modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.Place,
+                        contentDescription = "",
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    Text("Locations")
+                }
+                if (cache.numberOfLocations.value != 1) {
+                    Text("${cache.numberOfLocations.value}")
+                } else {
+                    Box(
+                        modifier = Modifier.background(shimmerBrush(cache.numberOfLocations.value == 1))
+                            .width(50.dp).height(20.dp)
+                    )
+                }
+            }
+            Divider()
+            Row(
+                modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.PlayArrow,
+                        contentDescription = "",
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    Text("Games")
+                }
+                if (cache.numberOfGames.value != 1) {
+                    Text("${cache.numberOfGames.value}")
+                } else {
+                    Box(
+                        modifier = Modifier.background(shimmerBrush(cache.numberOfGames.value == 1))
+                            .width(50.dp).height(20.dp)
+                    )
+                }
+            }
         }
     }
 }
