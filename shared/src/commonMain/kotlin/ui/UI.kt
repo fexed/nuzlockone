@@ -1,5 +1,7 @@
 package ui
 
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -14,6 +16,7 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import data.Type
+import data.getTypeName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import network.Cache
@@ -31,6 +35,10 @@ fun MainScaffold() {
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
     FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
     FilterState.instance.currentSelectedNuzlocke = remember { mutableStateOf(null) }
+
+    val filterSelected = FilterState.instance.currentSelectedType.value != Type.NONE ||
+    FilterState.instance.currentSelectedGame.value != -1 ||
+    FilterState.instance.currentSelectedNuzlocke.value != null
 
     MaterialTheme(
         colors = if (isSystemInDarkTheme()) DarkColors else LightColors
@@ -58,9 +66,22 @@ fun MainScaffold() {
                     else -> MainPage(it)
                 }
             },
-//            topBar = {
-//                TopAppBar(title = { Text("Nuzlockone") })
-//            },
+            topBar = {
+                 AnimatedVisibility(filterSelected) {
+                     TopAppBar {
+                         Text("Current filter: ")
+                         AnimatedVisibility(FilterState.instance.currentSelectedType.value != Type.NONE) {
+                             TypePill(FilterState.instance.currentSelectedType.value)
+                         }
+                         AnimatedVisibility(FilterState.instance.currentSelectedGame.value != -1) {
+                             Text("Game: ${Cache.instance.gamesList[FilterState.instance.currentSelectedGame.value].title}")
+                         }
+                         AnimatedVisibility(FilterState.instance.currentSelectedNuzlocke.value != null) {
+                             Text("Run: ${FilterState.instance.currentSelectedNuzlocke.value!!.name}")
+                         }
+                     }
+                 }
+            },
             bottomBar = {
                 BottomNavigation {
                     BottomNavigationItem(icon = {
