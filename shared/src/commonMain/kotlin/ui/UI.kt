@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,7 +71,7 @@ fun MainScaffold() {
             topBar = {
                  AnimatedVisibility(filterSelected) {
                      TopAppBar {
-                         Text("Current filter: ")
+                         Icon(Icons.Default.FilterList, contentDescription = "")
                          AnimatedVisibility(FilterState.instance.currentSelectedType.value != Type.NONE) {
                              TypePill(FilterState.instance.currentSelectedType.value)
                          }
