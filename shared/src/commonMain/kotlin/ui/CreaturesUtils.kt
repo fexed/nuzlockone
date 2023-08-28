@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import cache
 import com.seiko.imageloader.rememberImagePainter
 import data.Creature
 import data.Type
@@ -288,14 +289,14 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = paddingValues
     ) {
-        items(count = Cache.instance.numberOfPokemons.value) {
-            var creature by remember { mutableStateOf(Cache.instance.creaturesList[it]) }
+        items(count = cache.numberOfPokemons.value) {
+            var creature by remember { mutableStateOf(cache.creaturesList[it]) }
             val isLoading = creature.name == "Loading..."
 
             if (isLoading || !creature.isValid) {
                 LaunchedEffect(true) {
                     coroutineScope {
-                        Cache.instance.creaturesList[it] = try {
+                        cache.creaturesList[it] = try {
                             PokeApi().getCreatureData(it + 1)
                         } catch (e: Exception) {
                             Creature().apply {
@@ -305,7 +306,7 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
                                 type2 = Type.NONE
                             }
                         }
-                        creature = Cache.instance.creaturesList[it]
+                        creature = cache.creaturesList[it]
                     }
                 }
             }

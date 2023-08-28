@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cache
 import data.NuzlockRun
 import network.Cache
 
@@ -68,7 +69,7 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
                     AnimatedVisibility(currentNuzlocke.value?.nuzlockeId != nuzlockRun.nuzlockeId) {
                         if (nuzlockRun.gameId > 0) {
                             Text(
-                                "Pokémon " + Cache.instance.gamesList[nuzlockRun.gameId - 1].title,
+                                "Pokémon " + cache.gamesList[nuzlockRun.gameId - 1].title,
                                 fontSize = 10.sp
                             )
                         } else {
@@ -86,11 +87,11 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
                             }
                             Spacer(modifier = Modifier.padding(8.dp))
                             Button(onClick = {
-                                Cache.instance.nuzlockes.remove(nuzlockRun)
+                                cache.nuzlockes.remove(nuzlockRun)
                                 if (currentNuzlocke.value?.nuzlockeId == nuzlockRun.nuzlockeId) {
                                     currentNuzlocke.value = null
                                 }
-                                Cache.instance.numberOfNuzlockes.value -= 1
+                                cache.numberOfNuzlockes.value -= 1
                             }) {
                                 Text("Confirm?")
                             }
@@ -111,7 +112,7 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
                     Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                             if (currentNuzlocke.value != null && currentNuzlocke.value!!.gameId > 0) {
-                                Text("Pokémon " + Cache.instance.gamesList[currentNuzlocke.value!!.gameId - 1].title)
+                                Text("Pokémon " + cache.gamesList[currentNuzlocke.value!!.gameId - 1].title)
                                 Text("Game")
                             } else {
                                 Text("No game selected")

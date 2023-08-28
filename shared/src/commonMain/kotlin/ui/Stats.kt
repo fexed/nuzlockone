@@ -26,13 +26,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cache
 import network.Cache
 
 
 @Composable
 fun StatsCard() {
-    val cache = Cache.instance
-
     Card(modifier = Modifier.padding(32.dp)) {
         Column {
             Row(

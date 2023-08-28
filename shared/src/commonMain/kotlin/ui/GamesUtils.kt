@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cache
 import com.seiko.imageloader.rememberImagePainter
 import data.Game
 import data.Type
@@ -98,23 +99,21 @@ fun ListAllGames(paddingValues: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = paddingValues
     ) {
-        items(count = Cache.instance.numberOfGames.value) {
-            var game by remember { mutableStateOf(Cache.instance.gamesList[it]) }
-            var isLoading by remember { mutableStateOf(false) }
+        items(count = cache.numberOfGames.value) {
+            var game by remember { mutableStateOf(cache.gamesList[it]) }
+            var isLoading by remember { mutableStateOf(game.title == "Loading...") }
 
-            if (game.title == "Loading...") {
-                isLoading = true
-
+            if (isLoading) {
                 LaunchedEffect(true) {
                     coroutineScope {
-                        Cache.instance.gamesList[it] = try {
+                        cache.gamesList[it] = try {
                             PokeApi().getGameData(it + 1)
                         } catch (e: Exception) {
                             Game().apply {
                                 title = e.message ?: "Error"
                             }
                         }
-                        game = Cache.instance.gamesList[it]
+                        game = cache.gamesList[it]
                         game.isValid = true
                         isLoading = false
                     }

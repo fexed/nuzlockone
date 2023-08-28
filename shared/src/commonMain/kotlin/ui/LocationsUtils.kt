@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cache
 import data.Encounter
 import data.Location
 import kotlinx.coroutines.coroutineScope
@@ -114,8 +115,8 @@ fun ListAllLocations(paddingValues: PaddingValues) {
     val scope = rememberCoroutineScope()
 
     LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, contentPadding = paddingValues) {
-        items(count = Cache.instance.numberOfLocations.value) {
-            var location by remember { mutableStateOf(Cache.instance.locationsList[it]) }
+        items(count = cache.numberOfLocations.value) {
+            var location by remember { mutableStateOf(cache.locationsList[it]) }
             var isLoading by remember { mutableStateOf(false) }
 
             if (location.name == "Loading...") {
@@ -129,14 +130,14 @@ fun ListAllLocations(paddingValues: PaddingValues) {
 
                 LaunchedEffect(true) {
                     coroutineScope {
-                        Cache.instance.locationsList[it] = try {
+                        cache.locationsList[it] = try {
                             PokeApi().getLocationData(it + 1)
                         } catch (e: Exception) {
                             Location().apply {
                                 name = e.message ?: "Error"
                             }
                         }
-                        location = Cache.instance.locationsList[it]
+                        location = cache.locationsList[it]
                         isLoading = false
                     }
                 }

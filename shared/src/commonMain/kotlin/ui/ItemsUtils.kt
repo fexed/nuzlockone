@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cache
 import com.seiko.imageloader.rememberImagePainter
 import data.Item
 import kotlinx.coroutines.coroutineScope
@@ -65,14 +66,14 @@ fun ListAllItems(paddingValues: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = paddingValues
     ) {
-        items(count = Cache.instance.numberOfItems.value) {
-            var item by remember { mutableStateOf(Cache.instance.itemsList[it]) }
+        items(count = cache.numberOfItems.value) {
+            var item by remember { mutableStateOf(cache.itemsList[it]) }
             val isLoading = item.name == "Loading..."
 
             if (isLoading || !item.isValid) {
                 LaunchedEffect(true) {
                     coroutineScope {
-                        Cache.instance.itemsList[it] = try {
+                        cache.itemsList[it] = try {
                             PokeApi().getItemData(it + 1)
                         } catch (e: Exception) {
                             Item().apply {
@@ -80,7 +81,7 @@ fun ListAllItems(paddingValues: PaddingValues) {
                                 name = e.message ?: "Error"
                             }
                         }
-                        item = Cache.instance.itemsList[it]
+                        item = cache.itemsList[it]
                     }
                 }
             }

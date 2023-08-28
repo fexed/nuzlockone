@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import cache
 import data.NuzlockRun
 import kotlinx.datetime.Clock
 import network.Cache
@@ -36,7 +37,6 @@ import kotlin.random.Random
 @Composable
 fun MainPage(paddingValues: PaddingValues) {
     var showDialog by remember { mutableStateOf(false) }
-    val cache = Cache.instance
     var newNuzlocke = NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
 
     Column(

@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cache
 import data.Type
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -38,7 +39,6 @@ import network.Cache
 
 @Composable
 fun MainScaffold() {
-    val cache = Cache.instance
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
     FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
     FilterState.instance.currentSelectedNuzlocke = remember { mutableStateOf(null) }
@@ -94,7 +94,7 @@ fun MainScaffold() {
                                 Icon(Icons.Default.VideogameAsset, contentDescription = "")
                                 Spacer(modifier = Modifier.size(4.dp))
                                 if (FilterState.instance.currentSelectedGame.value > 0) {
-                                    Text(Cache.instance.gamesList[FilterState.instance.currentSelectedGame.value - 1].title)
+                                    Text(cache.gamesList[FilterState.instance.currentSelectedGame.value - 1].title)
                                 }
                             }
                         }
