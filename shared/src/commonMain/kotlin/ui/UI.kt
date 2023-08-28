@@ -1,6 +1,5 @@
 package ui
 
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.BottomNavigation
@@ -12,13 +11,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.VideogameAsset
@@ -29,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import data.Type
-import data.getTypeName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import network.Cache
