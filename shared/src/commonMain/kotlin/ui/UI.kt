@@ -44,8 +44,8 @@ fun MainScaffold() {
     FilterState.instance.currentSelectedNuzlocke = remember { mutableStateOf(null) }
 
     val filterSelected = FilterState.instance.currentSelectedType.value != Type.NONE ||
-    FilterState.instance.currentSelectedGame.value != -1 ||
-    FilterState.instance.currentSelectedNuzlocke.value != null
+            FilterState.instance.currentSelectedGame.value != -1 ||
+            FilterState.instance.currentSelectedNuzlocke.value != null
 
     MaterialTheme(
         colors = if (isSystemInDarkTheme()) DarkColors else LightColors
@@ -74,46 +74,46 @@ fun MainScaffold() {
                 }
             },
             topBar = {
-                 AnimatedVisibility(filterSelected) {
-                     TopAppBar {
-                         AnimatedVisibility(FilterState.instance.currentSelectedType.value != Type.NONE) {
-                             Row(
-                                 modifier = Modifier.wrapContentWidth().fillMaxHeight(),
-                                 verticalAlignment = Alignment.CenterVertically
-                             ) {
-                                 Spacer(modifier = Modifier.size(8.dp))
-                                 TypePill(FilterState.instance.currentSelectedType.value)
-                             }
-                         }
-                         AnimatedVisibility(FilterState.instance.currentSelectedGame.value != -1) {
-                             Row(
-                                 modifier = Modifier.wrapContentWidth().fillMaxHeight(),
-                                 verticalAlignment = Alignment.CenterVertically
-                             ) {
-                                 Spacer(modifier = Modifier.size(8.dp))
-                                 Icon(Icons.Default.VideogameAsset, contentDescription = "")
-                                 Spacer(modifier = Modifier.size(4.dp))
-                                 if (FilterState.instance.currentSelectedGame.value > 0) {
-                                     Text(Cache.instance.gamesList[FilterState.instance.currentSelectedGame.value - 1].title)
-                                 }
-                             }
-                         }
-                         AnimatedVisibility(FilterState.instance.currentSelectedNuzlocke.value != null) {
-                             Row(
-                                 modifier = Modifier.wrapContentWidth().fillMaxHeight(),
-                                 verticalAlignment = Alignment.CenterVertically
-                             ) {
-                                 Spacer(modifier = Modifier.size(8.dp))
-                                 if (FilterState.instance.currentSelectedNuzlocke.value != null) {
-                                     Text("Run: ${FilterState.instance.currentSelectedNuzlocke.value!!.name}")
-                                 }
-                             }
-                         }
-                         Spacer(Modifier.weight(1f).fillMaxHeight())
-                         Icon(Icons.Default.FilterList, contentDescription = "")
+                AnimatedVisibility(filterSelected) {
+                    TopAppBar {
+                        AnimatedVisibility(FilterState.instance.currentSelectedType.value != Type.NONE) {
+                            Row(
+                                modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Spacer(modifier = Modifier.size(8.dp))
+                                TypePill(FilterState.instance.currentSelectedType.value)
+                            }
+                        }
+                        AnimatedVisibility(FilterState.instance.currentSelectedGame.value != -1) {
+                            Row(
+                                modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Spacer(modifier = Modifier.size(8.dp))
+                                Icon(Icons.Default.VideogameAsset, contentDescription = "")
+                                Spacer(modifier = Modifier.size(4.dp))
+                                if (FilterState.instance.currentSelectedGame.value > 0) {
+                                    Text(Cache.instance.gamesList[FilterState.instance.currentSelectedGame.value - 1].title)
+                                }
+                            }
+                        }
+                        AnimatedVisibility(FilterState.instance.currentSelectedNuzlocke.value != null) {
+                            Row(
+                                modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Spacer(modifier = Modifier.size(8.dp))
+                                if (FilterState.instance.currentSelectedNuzlocke.value != null) {
+                                    Text("Run: ${FilterState.instance.currentSelectedNuzlocke.value!!.name}")
+                                }
+                            }
+                        }
+                        Spacer(Modifier.weight(1f).fillMaxHeight())
+                        Icon(Icons.Default.FilterList, contentDescription = "")
                         Spacer(modifier = Modifier.size(8.dp))
-                     }
-                 }
+                    }
+                }
             },
             bottomBar = {
                 BottomNavigation {
