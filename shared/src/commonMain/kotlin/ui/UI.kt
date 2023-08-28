@@ -56,7 +56,6 @@ import kotlin.random.Random
 @Composable
 fun MainPage(paddingValues: PaddingValues) {
     var dialogState = rememberMaterialDialogState()
-    val scope = rememberCoroutineScope()
     val cache = Cache.instance
     var newNuzlocke: NuzlockRun? = null
 
@@ -108,9 +107,6 @@ fun MainPage(paddingValues: PaddingValues) {
         buttons = {
             positiveButton("OK") {
                 cache.nuzlockes.add(newNuzlocke!!)
-                scope.launch {
-
-                }
                 cache.numberOfNuzlockes.value += 1
                 dialogState.hide()
             }
