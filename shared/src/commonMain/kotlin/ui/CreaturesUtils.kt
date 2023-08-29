@@ -275,7 +275,7 @@ fun TypePill(type: Type) {
             shape = RoundedCornerShape(50),
             colors = if (FilterState.instance.currentSelectedType.value != type) ButtonDefaults.outlinedButtonColors(
                 contentColor = color
-            ) else ButtonDefaults.outlinedButtonColors(backgroundColor = color)
+            ) else ButtonDefaults.outlinedButtonColors(contentColor = Color.White, backgroundColor = color)
         ) { Text(getTypeName(type)) }
     }
 }
