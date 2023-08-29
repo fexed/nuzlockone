@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.FilterListOff
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.runtime.Composable
@@ -110,7 +113,13 @@ fun MainScaffold() {
                             }
                         }
                         Spacer(Modifier.weight(1f).fillMaxHeight())
-                        Icon(Icons.Default.FilterList, contentDescription = "")
+                        OutlinedButton(onClick = {
+                            FilterState.instance.currentSelectedType.value = Type.NONE
+                            FilterState.instance.currentSelectedGame.value = -1
+                            FilterState.instance.currentSelectedNuzlocke.value = null
+                        }) {
+                            Icon(Icons.Default.FilterListOff, contentDescription = "")
+                        }
                         Spacer(modifier = Modifier.size(8.dp))
                     }
                 }
