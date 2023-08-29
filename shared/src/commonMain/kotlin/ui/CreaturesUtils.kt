@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -56,7 +55,6 @@ import data.Type
 import data.getTypeColor
 import data.getTypeName
 import kotlinx.coroutines.coroutineScope
-import network.Cache
 import network.PokeApi
 
 
@@ -277,7 +275,7 @@ fun TypePill(type: Type) {
             shape = RoundedCornerShape(50),
             colors = if (FilterState.instance.currentSelectedType.value != type) ButtonDefaults.outlinedButtonColors(
                 contentColor = color
-            ) else ButtonDefaults.buttonColors(contentColor = color)
+            ) else ButtonDefaults.outlinedButtonColors(backgroundColor = color)
         ) { Text(getTypeName(type)) }
     }
 }
