@@ -69,7 +69,7 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
                     AnimatedVisibility(currentNuzlocke.value?.nuzlockeId != nuzlockRun.nuzlockeId) {
                         if (nuzlockRun.gameId > 0) {
                             Text(
-                                "Pokémon " + cache.gamesList[nuzlockRun.gameId - 1].title,
+                                "Pokémon " + cache.gamesNameList[nuzlockRun.gameId - 1],
                                 fontSize = 10.sp
                             )
                         } else {
@@ -112,7 +112,7 @@ fun NuzlockeElement(nuzlockRun: NuzlockRun) {
                     Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                             if (currentNuzlocke.value != null && currentNuzlocke.value!!.gameId > 0) {
-                                Text("Pokémon " + cache.gamesList[currentNuzlocke.value!!.gameId - 1].title)
+                                Text("Pokémon " + cache.gamesNameList[currentNuzlocke.value!!.gameId - 1])
                                 Text("Game")
                             } else {
                                 Text("No game selected")

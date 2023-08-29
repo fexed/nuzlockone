@@ -84,6 +84,7 @@ class Cache {
     var gamesList: MutableList<Game> = mutableListOf(Game().apply {
         title = "Loading..."
     })
+    var gamesNameList: MutableList<String> = mutableListOf()
 
     suspend fun preloadGames() {
         val n = try {
@@ -96,8 +97,10 @@ class Cache {
             isValid = true
         }
         gamesList = ArrayList(n)
+        gamesNameList = ArrayList(n)
         for (ix in 0 until n) {
             gamesList.add(game)
+            gamesNameList.add("")
         }
         numberOfGames.value = n
     }

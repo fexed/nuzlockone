@@ -98,7 +98,7 @@ fun MainScaffold() {
                                 Icon(Icons.Default.VideogameAsset, contentDescription = "")
                                 Spacer(modifier = Modifier.size(4.dp))
                                 if (FilterState.instance.currentSelectedGame.value > 0) {
-                                    Text(cache.gamesList[FilterState.instance.currentSelectedGame.value - 1].title)
+                                    Text(cache.gamesNameList[FilterState.instance.currentSelectedGame.value - 1])
                                 }
                             }
                         }

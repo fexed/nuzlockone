@@ -116,6 +116,8 @@ fun ListAllGames(paddingValues: PaddingValues) {
                 }
             }
 
+            cache.gamesNameList[it] = game.title
+
             if (game.isValid && !isFiltered(game)) GameElement(game, isLoading)
         }
     }
