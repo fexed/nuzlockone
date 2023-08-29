@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.BottomNavigation
@@ -113,14 +114,15 @@ fun MainScaffold() {
                             }
                         }
                         Spacer(Modifier.weight(1f).fillMaxHeight())
-                        OutlinedButton(onClick = {
-                            FilterState.instance.currentSelectedType.value = Type.NONE
-                            FilterState.instance.currentSelectedGame.value = -1
-                            FilterState.instance.currentSelectedNuzlocke.value = null
-                        }) {
+                        OutlinedButton(
+                            modifier = Modifier.padding(8.dp),
+                            onClick = {
+                                FilterState.instance.currentSelectedType.value = Type.NONE
+                                FilterState.instance.currentSelectedGame.value = -1
+                                FilterState.instance.currentSelectedNuzlocke.value = null
+                            }) {
                             Icon(Icons.Default.FilterListOff, contentDescription = "")
                         }
-                        Spacer(modifier = Modifier.size(8.dp))
                     }
                 }
             },
