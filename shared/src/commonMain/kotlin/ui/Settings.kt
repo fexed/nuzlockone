@@ -15,8 +15,8 @@ import sharedVersion
 @Composable
 fun Settings(paddingValues: PaddingValues) {
     Column(modifier = Modifier.padding(paddingValues)) {
-        Text("Platform: ${getPlatformName()}", modifier = Modifier.padding(16.dp))
+        Text("${getPlatformName()} app version $appVersion", modifier = Modifier.padding(16.dp))
         Divider()
-        Text("Version: app ${appVersion}, shared ${sharedVersion}", modifier = Modifier.padding(16.dp))
+        Text("Shared module version $sharedVersion", modifier = Modifier.padding(16.dp))
     }
 }
