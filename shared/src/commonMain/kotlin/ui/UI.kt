@@ -46,6 +46,7 @@ fun MainScaffold() {
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
     FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
     FilterState.instance.currentSelectedNuzlocke = remember { mutableStateOf(null) }
+    FilterState.instance.currentSearchString = remember { mutableStateOf("") }
 
     val filterSelected = FilterState.instance.currentSelectedType.value != Type.NONE ||
             FilterState.instance.currentSelectedGame.value != -1 ||
@@ -120,6 +121,7 @@ fun MainScaffold() {
                                 FilterState.instance.currentSelectedType.value = Type.NONE
                                 FilterState.instance.currentSelectedGame.value = -1
                                 FilterState.instance.currentSelectedNuzlocke.value = null
+                                FilterState.instance.currentSearchString.value = ""
                             }) {
                             Icon(Icons.Default.FilterListOff, contentDescription = "")
                         }
