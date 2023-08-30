@@ -15,9 +15,12 @@ import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.request.get
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import language
@@ -158,40 +161,51 @@ class PokeApi {
     }
 
     suspend fun getCreatureData(number: Int): Creature {
-        val response = client.get("${baseURL}/pokemon-species/$number")
-        return creatureFromPokemonSpecies(response.body())
+        return withContext(Dispatchers.IO) {
+            val response = client.get("${baseURL}/pokemon-species/$number")
+             creatureFromPokemonSpecies(response.body())
+        }
     }
 
     suspend fun getCreatureData(name: String): Creature {
-        val response = client.get("${baseURL}/pokemon-species/$name")
-        return creatureFromPokemonSpecies(response.body())
+        return withContext(Dispatchers.IO) {
+            val response = client.get("${baseURL}/pokemon-species/$name")
+            creatureFromPokemonSpecies(response.body())
+        }
     }
 
     suspend fun getNumberOfPokemons(): Int {
-        val response = client.get("${baseURL}/pokemon-species/")
-        return response.body<EndpointData>().count
+        return withContext(Dispatchers.IO) {
+            val response = client.get("${baseURL}/pokemon-species/")
+            response.body<EndpointData>().count
+        }
     }
 
     suspend fun getNumberOfLocations(): Int {
-        val response = client.get("${baseURL}/location/")
-        return response.body<EndpointData>().count
+        return withContext(Dispatchers.IO) {
+            val response = client.get("${baseURL}/location/")
+            response.body<EndpointData>().count
+        }
     }
 
     suspend fun getLocationData(number: Int): Location {
-        val response = client.get("${baseURL}/location-area/$number")
-        val data = response.body<LocationArea>()
-        return Location().apply {
-            id = data.id
 
-            name = getLocalizedOrDefaultName(data.names)
+        return withContext(Dispatchers.IO) {
+            val response = client.get("${baseURL}/location-area/$number")
+            val data = response.body<LocationArea>()
+            Location().apply {
+                id = data.id
 
-            regionName = ""
+                name = getLocalizedOrDefaultName(data.names)
 
-            areaURLS.add("${baseURL}/location-area/$number")
+                regionName = ""
 
-            gameIndexes.add(data.game_index)
+                areaURLS.add("${baseURL}/location-area/$number")
 
-            isValid = true
+                gameIndexes.add(data.game_index)
+
+                isValid = true
+            }
         }
     }
 
@@ -222,53 +236,69 @@ class PokeApi {
     }
 
     suspend fun getNumberOfGames(): Int {
-        val response = client.get("${baseURL}/version/")
-        return response.body<EndpointData>().count
+        return withContext(Dispatchers.IO) {
+            val response = client.get("${baseURL}/version/")
+            response.body<EndpointData>().count
+        }
     }
 
     suspend fun getGameData(id: Int): Game {
-        val version = client.get("${baseURL}/version/$id").body<Version>()
-        return Game(
-            id = id,
-            title = gameNameFix(id, getLocalizedOrDefaultName(version.names)),
-            imageUrl = getGameImageUrl(id),
-            isValid = true
-        )
+        return withContext(Dispatchers.IO) {
+            val version = client.get("${baseURL}/version/$id").body<Version>()
+            Game(
+                id = id,
+                title = gameNameFix(id, getLocalizedOrDefaultName(version.names)),
+                imageUrl = getGameImageUrl(id),
+                isValid = true
+            )
+        }
     }
 
     suspend fun gameIdFromGameIndex(gameIndex: VersionGameIndex): Int {
-        val version = client.get(gameIndex.version.url).body<Version>()
-        return version.id
+        return withContext(Dispatchers.IO) {
+            val version = client.get(gameIndex.version.url).body<Version>()
+            version.id
+        }
     }
 
     suspend fun getNumberOfTypes(): Int {
-        val response = client.get("${baseURL}/type/")
-        return response.body<EndpointData>().count
+        return withContext(Dispatchers.IO) {
+            val response = client.get("${baseURL}/type/")
+            response.body<EndpointData>().count
+        }
     }
 
     suspend fun getTypeData(id: Int): network.Type {
-        val type = client.get("${baseURL}/type/$id").body<network.Type>()
-        return type
+        return withContext(Dispatchers.IO) {
+            val type = client.get("${baseURL}/type/$id").body<network.Type>()
+            type
+        }
     }
 
     suspend fun getTypeName(id: Int): String {
-        val type = getTypeData(id)
-        return getLocalizedOrDefaultName(type.names)
+        return withContext(Dispatchers.IO) {
+            val type = getTypeData(id)
+            getLocalizedOrDefaultName(type.names)
+        }
     }
 
     suspend fun getNumberOfItems(): Int {
-        val response = client.get("${baseURL}/item/")
-        return response.body<EndpointData>().count
+        return withContext(Dispatchers.IO) {
+            val response = client.get("${baseURL}/item/")
+            response.body<EndpointData>().count
+        }
     }
 
     suspend fun getItemData(id: Int): Item {
-        val item = client.get("${baseURL}/item/$id").body<network.Item>()
-        return Item().apply {
-            this.id = item.id
-            name = getLocalizedOrDefaultName(item.names)
-            cost = item.cost
-            imageURL = item.sprites.default
-            isValid = true
+        return withContext(Dispatchers.IO) {
+            val item = client.get("${baseURL}/item/$id").body<network.Item>()
+            Item().apply {
+                this.id = item.id
+                name = getLocalizedOrDefaultName(item.names)
+                cost = item.cost
+                imageURL = item.sprites.default
+                isValid = true
+            }
         }
     }
 }
