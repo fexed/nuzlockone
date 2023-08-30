@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import cache
 import com.seiko.imageloader.rememberImagePainter
 import data.Game
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.coroutineScope
 import network.PokeApi
 
@@ -110,7 +112,6 @@ fun ListAllGames(paddingValues: PaddingValues) {
                             }
                         }
                         game = cache.gamesList[it]
-                        game.isValid = true
                         isLoading = false
                     }
                 }
