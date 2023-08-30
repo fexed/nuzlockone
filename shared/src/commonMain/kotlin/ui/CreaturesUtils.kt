@@ -220,7 +220,15 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
 }
 
 @Composable
-fun CreatureCard(creature: Creature, details: String = "", caught: Boolean = false) {
+fun CreatureCard(creature: Creature, details: String = "") {
+    val currentNuzlocke = FilterState.instance.currentSelectedNuzlocke
+    var caught by remember {
+        mutableStateOf(
+            if (currentNuzlocke.value != null) {
+                currentNuzlocke.value!!.speciesCaughtIds.contains(creature.id)
+            } else false
+        )
+    }
     val borderColor = if (caught) Color.Green else Color.Transparent
     val painter = rememberImagePainter(creature.spriteImageUrl)
 
