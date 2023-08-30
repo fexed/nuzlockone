@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cache
 import network.Cache
 
@@ -124,6 +125,14 @@ fun StatsCard() {
                             .width(50.dp).height(20.dp)
                     )
                 }
+            }
+            Divider()
+            Row(
+                modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(32.dp, 8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Powered by PokéApi", fontSize = 10.sp)
             }
         }
     }
