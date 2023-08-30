@@ -129,7 +129,7 @@ fun ListAllLocations(paddingValues: PaddingValues) {
                 }
 
                 LaunchedEffect(true) {
-                    coroutineScope {
+                    scope.launch {
                         cache.locationsList[it] = try {
                             PokeApi().getLocationData(it + 1)
                         } catch (e: Exception) {
