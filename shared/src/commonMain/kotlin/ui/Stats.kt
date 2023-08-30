@@ -132,7 +132,10 @@ fun StatsCard() {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Powered by PokéApi", fontSize = 10.sp)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Powered by PokéApi", fontSize = 10.sp)
+                    Text("Made by Fexed", fontSize = 10.sp)
+                }
             }
         }
     }
