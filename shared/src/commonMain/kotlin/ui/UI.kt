@@ -41,6 +41,112 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import network.Cache
 
+
+@Composable
+fun TopBarFiltering(filterSelected: Boolean) {
+    AnimatedVisibility(filterSelected) {
+        TopAppBar {
+            AnimatedVisibility(FilterState.instance.currentSelectedType.value != Type.NONE) {
+                Row(
+                    modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.size(8.dp))
+                    TypePill(FilterState.instance.currentSelectedType.value)
+                }
+            }
+            AnimatedVisibility(FilterState.instance.currentSelectedGame.value != -1) {
+                Row(
+                    modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Icon(Icons.Default.VideogameAsset, contentDescription = "")
+                    Spacer(modifier = Modifier.size(4.dp))
+                    if (FilterState.instance.currentSelectedGame.value > 0) {
+                        Text(cache.gamesNameList[FilterState.instance.currentSelectedGame.value - 1])
+                    }
+                }
+            }
+            AnimatedVisibility(FilterState.instance.currentSelectedNuzlocke.value != null) {
+                Row(
+                    modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.size(8.dp))
+                    if (FilterState.instance.currentSelectedNuzlocke.value != null) {
+                        Text("Run: ${FilterState.instance.currentSelectedNuzlocke.value!!.name}")
+                    }
+                }
+            }
+            Spacer(Modifier.weight(1f).fillMaxHeight())
+            OutlinedButton(
+                modifier = Modifier.padding(8.dp),
+                onClick = {
+                    FilterState.instance.currentSelectedType.value = Type.NONE
+                    FilterState.instance.currentSelectedGame.value = -1
+                    FilterState.instance.currentSelectedNuzlocke.value = null
+                    FilterState.instance.currentSearchString.value = ""
+                }) {
+                Icon(Icons.Default.FilterListOff, contentDescription = "")
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomNavigationBar(currentSelected: Int, changeContent: (Int) -> Unit) {
+    BottomNavigation {
+        BottomNavigationItem(icon = {
+            Icon(imageVector = Icons.Default.Home, "Home")
+        },
+            selected = (currentSelected == -1),
+            onClick = {
+                changeContent(-1)
+            })
+
+        BottomNavigationItem(icon = {
+            Icon(imageVector = Icons.Default.List, "Pokémons")
+        },
+            selected = (currentSelected == 0),
+            onClick = {
+                changeContent(0)
+            })
+
+        BottomNavigationItem(icon = {
+            Icon(imageVector = Icons.Default.Category, "Items")
+        },
+            selected = (currentSelected == 4),
+            onClick = {
+                changeContent(4)
+            })
+
+        BottomNavigationItem(icon = {
+            Icon(imageVector = Icons.Default.Map, "Locations")
+        },
+            selected = (currentSelected == 1),
+            onClick = {
+                changeContent(1)
+            })
+
+        BottomNavigationItem(icon = {
+            Icon(imageVector = Icons.Default.VideogameAsset, "Games")
+        },
+            selected = (currentSelected == 2),
+            onClick = {
+                changeContent(2)
+            })
+
+        BottomNavigationItem(icon = {
+            Icon(imageVector = Icons.Default.Settings, "Settings")
+        },
+            selected = (currentSelected == 3),
+            onClick = {
+                changeContent(3)
+            })
+    }
+}
+
 @Composable
 fun MainScaffold() {
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
@@ -78,107 +184,8 @@ fun MainScaffold() {
                     else -> MainPage(it)
                 }
             },
-            topBar = {
-                AnimatedVisibility(filterSelected) {
-                    TopAppBar {
-                        AnimatedVisibility(FilterState.instance.currentSelectedType.value != Type.NONE) {
-                            Row(
-                                modifier = Modifier.wrapContentWidth().fillMaxHeight(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Spacer(modifier = Modifier.size(8.dp))
-                                TypePill(FilterState.instance.currentSelectedType.value)
-                            }
-                        }
-                        AnimatedVisibility(FilterState.instance.currentSelectedGame.value != -1) {
-                            Row(
-                                modifier = Modifier.wrapContentWidth().fillMaxHeight(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Spacer(modifier = Modifier.size(8.dp))
-                                Icon(Icons.Default.VideogameAsset, contentDescription = "")
-                                Spacer(modifier = Modifier.size(4.dp))
-                                if (FilterState.instance.currentSelectedGame.value > 0) {
-                                    Text(cache.gamesNameList[FilterState.instance.currentSelectedGame.value - 1])
-                                }
-                            }
-                        }
-                        AnimatedVisibility(FilterState.instance.currentSelectedNuzlocke.value != null) {
-                            Row(
-                                modifier = Modifier.wrapContentWidth().fillMaxHeight(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Spacer(modifier = Modifier.size(8.dp))
-                                if (FilterState.instance.currentSelectedNuzlocke.value != null) {
-                                    Text("Run: ${FilterState.instance.currentSelectedNuzlocke.value!!.name}")
-                                }
-                            }
-                        }
-                        Spacer(Modifier.weight(1f).fillMaxHeight())
-                        OutlinedButton(
-                            modifier = Modifier.padding(8.dp),
-                            onClick = {
-                                FilterState.instance.currentSelectedType.value = Type.NONE
-                                FilterState.instance.currentSelectedGame.value = -1
-                                FilterState.instance.currentSelectedNuzlocke.value = null
-                                FilterState.instance.currentSearchString.value = ""
-                            }) {
-                            Icon(Icons.Default.FilterListOff, contentDescription = "")
-                        }
-                    }
-                }
-            },
-            bottomBar = {
-                BottomNavigation {
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Home, "Home")
-                    },
-                        selected = (content == -1),
-                        onClick = {
-                            content = -1
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.List, "Pokémons")
-                    },
-                        selected = (content == 0),
-                        onClick = {
-                            content = 0
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Category, "Items")
-                    },
-                        selected = (content == 4),
-                        onClick = {
-                            content = 4
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Map, "Locations")
-                    },
-                        selected = (content == 1),
-                        onClick = {
-                            content = 1
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.VideogameAsset, "Games")
-                    },
-                        selected = (content == 2),
-                        onClick = {
-                            content = 2
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Settings, "Settings")
-                    },
-                        selected = (content == 3),
-                        onClick = {
-                            content = 3
-                        })
-                }
-            }
+            topBar = { TopBarFiltering(filterSelected) },
+            bottomBar = { BottomNavigationBar(content) { content = it } }
         )
     }
 }
