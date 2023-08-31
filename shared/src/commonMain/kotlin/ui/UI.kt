@@ -1,6 +1,7 @@
 package ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,12 +28,15 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FilterListOff
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.More
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.UnfoldLess
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -114,6 +118,51 @@ fun BottomNavigationBar(currentSelected: Int, changeContent: (Int) -> Unit) {
     val GAMES = 2
 
     BottomNavigation {
+
+        AnimatedVisibility(expanded) {
+            Row {
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.List, "Pokémons")
+                },
+                    selected = (currentSelected == PKMNS),
+                    onClick = {
+                        changeContent(PKMNS)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.Category, "Items")
+                },
+                    selected = (currentSelected == ITEMS),
+                    onClick = {
+                        changeContent(ITEMS)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.Map, "Locations")
+                },
+                    selected = (currentSelected == PLACS),
+                    onClick = {
+                        changeContent(PLACS)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.VideogameAsset, "Games")
+                },
+                    selected = (currentSelected == GAMES),
+                    onClick = {
+                        changeContent(GAMES)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(Icons.Default.Close, contentDescription = "")
+                },
+                    selected = false,
+                    onClick = {
+                        expanded = false
+                    })
+            }
+        }
+
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.Home, "Home")
         },
@@ -122,46 +171,13 @@ fun BottomNavigationBar(currentSelected: Int, changeContent: (Int) -> Unit) {
                 changeContent(HOME)
             })
 
-        OutlinedButton(
+        BottomNavigationItem(icon = {
+            Icon(Icons.Default.MoreVert, contentDescription = "")
+        },
+            selected = false,
             onClick = {
                 expanded = true
-            },
-            modifier = Modifier.size(50.dp).padding(4.dp),  //avoid the oval shape
-            shape = CircleShape,
-            contentPadding = PaddingValues(0.dp),
-        ) {
-            Icon(Icons.Default.MoreVert, contentDescription = "")
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                DropdownMenuItem(
-                    onClick = {
-                        changeContent(PKMNS)
-                        expanded = false
-                    }
-                ) {  Icon(imageVector = Icons.Default.List, "Pokémons") }
-                DropdownMenuItem(
-                    onClick = {
-                        changeContent(ITEMS)
-                        expanded = false
-                    }
-                ) {  Icon(imageVector = Icons.Default.Category, "Items") }
-                DropdownMenuItem(
-                    onClick = {
-                        changeContent(PLACS)
-                        expanded = false
-                    }
-                ) {  Icon(imageVector = Icons.Default.Map, "Locations") }
-                DropdownMenuItem(
-                    onClick = {
-                        changeContent(GAMES)
-                        expanded = false
-                    }
-                ) {  Icon(imageVector = Icons.Default.VideogameAsset, "Games") }
-            }
-        }
+            })
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.Settings, "Settings")
