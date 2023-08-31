@@ -96,53 +96,60 @@ fun TopBarFiltering(filterSelected: Boolean) {
 
 @Composable
 fun BottomNavigationBar(currentSelected: Int, changeContent: (Int) -> Unit) {
+    val HOME = -1
+    val SETTINGS = 3
+    val PKMNS = 0
+    val ITEMS = 4
+    val PLACS = 1
+    val GAMES = 2
+
     BottomNavigation {
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.Home, "Home")
         },
-            selected = (currentSelected == -1),
+            selected = (currentSelected == HOME),
             onClick = {
-                changeContent(-1)
+                changeContent(HOME)
             })
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.List, "Pokémons")
         },
-            selected = (currentSelected == 0),
+            selected = (currentSelected == PKMNS),
             onClick = {
-                changeContent(0)
+                changeContent(PKMNS)
             })
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.Category, "Items")
         },
-            selected = (currentSelected == 4),
+            selected = (currentSelected == ITEMS),
             onClick = {
-                changeContent(4)
+                changeContent(ITEMS)
             })
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.Map, "Locations")
         },
-            selected = (currentSelected == 1),
+            selected = (currentSelected == PLACS),
             onClick = {
-                changeContent(1)
+                changeContent(PLACS)
             })
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.VideogameAsset, "Games")
         },
-            selected = (currentSelected == 2),
+            selected = (currentSelected == GAMES),
             onClick = {
-                changeContent(2)
+                changeContent(GAMES)
             })
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.Settings, "Settings")
         },
-            selected = (currentSelected == 3),
+            selected = (currentSelected == SETTINGS),
             onClick = {
-                changeContent(3)
+                changeContent(SETTINGS)
             })
     }
 }
