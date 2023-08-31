@@ -46,14 +46,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cache
 import data.Type
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import network.Cache
-
+import widthClass
 
 @Composable
 fun TopBarFiltering(filterSelected: Boolean) {
@@ -109,83 +107,134 @@ fun TopBarFiltering(filterSelected: Boolean) {
 
 @Composable
 fun BottomNavigationBar(currentSelected: Int, changeContent: (Int) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
     val HOME = -1
     val SETTINGS = 3
     val PKMNS = 0
     val ITEMS = 4
     val PLACS = 1
     val GAMES = 2
+    if (widthClass() == WindowSizeClass.COMPACT) {
+        var expanded by remember { mutableStateOf(false) }
 
-    BottomNavigation {
+        BottomNavigation {
+            AnimatedVisibility(expanded) {
+                Row {
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.List, "Pokémons")
+                    },
+                        selected = (currentSelected == PKMNS),
+                        onClick = {
+                            changeContent(PKMNS)
+                        })
 
-        AnimatedVisibility(expanded) {
-            Row {
-                BottomNavigationItem(icon = {
-                    Icon(imageVector = Icons.Default.List, "Pokémons")
-                },
-                    selected = (currentSelected == PKMNS),
-                    onClick = {
-                        changeContent(PKMNS)
-                    })
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.Category, "Items")
+                    },
+                        selected = (currentSelected == ITEMS),
+                        onClick = {
+                            changeContent(ITEMS)
+                        })
 
-                BottomNavigationItem(icon = {
-                    Icon(imageVector = Icons.Default.Category, "Items")
-                },
-                    selected = (currentSelected == ITEMS),
-                    onClick = {
-                        changeContent(ITEMS)
-                    })
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.Map, "Locations")
+                    },
+                        selected = (currentSelected == PLACS),
+                        onClick = {
+                            changeContent(PLACS)
+                        })
 
-                BottomNavigationItem(icon = {
-                    Icon(imageVector = Icons.Default.Map, "Locations")
-                },
-                    selected = (currentSelected == PLACS),
-                    onClick = {
-                        changeContent(PLACS)
-                    })
+                    BottomNavigationItem(icon = {
+                        Icon(imageVector = Icons.Default.VideogameAsset, "Games")
+                    },
+                        selected = (currentSelected == GAMES),
+                        onClick = {
+                            changeContent(GAMES)
+                        })
 
-                BottomNavigationItem(icon = {
-                    Icon(imageVector = Icons.Default.VideogameAsset, "Games")
-                },
-                    selected = (currentSelected == GAMES),
-                    onClick = {
-                        changeContent(GAMES)
-                    })
-
-                BottomNavigationItem(icon = {
-                    Icon(Icons.Default.Close, contentDescription = "")
-                },
-                    selected = false,
-                    onClick = {
-                        expanded = false
-                    })
+                    BottomNavigationItem(icon = {
+                        Icon(Icons.Default.Close, contentDescription = "")
+                    },
+                        selected = false,
+                        onClick = {
+                            expanded = false
+                        })
+                }
             }
+
+            BottomNavigationItem(icon = {
+                Icon(imageVector = Icons.Default.Home, "Home")
+            },
+                selected = (currentSelected == HOME),
+                onClick = {
+                    changeContent(HOME)
+                })
+
+            BottomNavigationItem(icon = {
+                Icon(Icons.Default.MoreVert, contentDescription = "")
+            },
+                selected = false,
+                onClick = {
+                    expanded = true
+                })
+
+            BottomNavigationItem(icon = {
+                Icon(imageVector = Icons.Default.Settings, "Settings")
+            },
+                selected = (currentSelected == SETTINGS),
+                onClick = {
+                    changeContent(SETTINGS)
+                })
         }
+    } else {
+        BottomNavigation {
+            BottomNavigationItem(icon = {
+                Icon(imageVector = Icons.Default.List, "Pokémons")
+            },
+                selected = (currentSelected == PKMNS),
+                onClick = {
+                    changeContent(PKMNS)
+                })
 
-        BottomNavigationItem(icon = {
-            Icon(imageVector = Icons.Default.Home, "Home")
-        },
-            selected = (currentSelected == HOME),
-            onClick = {
-                changeContent(HOME)
-            })
+            BottomNavigationItem(icon = {
+                Icon(imageVector = Icons.Default.Category, "Items")
+            },
+                selected = (currentSelected == ITEMS),
+                onClick = {
+                    changeContent(ITEMS)
+                })
 
-        BottomNavigationItem(icon = {
-            Icon(Icons.Default.MoreVert, contentDescription = "")
-        },
-            selected = false,
-            onClick = {
-                expanded = true
-            })
+            BottomNavigationItem(icon = {
+                Icon(imageVector = Icons.Default.Map, "Locations")
+            },
+                selected = (currentSelected == PLACS),
+                onClick = {
+                    changeContent(PLACS)
+                })
 
-        BottomNavigationItem(icon = {
-            Icon(imageVector = Icons.Default.Settings, "Settings")
-        },
-            selected = (currentSelected == SETTINGS),
-            onClick = {
-                changeContent(SETTINGS)
-            })
+            BottomNavigationItem(icon = {
+                Icon(imageVector = Icons.Default.VideogameAsset, "Games")
+            },
+                selected = (currentSelected == GAMES),
+                onClick = {
+                    changeContent(GAMES)
+                })
+
+            BottomNavigationItem(icon = {
+                Icon(imageVector = Icons.Default.Home, "Home")
+            },
+                selected = (currentSelected == HOME),
+                onClick = {
+                    changeContent(HOME)
+                })
+
+            BottomNavigationItem(icon = {
+                Icon(imageVector = Icons.Default.Settings, "Settings")
+            },
+                selected = (currentSelected == SETTINGS),
+                onClick = {
+                    changeContent(SETTINGS)
+                })
+        }
     }
 }
 

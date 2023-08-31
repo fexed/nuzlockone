@@ -1,3 +1,4 @@
+import android.util.DisplayMetrics
 import androidx.compose.runtime.Composable
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.storage.CacheStorage
@@ -23,6 +24,10 @@ actual fun getCacheFile(): CacheStorage {
 actual fun getPlatformHttpClient(): HttpClient {
     return HttpClient()
 }
+
+actual val screenHeightPixels: Int = DisplayMetrics().heightPixels
+actual val screenWidthPixels: Int = DisplayMetrics().widthPixels
+actual val screenDensityDPI: Int = DisplayMetrics().densityDpi
 
 @Composable
 fun MainView() = MainScaffold()

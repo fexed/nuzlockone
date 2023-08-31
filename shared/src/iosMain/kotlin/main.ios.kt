@@ -31,4 +31,8 @@ actual fun getPlatformHttpClient(): HttpClient {
     }
 }
 
+actual val screenHeightPixels: Int = 0
+actual val screenWidthPixels: Int = 0
+actual val screenDensityDPI: Int = 0
+
 fun MainViewController() = ComposeUIViewController { MainScaffold() }
