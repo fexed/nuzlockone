@@ -76,6 +76,8 @@ kotlin {
                 implementation(compose.desktop.common)
                 implementation("io.ktor:ktor-client-apache5:$ktorVersion")
                 api("io.github.qdsfdhvh:image-loader-extension-imageio:1.6.4")
+                implementation(compose.preview)
+                implementation(compose.uiTooling)
             }
         }
     }
