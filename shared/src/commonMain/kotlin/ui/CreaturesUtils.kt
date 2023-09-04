@@ -301,6 +301,7 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
 
             if (isLoading || !creature.isValid) {
                 LaunchedEffect(true) {
+                    toBeLoaded.value++
                     coroutineScope {
                         cache.creaturesList[it] = try {
                             PokeApi().getCreatureData(it + 1)
@@ -313,6 +314,7 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
                             }
                         }
                         creature = cache.creaturesList[it]
+                        toBeLoaded.value--
                     }
                 }
             }

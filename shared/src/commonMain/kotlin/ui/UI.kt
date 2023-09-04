@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 import widthClass
 
 lateinit var loaded: MutableState<Int>
-var toBeLoaded = 6
+lateinit var toBeLoaded: MutableState<Int>
 
 @Composable
 fun TopBarFiltering(filterSelected: Boolean) {
@@ -242,6 +242,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
 @Composable
 fun MainScaffold() {
     loaded = remember { mutableStateOf(0) }
+    toBeLoaded = remember { mutableStateOf(6) }
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
     FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
     FilterState.instance.currentSelectedNuzlocke = remember { mutableStateOf(null) }
@@ -278,7 +279,7 @@ fun MainScaffold() {
                 }
             },
             topBar = { TopBarFiltering(filterSelected) },
-            bottomBar = { BottomNavigationBar(content, loading = (loaded.value.toFloat()/toBeLoaded)) { content = it } }
+            bottomBar = { BottomNavigationBar(content, loading = (loaded.value.toFloat()/(toBeLoaded.value))) { content = it } }
         )
     }
 }
