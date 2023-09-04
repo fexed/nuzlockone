@@ -4,10 +4,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -18,6 +20,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
@@ -106,140 +109,148 @@ fun TopBarFiltering(filterSelected: Boolean) {
 }
 
 @Composable
-fun BottomNavigationBar(currentSelected: Int, changeContent: (Int) -> Unit) {
+fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeContent: (Int) -> Unit) {
     val HOME = -1
     val SETTINGS = 3
     val PKMNS = 0
     val ITEMS = 4
     val PLACS = 1
     val GAMES = 2
-    if (widthClass() == WindowSizeClass.COMPACT) {
-        var expanded by remember { mutableStateOf(false) }
 
-        BottomNavigation {
-            AnimatedVisibility(expanded) {
-                Row {
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.List, "Pokémons")
-                    },
-                        selected = (currentSelected == PKMNS),
-                        onClick = {
-                            changeContent(PKMNS)
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Category, "Items")
-                    },
-                        selected = (currentSelected == ITEMS),
-                        onClick = {
-                            changeContent(ITEMS)
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.Map, "Locations")
-                    },
-                        selected = (currentSelected == PLACS),
-                        onClick = {
-                            changeContent(PLACS)
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(imageVector = Icons.Default.VideogameAsset, "Games")
-                    },
-                        selected = (currentSelected == GAMES),
-                        onClick = {
-                            changeContent(GAMES)
-                        })
-
-                    BottomNavigationItem(icon = {
-                        Icon(Icons.Default.Close, contentDescription = "")
-                    },
-                        selected = false,
-                        onClick = {
-                            expanded = false
-                        })
-                }
-            }
-
-            BottomNavigationItem(icon = {
-                Icon(imageVector = Icons.Default.Home, "Home")
-            },
-                selected = (currentSelected == HOME),
-                onClick = {
-                    changeContent(HOME)
-                })
-
-            BottomNavigationItem(icon = {
-                Icon(Icons.Default.MoreVert, contentDescription = "")
-            },
-                selected = false,
-                onClick = {
-                    expanded = true
-                })
-
-            BottomNavigationItem(icon = {
-                Icon(imageVector = Icons.Default.Settings, "Settings")
-            },
-                selected = (currentSelected == SETTINGS),
-                onClick = {
-                    changeContent(SETTINGS)
-                })
+    Column {
+        if (loading < 1.0f) {
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), progress = loading)
         }
-    } else {
-        BottomNavigation {
-            BottomNavigationItem(icon = {
-                Icon(imageVector = Icons.Default.List, "Pokémons")
-            },
-                selected = (currentSelected == PKMNS),
-                onClick = {
-                    changeContent(PKMNS)
-                })
 
-            BottomNavigationItem(icon = {
-                Icon(imageVector = Icons.Default.Category, "Items")
-            },
-                selected = (currentSelected == ITEMS),
-                onClick = {
-                    changeContent(ITEMS)
-                })
+        if (widthClass() == WindowSizeClass.COMPACT) {
+            var expanded by remember { mutableStateOf(false) }
+            BottomNavigation {
+                AnimatedVisibility(expanded) {
+                    Row {
+                        BottomNavigationItem(icon = {
+                            Icon(imageVector = Icons.Default.List, "Pokémons")
+                        },
+                            selected = (currentSelected == PKMNS),
+                            onClick = {
+                                changeContent(PKMNS)
+                            })
 
-            BottomNavigationItem(icon = {
-                Icon(imageVector = Icons.Default.Map, "Locations")
-            },
-                selected = (currentSelected == PLACS),
-                onClick = {
-                    changeContent(PLACS)
-                })
+                        BottomNavigationItem(icon = {
+                            Icon(imageVector = Icons.Default.Category, "Items")
+                        },
+                            selected = (currentSelected == ITEMS),
+                            onClick = {
+                                changeContent(ITEMS)
+                            })
 
-            BottomNavigationItem(icon = {
-                Icon(imageVector = Icons.Default.VideogameAsset, "Games")
-            },
-                selected = (currentSelected == GAMES),
-                onClick = {
-                    changeContent(GAMES)
-                })
+                        BottomNavigationItem(icon = {
+                            Icon(imageVector = Icons.Default.Map, "Locations")
+                        },
+                            selected = (currentSelected == PLACS),
+                            onClick = {
+                                changeContent(PLACS)
+                            })
 
-            BottomNavigationItem(icon = {
-                Icon(imageVector = Icons.Default.Home, "Home")
-            },
-                selected = (currentSelected == HOME),
-                onClick = {
-                    changeContent(HOME)
-                })
+                        BottomNavigationItem(icon = {
+                            Icon(imageVector = Icons.Default.VideogameAsset, "Games")
+                        },
+                            selected = (currentSelected == GAMES),
+                            onClick = {
+                                changeContent(GAMES)
+                            })
 
-            BottomNavigationItem(icon = {
-                Icon(imageVector = Icons.Default.Settings, "Settings")
-            },
-                selected = (currentSelected == SETTINGS),
-                onClick = {
-                    changeContent(SETTINGS)
-                })
+                        BottomNavigationItem(icon = {
+                            Icon(Icons.Default.Close, contentDescription = "")
+                        },
+                            selected = false,
+                            onClick = {
+                                expanded = false
+                            })
+                    }
+                }
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.Home, "Home")
+                },
+                    selected = (currentSelected == HOME),
+                    onClick = {
+                        changeContent(HOME)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(Icons.Default.MoreVert, contentDescription = "")
+                },
+                    selected = false,
+                    onClick = {
+                        expanded = true
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.Settings, "Settings")
+                },
+                    selected = (currentSelected == SETTINGS),
+                    onClick = {
+                        changeContent(SETTINGS)
+                    })
+            }
+        } else {
+            BottomNavigation {
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.List, "Pokémons")
+                },
+                    selected = (currentSelected == PKMNS),
+                    onClick = {
+                        changeContent(PKMNS)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.Category, "Items")
+                },
+                    selected = (currentSelected == ITEMS),
+                    onClick = {
+                        changeContent(ITEMS)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.Map, "Locations")
+                },
+                    selected = (currentSelected == PLACS),
+                    onClick = {
+                        changeContent(PLACS)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.VideogameAsset, "Games")
+                },
+                    selected = (currentSelected == GAMES),
+                    onClick = {
+                        changeContent(GAMES)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.Home, "Home")
+                },
+                    selected = (currentSelected == HOME),
+                    onClick = {
+                        changeContent(HOME)
+                    })
+
+                BottomNavigationItem(icon = {
+                    Icon(imageVector = Icons.Default.Settings, "Settings")
+                },
+                    selected = (currentSelected == SETTINGS),
+                    onClick = {
+                        changeContent(SETTINGS)
+                    })
+            }
         }
     }
 }
 
 @Composable
 fun MainScaffold() {
+    var loaded by remember { mutableStateOf(0) }
+    val ITEMSTOLOAD = 6
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
     FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
     FilterState.instance.currentSelectedNuzlocke = remember { mutableStateOf(null) }
@@ -256,12 +267,12 @@ fun MainScaffold() {
         val scope = rememberCoroutineScope()
 
         scope.launch {
-            coroutineScope { cache.preloadTypes() }
-            coroutineScope { cache.preloadPokemons() }
-            coroutineScope { cache.preloadLocations() }
-            coroutineScope { cache.preloadGames() }
-            coroutineScope { cache.preloadItems() }
-            coroutineScope { cache.loadNuzlockes() }
+            coroutineScope { cache.preloadTypes(); loaded++ }
+            coroutineScope { cache.preloadPokemons(); loaded++ }
+            coroutineScope { cache.preloadLocations(); loaded++ }
+            coroutineScope { cache.preloadGames(); loaded++ }
+            coroutineScope { cache.preloadItems(); loaded++ }
+            coroutineScope { cache.loadNuzlockes(); loaded++ }
         }
 
         Scaffold(
@@ -276,7 +287,7 @@ fun MainScaffold() {
                 }
             },
             topBar = { TopBarFiltering(filterSelected) },
-            bottomBar = { BottomNavigationBar(content) { content = it } }
+            bottomBar = { BottomNavigationBar(content, loading = (loaded.toFloat()/ITEMSTOLOAD)) { content = it } }
         )
     }
 }
