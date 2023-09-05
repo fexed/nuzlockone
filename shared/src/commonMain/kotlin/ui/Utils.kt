@@ -75,6 +75,8 @@ fun isFiltered(creature: Creature): Boolean {
         }
     }
 
+    if (creature.name == "Loading...") isFiltered = false
+
     return isFiltered
 }
 

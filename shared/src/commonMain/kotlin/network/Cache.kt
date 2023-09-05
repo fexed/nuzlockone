@@ -8,14 +8,16 @@ import data.Location
 import data.NuzlockRun
 import data.Type
 import data.typeNames
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class Cache {
     val api = PokeApi()
     var numberOfPokemons: MutableState<Int> = mutableStateOf(1)
-    var creaturesList: MutableList<Creature> = mutableListOf(Creature().apply {
+    var creaturesList: MutableStateFlow<MutableList<Creature>> = MutableStateFlow(mutableListOf(Creature().apply {
         name = "Loading..."
         type1 = Type.NONE
-    })
+    }))
 
     suspend fun preloadPokemons() {
         val n = try {
@@ -24,37 +26,41 @@ class Cache {
             println(e.message)
             0
         }
-        val creature = Creature().apply {
-            id = -1
-            name = "Loading..."
-            type1 = Type.NONE
-            type2 = Type.NONE
-            isValid = true
-        }
-        creaturesList = ArrayList(n)
+
+        val newList = mutableListOf<Creature>()
         for (ix in 0 until n) {
-            creature.apply { id = ix + 1 }
-            creaturesList.add(ix, creature)
+            val creature = Creature().apply {
+                id = -1
+                name = "Loading..."
+                type1 = Type.NONE
+                type2 = Type.NONE
+                isValid = true
+                id = ix + 1
+            }
+            newList.add(ix, creature)
         }
         numberOfPokemons.value = n
-//
-//        for (ix in 0 until n) {
-//            if (!creaturesList[ix].isPreloading) {
-//                creaturesList[ix].isPreloading = true
-//                coroutineScope {
-//                    creaturesList[ix] = try {
-//                        api.getCreatureData(ix + 1)
-//                    } catch (e: Exception) {
-//                        Creature().apply {
-//                            id = -1
-//                            name = e.message ?: "Error"
-//                            type1 = Type.NONE
-//                            type2 = Type.NONE
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        creaturesList.value = newList
+    }
+
+    suspend fun loadAllPokemons() {
+        for (ix in 0 until numberOfPokemons.value) {
+            if (creaturesList.value[ix].name == "Loading...") {
+                creaturesList.value[ix].isPreloading = true
+                coroutineScope {
+                    creaturesList.value[ix] = try {
+                        api.getCreatureData(ix + 1)
+                    } catch (e: Exception) {
+                        Creature().apply {
+                            id = -1
+                            name = e.message ?: "Error"
+                            type1 = Type.NONE
+                            type2 = Type.NONE
+                        }
+                    }
+                }
+            }
+        }
     }
 
     var numberOfLocations: MutableState<Int> = mutableStateOf(1)

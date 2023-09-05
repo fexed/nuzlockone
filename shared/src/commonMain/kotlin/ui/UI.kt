@@ -265,6 +265,7 @@ fun MainScaffold() {
             coroutineScope { cache.preloadGames(); loaded.value++ }
             coroutineScope { cache.preloadItems(); loaded.value++ }
             coroutineScope { cache.loadNuzlockes(); loaded.value++ }
+            coroutineScope { cache.loadAllPokemons(); }
         }
 
         Scaffold(

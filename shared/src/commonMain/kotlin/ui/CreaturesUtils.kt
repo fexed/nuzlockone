@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -290,40 +291,16 @@ fun TypePill(type: Type) {
 
 @Composable
 fun ListAllPokemons(paddingValues: PaddingValues) {
+    val list = cache.creaturesList
     LazyColumn(
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = paddingValues
     ) {
-        items(count = cache.numberOfPokemons.value) {
-            var creature by remember { mutableStateOf(cache.creaturesList[it]) }
-            val isLoading = creature.name == "Loading..."
-
-            if (isLoading || !creature.isValid) {
-                LaunchedEffect(true) {
-                    toBeLoaded.value++
-                    coroutineScope {
-                        cache.creaturesList[it] = try {
-                            PokeApi().getCreatureData(it + 1)
-                        } catch (e: Exception) {
-                            Creature().apply {
-                                id = -1
-                                name = e.message ?: "Error"
-                                type1 = Type.NONE
-                                type2 = Type.NONE
-                            }
-                        }
-                        creature = cache.creaturesList[it]
-                        toBeLoaded.value--
-                    }
-                }
+        items(items = list.value) { creature ->
+            if (!isFiltered(creature)) {
+                CreatureRowElement(creature, isLoading = creature.name == "Loading...")
             }
-
-            if (creature.isValid) {
-                if (isLoading || !isLoading && !isFiltered(creature)) {
-                    CreatureRowElement(creature, isLoading = isLoading)
-                }
-            } else CreatureRowElement(creature, isLoading = true)
         }
     }
 }
