@@ -14,6 +14,7 @@ class Encounter(
     var chance: Int,
     var typeId: Int,
     var typeName: String,
+    var areaName: String,
     var game: Game
 ) {
     override fun toString(): String {

@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -261,7 +262,7 @@ fun CreatureCard(creature: Creature, details: String = "") {
             TypePill(creature.type1)
             Spacer(modifier = Modifier.width(4.dp))
             TypePill(creature.type2)
-            Text(details)
+            Text(details, fontSize = 12.sp, textAlign = TextAlign.Center)
         }
     }
 }

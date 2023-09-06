@@ -197,9 +197,11 @@ class PokeApi {
 
                 name = getLocalizedOrDefaultName(data.names)
 
-                regionName = ""
+                regionName = getLocalizedOrDefaultName(client.get(data.region.url).body<Region>().names)
 
-                areaURLS.add("${baseURL}/location-area/$number")
+                for (areaUrl in data.areas) {
+                    areaURLS.add(areaUrl.url)
+                }
 
                 for (genGameIx in data.game_indices) {
                     gameIndexes.addAll(gameIdFromGameIndex(genGameIx))
@@ -227,6 +229,7 @@ class PokeApi {
                             encounterDetail.chance,
                             encounterMethod.order,
                             encounterMethodName,
+                            getLocalizedOrDefaultName(area.names),
                             Game(id = version.id, title = gameName, isValid = true)
                         )
                         emit(newEncounter)

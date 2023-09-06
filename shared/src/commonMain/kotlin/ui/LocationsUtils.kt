@@ -83,7 +83,7 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
                                             if (!isFiltered(encounterList!![it])) {
                                                 CreatureCard(
                                                     encounterList!![it].creature,
-                                                    details = encounterList!![it].typeName
+                                                    details = encounterList!![it].areaName + "\n\n" + encounterList!![it].typeName
                                                 )
                                             }
                                         }
