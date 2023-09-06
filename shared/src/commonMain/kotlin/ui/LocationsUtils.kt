@@ -43,7 +43,7 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
     val scope = rememberCoroutineScope()
     var areDetailsVisible by mutableStateOf(false)
     var areEncountersLoaded by mutableStateOf(false)
-    var encounterList : MutableList<Encounter>? = null
+    var encounterList: MutableList<Encounter>? = null
     var encounterNumber by remember { mutableStateOf(0) }
 
     Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).clickable {
@@ -65,14 +65,18 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
         }
         areDetailsVisible = !areDetailsVisible
     }) {
-        Column(modifier = Modifier.background(
+        Column(
+            modifier = Modifier.background(
                 shimmerBrush(showShimmer = isLoading)
-        )) {
+            )
+        ) {
             if (!isLoading) {
                 Row(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp)) {
                     Column {
                         Text(location.regionName, fontSize = 14.sp)
-                        Text(location.name, fontSize = 20.sp, modifier = Modifier.padding(0.dp, 8.dp))
+                        Text(
+                            location.name, fontSize = 20.sp, modifier = Modifier.padding(0.dp, 8.dp)
+                        )
                         AnimatedVisibility(areDetailsVisible) {
                             Column {
                                 Spacer(modifier = Modifier.padding(8.dp))
@@ -83,7 +87,7 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
                                             if (!isFiltered(encounterList!![it])) {
                                                 CreatureCard(
                                                     encounterList!![it].creature,
-                                                    details = encounterList!![it].areaName + "\n\n" + encounterList!![it].typeName
+                                                    details = (if (encounterList!![it].areaName != location.name) encounterList!![it].areaName + "\n\n" else "") + encounterList!![it].typeName
                                                 )
                                             }
                                         }
@@ -93,8 +97,8 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
                                             Box(
                                                 modifier = Modifier.fillMaxHeight().width(150.dp)
                                                     .height(225.dp).padding(8.dp).background(
-                                                    shimmerBrush(!areEncountersLoaded)
-                                                )
+                                                        shimmerBrush(!areEncountersLoaded)
+                                                    )
                                             )
                                         }
                                     }
@@ -114,7 +118,11 @@ fun LocationRowElement(location: Location, isLoading: Boolean = false) {
 fun ListAllLocations(paddingValues: PaddingValues) {
     val scope = rememberCoroutineScope()
 
-    LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, contentPadding = paddingValues) {
+    LazyColumn(
+        Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = paddingValues
+    ) {
         items(count = cache.numberOfLocations.value) {
             var location by remember { mutableStateOf(cache.locationsList[it]) }
             var isLoading by remember { mutableStateOf(false) }
@@ -143,7 +151,9 @@ fun ListAllLocations(paddingValues: PaddingValues) {
                 }
             }
 
-            if (location.isValid && !isFiltered(location)) LocationRowElement(location, isLoading = isLoading)
+            if (location.isValid && !isFiltered(location)) LocationRowElement(
+                location, isLoading = isLoading
+            )
         }
     }
 }
