@@ -189,10 +189,9 @@ class PokeApi {
     }
 
     suspend fun getLocationData(number: Int): Location {
-
         return withContext(Dispatchers.IO) {
-            val response = client.get("${baseURL}/location-area/$number")
-            val data = response.body<LocationArea>()
+            val response = client.get("${baseURL}/location/$number")
+            val data = response.body<network.Location>()
             Location().apply {
                 id = data.id
 
@@ -202,7 +201,9 @@ class PokeApi {
 
                 areaURLS.add("${baseURL}/location-area/$number")
 
-                gameIndexes.add(data.game_index)
+                for (genGameIx in data.game_indices) {
+                    gameIndexes.addAll(gameIdFromGameIndex(genGameIx))
+                }
 
                 isValid = true
             }
@@ -258,6 +259,20 @@ class PokeApi {
         return withContext(Dispatchers.IO) {
             val version = client.get(gameIndex.version.url).body<Version>()
             version.id
+        }
+    }
+    suspend fun gameIdFromGameIndex(gameIndex: GenerationGameIndex): List<Int> {
+        return withContext(Dispatchers.IO) {
+            val gameIds = mutableListOf<Int>()
+            val generation = client.get(gameIndex.generation.url).body<Generation>()
+            for (versionGroupUrl in generation.version_groups) {
+                val versionGroup = client.get(versionGroupUrl.url).body<VersionGroup>()
+                for (versionUrl in versionGroup.versions) {
+                    val version = client.get(versionUrl.url).body<Version>()
+                    gameIds.add(version.id)
+                }
+            }
+            gameIds
         }
     }
 
