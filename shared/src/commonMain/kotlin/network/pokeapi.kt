@@ -116,19 +116,7 @@ class PokeApi {
 
         creature.name = getLocalizedOrDefaultName(netData.names)
 
-        for (descr in netData.flavor_text_entries) {
-            if (descr.language.name == language) {
-                val version = client.get(descr.version.url).body<Version>()
-                val title = gameNameFix(version.id, getLocalizedOrDefaultName(version.names))
-                creature.flavorTexts.add(
-                    data.FlavorText(
-                        descr.language.name, descr.flavor_text + "\n(${title})"
-                    )
-                )
-            }
-        }
-
-        coroutineScope {
+        withContext(Dispatchers.IO) {
             for (variety in netData.varieties) {
                 if (variety.is_default) {
                     val defaultVariety = client.get(variety.pokemon.url).body<Pokemon>()
