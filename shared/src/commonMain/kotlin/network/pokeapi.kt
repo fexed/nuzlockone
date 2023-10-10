@@ -131,10 +131,10 @@ class PokeApi {
                     for (form_url in defaultVariety.forms) {
                         val form = client.get(form_url.url).body<PokemonForm>()
                         if (form.is_default) {
-                            creature.spriteImageUrl = form.sprites.front_default
-                            creature.shinySpriteImageUrl = form.sprites.front_shiny
-                            creature.backSpriteImageUrl = form.sprites.back_default
-                            creature.backShinySpriteImageUrl = form.sprites.back_shiny
+                            creature.spriteImageUrl = form.sprites.front_default ?: ""
+                            creature.shinySpriteImageUrl = form.sprites.front_shiny ?: ""
+                            creature.backSpriteImageUrl = form.sprites.back_default ?: ""
+                            creature.backShinySpriteImageUrl = form.sprites.back_shiny ?: ""
                             break
                         }
                     }
@@ -375,10 +375,10 @@ class PokemonForm(
 
 @Serializable
 class PokemonFormSprites(
-    val front_default: String,
-    val front_shiny: String,
-    val back_default: String,
-    val back_shiny: String
+    val front_default: String?,
+    val front_shiny: String?,
+    val back_default: String?,
+    val back_shiny: String?
 )
 
 @Serializable
