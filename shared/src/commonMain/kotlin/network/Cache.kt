@@ -11,8 +11,6 @@ import data.Type
 import data.typeNames
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 
 class Cache {
@@ -28,7 +26,6 @@ class Cache {
             0
         }
 
-        val newList = mutableStateListOf<Creature>()
         for (ix in 0 until n) {
             val creature = Creature().apply {
                 id = -1
@@ -58,7 +55,6 @@ class Cache {
                             type2 = Type.NONE
                         }
                     }
-                    println("Loaded ${creaturesList[ix].name}")
                 }
             }
         }
