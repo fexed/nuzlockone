@@ -1,6 +1,7 @@
 package network
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import data.Creature
 import data.Game
@@ -8,16 +9,16 @@ import data.Location
 import data.NuzlockRun
 import data.Type
 import data.typeNames
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 
 class Cache {
     val api = PokeApi()
     var numberOfPokemons: MutableState<Int> = mutableStateOf(1)
-    var creaturesList: MutableStateFlow<MutableList<Creature>> = MutableStateFlow(mutableListOf(Creature().apply {
-        name = "Loading..."
-        type1 = Type.NONE
-    }))
+    var creaturesList = mutableStateListOf<Creature>()
 
     suspend fun preloadPokemons() {
         val n = try {
@@ -27,7 +28,7 @@ class Cache {
             0
         }
 
-        val newList = mutableListOf<Creature>()
+        val newList = mutableStateListOf<Creature>()
         for (ix in 0 until n) {
             val creature = Creature().apply {
                 id = -1
@@ -37,18 +38,17 @@ class Cache {
                 isValid = true
                 id = ix + 1
             }
-            newList.add(ix, creature)
+            creaturesList.add(ix, creature)
         }
         numberOfPokemons.value = n
-        creaturesList.value = newList
     }
 
     suspend fun loadAllPokemons() {
         for (ix in 0 until numberOfPokemons.value) {
-            if (creaturesList.value[ix].name == "Loading...") {
-                creaturesList.value[ix].isPreloading = true
-                coroutineScope {
-                    creaturesList.value[ix] = try {
+            if (creaturesList[ix].name == "Loading...") {
+                creaturesList[ix].isPreloading = true
+                withContext(Dispatchers.IO) {
+                    creaturesList[ix] = try {
                         api.getCreatureData(ix + 1)
                     } catch (e: Exception) {
                         Creature().apply {
@@ -58,6 +58,7 @@ class Cache {
                             type2 = Type.NONE
                         }
                     }
+                    println("Loaded ${creaturesList[ix].name}")
                 }
             }
         }

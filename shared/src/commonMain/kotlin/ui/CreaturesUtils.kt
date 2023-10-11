@@ -292,13 +292,12 @@ fun TypePill(type: Type) {
 
 @Composable
 fun ListAllPokemons(paddingValues: PaddingValues) {
-    val list = cache.creaturesList
     LazyColumn(
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = paddingValues
     ) {
-        items(items = list.value) { creature ->
+        items(items = cache.creaturesList) { creature ->
             if (!isFiltered(creature)) {
                 CreatureRowElement(creature, isLoading = creature.name == "Loading...")
             }
