@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import data.Creature
 import data.Encounter
 import data.Game
+import data.Item
 import data.Location
 import data.NuzlockRun
 import data.Type
@@ -62,6 +63,13 @@ fun isFiltered(creature: Creature): Boolean {
 
     val currentType = instance.currentSelectedType
     val currentGame = instance.currentSelectedGame
+    val currentSearchString = instance.currentSearchString
+
+    if (currentSearchString.value != null) {
+        if (!creature.name.contains(currentSearchString.value!!)) {
+            isFiltered = true
+        }
+    }
 
     if (currentType.value != Type.NONE) {
         if (creature.type1 != currentType.value && creature.type2 != currentType.value) {
@@ -99,6 +107,13 @@ fun isFiltered(location: Location): Boolean {
     val instance = FilterState.instance
 
     val currentGame = instance.currentSelectedGame
+    val currentSearchString = instance.currentSearchString
+
+    if (currentSearchString.value != null) {
+        if (!location.name.contains(currentSearchString.value!!)) {
+            isFiltered = true
+        }
+    }
 
     if(currentGame.value != -1) {
         if (!location.gameIndexes.contains(currentGame.value)) {
@@ -111,9 +126,33 @@ fun isFiltered(location: Location): Boolean {
 
 fun isFiltered(game: Game): Boolean {
     var isFiltered = false
+    val instance = FilterState.instance
+
+    val currentSearchString = instance.currentSearchString
+
+    if (currentSearchString.value != null) {
+        if (!game.title.contains(currentSearchString.value!!)) {
+            isFiltered = true
+        }
+    }
 
     if (isGameIdBlacklisted(game.id)) {
         isFiltered = true
+    }
+
+    return isFiltered
+}
+
+fun isFiltered(item: Item): Boolean {
+    var isFiltered = false
+    val instance = FilterState.instance
+
+    val currentSearchString = instance.currentSearchString
+
+    if (currentSearchString.value != null) {
+        if (!item.name.contains(currentSearchString.value!!)) {
+            isFiltered = true
+        }
     }
 
     return isFiltered

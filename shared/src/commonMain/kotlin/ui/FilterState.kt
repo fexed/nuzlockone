@@ -8,7 +8,7 @@ class FilterState private constructor() {
     lateinit var currentSelectedType: MutableState<Type>
     lateinit var currentSelectedGame: MutableState<Int>
     lateinit var currentSelectedNuzlocke: MutableState<NuzlockRun?>
-    lateinit var currentSearchString: MutableState<String>
+    lateinit var currentSearchString: MutableState<String?>
     companion object {
         val instance: FilterState by lazy {
             FilterState()

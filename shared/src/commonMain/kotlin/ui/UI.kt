@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -28,6 +30,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterListOff
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -85,6 +88,19 @@ fun TopBarFiltering(filterSelected: Boolean) {
                     }
                 }
             }
+            AnimatedVisibility(FilterState.instance.currentSearchString.value != null) {
+                Row(
+                    modifier = Modifier.wrapContentWidth().fillMaxHeight(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.size(8.dp))
+                    if (FilterState.instance.currentSearchString.value != null) {
+                        TextField(value = FilterState.instance.currentSearchString.value!!, onValueChange = {
+                            FilterState.instance.currentSearchString.value = it
+                        })
+                    }
+                }
+            }
             Spacer(Modifier.weight(1f).fillMaxHeight())
             OutlinedButton(
                 modifier = Modifier.padding(8.dp),
@@ -92,7 +108,7 @@ fun TopBarFiltering(filterSelected: Boolean) {
                     FilterState.instance.currentSelectedType.value = Type.NONE
                     FilterState.instance.currentSelectedGame.value = -1
                     FilterState.instance.currentSelectedNuzlocke.value = null
-                    FilterState.instance.currentSearchString.value = ""
+                    FilterState.instance.currentSearchString.value = null
                 }) {
                 Icon(Icons.Default.FilterListOff, contentDescription = "")
             }
@@ -103,11 +119,11 @@ fun TopBarFiltering(filterSelected: Boolean) {
 @Composable
 fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeContent: (Int) -> Unit) {
     val HOME = -1
-    val SETTINGS = 3
     val PKMNS = 0
-    val ITEMS = 4
     val PLACS = 1
     val GAMES = 2
+    val ITEMS = 3
+    val SETTINGS = 4
 
     Column {
         if (loading < 1.0f) {
@@ -246,11 +262,12 @@ fun MainScaffold() {
     FilterState.instance.currentSelectedType = remember { mutableStateOf(Type.NONE) }
     FilterState.instance.currentSelectedGame = remember { mutableStateOf(-1) }
     FilterState.instance.currentSelectedNuzlocke = remember { mutableStateOf(null) }
-    FilterState.instance.currentSearchString = remember { mutableStateOf("") }
+    FilterState.instance.currentSearchString = remember { mutableStateOf(null) }
 
     val filterSelected = FilterState.instance.currentSelectedType.value != Type.NONE ||
             FilterState.instance.currentSelectedGame.value != -1 ||
-            FilterState.instance.currentSelectedNuzlocke.value != null
+            FilterState.instance.currentSelectedNuzlocke.value != null ||
+            FilterState.instance.currentSearchString.value != null
 
     MaterialTheme(
         colors = if (isSystemInDarkTheme()) DarkColors else LightColors
@@ -274,13 +291,22 @@ fun MainScaffold() {
                     0 -> ListAllPokemons(it)
                     1 -> ListAllLocations(it)
                     2 -> ListAllGames(it)
-                    3 -> Settings(it)
-                    4 -> ListAllItems(it)
+                    3 -> ListAllItems(it)
+                    4 -> Settings(it)
                     else -> MainPage(it)
                 }
             },
             topBar = { TopBarFiltering(filterSelected) },
-            bottomBar = { BottomNavigationBar(content, loading = (loaded.value.toFloat()/(toBeLoaded.value))) { content = it } }
+            bottomBar = { BottomNavigationBar(content, loading = (loaded.value.toFloat()/(toBeLoaded.value))) { content = it } },
+            floatingActionButton = {
+                if (content in 0..3) {
+                    FloatingActionButton(onClick = {
+                        FilterState.instance.currentSearchString.value = ""
+                    }) {
+                        Icon(Icons.Default.Search, contentDescription = "")
+                    }
+                }
+            }
         )
     }
 }

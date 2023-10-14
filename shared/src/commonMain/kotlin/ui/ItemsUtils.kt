@@ -87,7 +87,7 @@ fun ListAllItems(paddingValues: PaddingValues) {
             }
 
             if (item.isValid) {
-                ItemCard(item, isLoading = isLoading)
+                if (!isFiltered(item)) ItemCard(item, isLoading = isLoading)
             } else ItemCard(item, isLoading = true)
         }
     }
