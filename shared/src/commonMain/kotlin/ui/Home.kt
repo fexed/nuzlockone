@@ -1,5 +1,6 @@
 package ui
 
+import IsNuzlockeRecordFeatureEnabled
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,29 +45,31 @@ fun MainPage(paddingValues: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn {
-            if (cache.numberOfNuzlockes.value == 0) {
-                item {
-                    DummyNuzlockeElement()
-                }
-            } else {
-                items(cache.numberOfNuzlockes.value) {
-                    AnimatedVisibility(!isFiltered(cache.nuzlockes[it])) {
-                        NuzlockeElement(cache.nuzlockes[it])
+            if (IsNuzlockeRecordFeatureEnabled) {
+                if (cache.numberOfNuzlockes.value == 0) {
+                    item {
+                        DummyNuzlockeElement()
+                    }
+                } else {
+                    items(cache.numberOfNuzlockes.value) {
+                        AnimatedVisibility(!isFiltered(cache.nuzlockes[it])) {
+                            NuzlockeElement(cache.nuzlockes[it])
+                        }
                     }
                 }
-            }
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    OutlinedButton(onClick = {
-                        newNuzlocke =
-                            NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
-                        newNuzlocke.name = "New Nuzlocke"
-                        showDialog = true
-                    }, enabled = FilterState.instance.currentSelectedNuzlocke.value == null) {
-                        Icon(Icons.Default.Add, contentDescription = "")
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        OutlinedButton(onClick = {
+                            newNuzlocke =
+                                NuzlockRun(nuzlockeId = Random(seed = Clock.System.now().nanosecondsOfSecond).nextInt())
+                            newNuzlocke.name = "New Nuzlocke"
+                            showDialog = true
+                        }, enabled = FilterState.instance.currentSelectedNuzlocke.value == null) {
+                            Icon(Icons.Default.Add, contentDescription = "")
+                        }
                     }
                 }
             }

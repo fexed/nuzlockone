@@ -17,6 +17,8 @@ expect val screenDensityDPI: Int
 const val sharedVersion: String = "1.0"
 val cache = Cache.instance
 
+const val IsNuzlockeRecordFeatureEnabled = false
+
 @Composable
 fun Int.pxToDp() = with (LocalDensity.current) { this@pxToDp.toDp() }
 
