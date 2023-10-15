@@ -2,16 +2,15 @@ package ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,33 +26,30 @@ import cache
 import com.seiko.imageloader.rememberImagePainter
 import data.Item
 import kotlinx.coroutines.coroutineScope
-import network.Cache
 import network.PokeApi
 
 @Composable
 fun ItemCard(item: Item, isLoading: Boolean = false) {
     val painter = rememberImagePainter(item.imageURL)
 
-    Card(modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp)) {
-        Row(
-            modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(8.dp).background(
+    Card(modifier = Modifier.wrapContentSize().padding(8.dp)) {
+        Column(
+            modifier = Modifier.wrapContentSize().padding(8.dp).background(
                 shimmerBrush(showShimmer = isLoading)
             ),
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (!isLoading) {
+                Text(item.name)
                 Image(
                     painter,
                     null,
-                    modifier = Modifier.size(25.dp)
-                )
-                Text(item.name)
-                Spacer(
-                    Modifier.weight(1f).fillMaxHeight()
+                    modifier = Modifier.size(125.dp)
                 )
                 Text("${item.cost}")
             } else {
-                Box(modifier = Modifier.size(25.dp))
+                Box(modifier = Modifier.size(100.dp))
             }
         }
     }
@@ -61,9 +57,8 @@ fun ItemCard(item: Item, isLoading: Boolean = false) {
 
 @Composable
 fun ListAllItems(paddingValues: PaddingValues) {
-    LazyColumn(
-        Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
         contentPadding = paddingValues
     ) {
         items(count = cache.numberOfItems.value) {
