@@ -13,7 +13,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -32,8 +33,6 @@ import androidx.compose.ui.unit.sp
 import cache
 import com.seiko.imageloader.rememberImagePainter
 import data.Game
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.coroutineScope
 import network.PokeApi
 
@@ -71,8 +70,7 @@ fun GameElement(game: Game, isLoading: Boolean = false) {
                             (if (isSystemInDarkTheme()) Color.Black else Color.White).copy(alpha = 0.5f)
                         )
                     ) {
-                        Text("Pokémon", modifier = Modifier.padding(8.dp, 8.dp, 0.dp, 0.dp))
-                        Text(game.title, modifier = Modifier.padding(4.dp), fontSize = 20.sp)
+                        Text(game.title, modifier = Modifier.padding(4.dp), fontSize = 16.sp)
                         if (currentGame.value == game.id) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -92,9 +90,9 @@ fun GameElement(game: Game, isLoading: Boolean = false) {
 
 @Composable
 fun ListAllGames(paddingValues: PaddingValues) {
-    LazyColumn(
-        Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        horizontalArrangement = Arrangement.Center,
         contentPadding = paddingValues
     ) {
         items(count = cache.numberOfGames.value) {
