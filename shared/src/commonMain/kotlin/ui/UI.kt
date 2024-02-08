@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.FilterListOff
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -301,9 +302,17 @@ fun MainScaffold() {
             floatingActionButton = {
                 if (content in 0..3) {
                     FloatingActionButton(onClick = {
-                        FilterState.instance.currentSearchString.value = ""
+                        if (FilterState.instance.currentSearchString.value == null) {
+                            FilterState.instance.currentSearchString.value = ""
+                        } else {
+                            FilterState.instance.currentSearchString.value = null
+                        }
                     }) {
-                        Icon(Icons.Default.Search, contentDescription = "")
+                        if (FilterState.instance.currentSearchString.value == null) {
+                            Icon(Icons.Default.Search, contentDescription = "")
+                        } else {
+                            Icon(Icons.Default.SearchOff, contentDescription = "")
+                        }
                     }
                 }
             }
