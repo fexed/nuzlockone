@@ -18,9 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cache
-import network.Cache
 
 
 @Composable
