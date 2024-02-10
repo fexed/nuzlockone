@@ -25,13 +25,18 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.filled.Backpack
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FilterListOff
+import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.RecentActors
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SearchOff
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -137,7 +142,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
                 AnimatedVisibility(expanded) {
                     Row {
                         BottomNavigationItem(icon = {
-                            Icon(imageVector = Icons.Default.List, "Pokémons")
+                            Icon(imageVector = Icons.Filled.LibraryBooks, "Pokémons")
                         },
                             selected = (currentSelected == PKMNS),
                             onClick = {
@@ -145,7 +150,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
                             })
 
                         BottomNavigationItem(icon = {
-                            Icon(imageVector = Icons.Default.Category, "Items")
+                            Icon(imageVector = Icons.Filled.Backpack, "Items")
                         },
                             selected = (currentSelected == ITEMS),
                             onClick = {
@@ -153,7 +158,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
                             })
 
                         BottomNavigationItem(icon = {
-                            Icon(imageVector = Icons.Default.Map, "Locations")
+                            Icon(imageVector = Icons.Filled.Map, "Locations")
                         },
                             selected = (currentSelected == PLACS),
                             onClick = {
@@ -161,7 +166,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
                             })
 
                         BottomNavigationItem(icon = {
-                            Icon(imageVector = Icons.Default.VideogameAsset, "Games")
+                            Icon(imageVector = Icons.Filled.VideogameAsset, "Games")
                         },
                             selected = (currentSelected == GAMES),
                             onClick = {
@@ -169,7 +174,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
                             })
 
                         BottomNavigationItem(icon = {
-                            Icon(Icons.Default.Close, contentDescription = "")
+                            Icon(Icons.Filled.Close, contentDescription = "")
                         },
                             selected = false,
                             onClick = {
@@ -179,7 +184,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
                 }
 
                 BottomNavigationItem(icon = {
-                    Icon(imageVector = Icons.Default.Home, "Home")
+                    Icon(imageVector = Icons.Filled.Home, "Home")
                 },
                     selected = (currentSelected == HOME),
                     onClick = {
@@ -187,7 +192,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
                     })
 
                 BottomNavigationItem(icon = {
-                    Icon(Icons.Default.MoreVert, contentDescription = "")
+                    Icon(Icons.Filled.Storage, contentDescription = "")
                 },
                     selected = false,
                     onClick = {
@@ -195,7 +200,7 @@ fun BottomNavigationBar(currentSelected: Int, loading: Float = 0.5f, changeConte
                     })
 
                 BottomNavigationItem(icon = {
-                    Icon(imageVector = Icons.Default.Settings, "Settings")
+                    Icon(imageVector = Icons.Filled.Settings, "Settings")
                 },
                     selected = (currentSelected == SETTINGS),
                     onClick = {
