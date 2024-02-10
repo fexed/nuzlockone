@@ -295,8 +295,11 @@ fun ListAllPokemons(paddingValues: PaddingValues) {
         contentPadding = paddingValues
     ) {
         items(items = cache.creaturesList) { creature ->
+            val isLoading = creature.name == "Loading..."
             if (!isFiltered(creature)) {
-                CreatureRowElement(creature, isLoading = creature.name == "Loading...")
+                if (isLoading) toBeLoaded.value += 1
+                else loaded.value += 1
+                CreatureRowElement(creature, isLoading = isLoading)
             }
         }
     }
