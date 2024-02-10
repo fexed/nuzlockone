@@ -36,7 +36,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,8 +55,6 @@ import data.Creature
 import data.Type
 import data.getTypeColor
 import data.getTypeName
-import kotlinx.coroutines.coroutineScope
-import network.PokeApi
 
 
 @Composable
@@ -117,7 +114,7 @@ fun CreatureRowElement(creature: Creature, isLoading: Boolean = false) {
                             Text("${creature.id}", fontSize = 10.sp)
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(creature.name, fontSize = 16.sp)
-                            if (creature.isLegendary || creature.isMithycal) {
+                            if (creature.isLegendary || creature.isMythical) {
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Icon(Icons.Default.Star, contentDescription = "")
                             }

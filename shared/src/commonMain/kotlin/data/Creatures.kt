@@ -9,7 +9,7 @@ class Creature(
     var type2: Type = Type.NONE,
     var isBaby: Boolean = false,
     var isLegendary: Boolean = false,
-    var isMithycal: Boolean = false,
+    var isMythical: Boolean = false,
     var generation: Int = -1,
     var gameIndexes: MutableList<Int> = mutableListOf(),
     val flavorTexts: MutableList<FlavorText> = mutableListOf(),

@@ -17,7 +17,6 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -111,7 +110,7 @@ class PokeApi {
         creature.id = netData.id
         creature.isBaby = netData.is_baby
         creature.isLegendary = netData.is_legendary
-        creature.isMithycal = netData.is_mythical
+        creature.isMythical = netData.is_mythical
         creature.generation = mapGenerationToNumber(netData.generation.name)
 
         creature.name = getLocalizedOrDefaultName(netData.names)
